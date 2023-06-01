@@ -1,0 +1,27 @@
+name: memories_scrapbook
+description: collaborative memories scrapbook for people living with dementia
+
+on: [push, workflow_dispatch]
+
+jobs:
+  drive:
+    runs-on: ubuntu-latest
+    steps:
+      - run: flutter test #runs everything in test directory
+publish_to: none
+
+environment:
+  sdk: '>=2.19.4 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
