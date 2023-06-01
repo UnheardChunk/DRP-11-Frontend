@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: NameFormPage(),
     );
   }
 }
 
 class NameFormPage extends StatefulWidget {
+  const NameFormPage({super.key});
+
   @override
-  _NameFormPageState createState() => _NameFormPageState();
+  State<NameFormPage> createState() => _NameFormPageState();
 }
 
 class _NameFormPageState extends State<NameFormPage> {
@@ -73,21 +77,21 @@ class _NameFormPageState extends State<NameFormPage> {
             onChanged: (value) {
               // You can perform any required logic here
             },
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Enter name',
               border: OutlineInputBorder(),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           if (isSubmitted)
             ElevatedButton(
               onPressed: () => navigateToAnotherPage(nameController.text),
-              child: Text('See scrapbook'),
+              child: const Text('See scrapbook'),
             )
           else
             ElevatedButton(
               onPressed: () => submitForm(index),
-              child: Text('Submit'),
+              child: const Text('Submit'),
             ),
         ],
       ),
@@ -98,7 +102,7 @@ class _NameFormPageState extends State<NameFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My scrapbooks'),
+        title: const Text('My scrapbooks'),
       ),
       body: ListView.builder(
         itemCount: controllers.length,
@@ -109,7 +113,7 @@ class _NameFormPageState extends State<NameFormPage> {
                 buildForm(index),
                 FloatingActionButton(
                   onPressed: addForm,
-                  child: Icon(Icons.add),
+                  child: const Icon(Icons.add),
                 ),
               ],
             );
@@ -131,7 +135,7 @@ class AnotherPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Scrapbook'),
+        title: const Text('Scrapbook'),
       ),
       body: Center(
         child: Text('Hello, $name'),
