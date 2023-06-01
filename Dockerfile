@@ -1,1 +1,2 @@
-FROM mobiledevops/flutter-sdk-image
+FROM mobiledevops/flutter-sdk-image:3.10.1
+COPY /frontend .
