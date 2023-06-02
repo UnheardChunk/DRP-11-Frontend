@@ -1,4 +1,4 @@
-import 'dart:convert';
+// import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -160,9 +160,8 @@ class AnotherPage extends StatelessWidget {
   getJSON() async {
     final data = await supabase
         .from('Scapbooks')
-        .select('name, data')
-        .single();
-    return jsonDecode(data).toString();
+        .select('name, data').eq('name', name).single();
+    return data.toString();
   }
   const AnotherPage({Key? key, required this.name}) : super(key: key);
 
@@ -175,7 +174,7 @@ class AnotherPage extends StatelessWidget {
 
       body: const Center(
 
-        child: Text("bjk"),
+        child: Text(''),
       ),
     );
   }
