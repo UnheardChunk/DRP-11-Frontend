@@ -1,8 +1,20 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-void main() {
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Supabase.initialize(
+    url: 'https://cjcjooldtthzjlnpknaf.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqY2pvb2xkdHRoempsbnBrbmFmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY4NTU1ODc1OSwiZXhwIjoyMDAxMTM0NzU5fQ.cXwzHzFAIizOyQ26MZhZZdCHUQRybqBALGQpLKF3mXw',
+  );
   runApp(const MyApp());
 }
+
+// Get a reference your Supabase client
+final supabase = Supabase.instance.client;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -32,13 +44,13 @@ class _NameFormPageState extends State<NameFormPage> {
     addForm();
   }
 
-  // @override
-  // void dispose() {
-  //   for (var controller in controllers) {
-  //     controller.dispose();
-  //   }
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    for (var controller in controllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
 
   void addForm() {
     if (controllers.length < 5) {
@@ -49,17 +61,33 @@ class _NameFormPageState extends State<NameFormPage> {
     }
   }
 
-  void submitForm(int index) {
+  Future<void> submitForm(int index, String name) async {
     setState(() {
       isFormSubmitted[index] = true;
     });
+    //final data = await supabase.from('Scapbooks').insert({'name': name,'data': {}});
+
   }
 
-  void navigateToAnotherPage(String name) {
+  Future<Scaffold> navigateToAnotherPage(String name) async {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => AnotherPage(name: name),
+      ),
+    );
+
+    final data = await supabase
+        .from('Scapbooks')
+        .select('name, data').single();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Scrapbook'),
+      ),
+
+      body: Center(
+        child: Text(data),
       ),
     );
   }
@@ -90,7 +118,7 @@ class _NameFormPageState extends State<NameFormPage> {
             )
           else
             ElevatedButton(
-              onPressed: () => submitForm(index),
+              onPressed: () => submitForm(index, nameController.text),
               child: const Text('Submit'),
             ),
         ],
@@ -129,6 +157,13 @@ class _NameFormPageState extends State<NameFormPage> {
 class AnotherPage extends StatelessWidget {
   final String name;
 
+  getJSON() async {
+    final data = await supabase
+        .from('Scapbooks')
+        .select('name, data')
+        .single();
+    return jsonDecode(data).toString();
+  }
   const AnotherPage({Key? key, required this.name}) : super(key: key);
 
   @override
@@ -137,8 +172,10 @@ class AnotherPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Scrapbook'),
       ),
-      body: Center(
-        child: Text('Hello, $name'),
+
+      body: const Center(
+
+        child: Text("bjk"),
       ),
     );
   }
