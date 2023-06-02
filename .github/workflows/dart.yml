@@ -57,8 +57,8 @@ jobs:
       - run: flutter pub get
       - run: dart format .
       - run: flutter analyze .
-      - run: flutter build apk
+      - run: cd frontend && flutter build apk
       - uses: actions/upload-artifact@v1
         with:
-          name: release-apk
-          path: build/app/outputs/apk/release/app-release.apk
+          name: app-release
+          path: frontend/build/app/outputs/flutter-apk/app-release.apk
