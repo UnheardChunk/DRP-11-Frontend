@@ -65,7 +65,8 @@ class _NameFormPageState extends State<NameFormPage> {
     setState(() {
       isFormSubmitted[index] = true;
     });
-    //final data = await supabase.from('Scapbooks').insert({'name': name,'data': {}});
+    final data = await supabase.from('Scapbooks').insert({'name': name,'data': ""});
+    return data;
 
   }
 
@@ -160,7 +161,7 @@ class AnotherPage extends StatelessWidget {
   getJSON() async {
     final data = await supabase
         .from('Scapbooks')
-        .select('name, data').eq('name', name).single();
+        .select('name');
     return data.toString();
   }
   const AnotherPage({Key? key, required this.name}) : super(key: key);
@@ -172,9 +173,9 @@ class AnotherPage extends StatelessWidget {
         title: const Text('Scrapbook'),
       ),
 
-      body: const Center(
+      body: Center(
 
-        child: Text(''),
+        child: Text("hello $name"),
       ),
     );
   }
