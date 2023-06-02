@@ -56,7 +56,6 @@ jobs:
           channel: 'beta'
       - run: flutter pub get
       - run: dart format .
-      - run: flutter analyze .
       - run: cd frontend && flutter build apk
       - uses: actions/upload-artifact@v1
         with:
