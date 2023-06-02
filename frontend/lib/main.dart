@@ -131,7 +131,7 @@ class _NameFormPageState extends State<NameFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My scrapbooks'),
+        title: const Text('MYSCRAPBOOKS'),
       ),
       body: ListView.builder(
         itemCount: controllers.length,
