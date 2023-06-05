@@ -1,31 +1,7 @@
-// import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:memories_scrapbook/main.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  await Supabase.initialize(
-    url: 'https://cjcjooldtthzjlnpknaf.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqY2pvb2xkdHRoempsbnBrbmFmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY4NTU1ODc1OSwiZXhwIjoyMDAxMTM0NzU5fQ.cXwzHzFAIizOyQ26MZhZZdCHUQRybqBALGQpLKF3mXw',
-  );
-  runApp(const MyApp());
-}
-
-// Get a reference your Supabase client
-final supabase = Supabase.instance.client;
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: NameFormPage(),
-    );
-  }
-}
 
 class NameFormPage extends StatefulWidget {
   const NameFormPage({super.key});
@@ -70,7 +46,7 @@ class _NameFormPageState extends State<NameFormPage> {
 
   }
 
-  Future<Scaffold> navigateToAnotherPage(String name) async {
+  Future<Scaffold> navigateToScrapbookPage(String name) async {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -114,7 +90,7 @@ class _NameFormPageState extends State<NameFormPage> {
           const SizedBox(height: 16),
           if (isSubmitted)
             ElevatedButton(
-              onPressed: () => navigateToAnotherPage(nameController.text),
+              onPressed: () => navigateToScrapbookPage(nameController.text),
               child: const Text('See scrapbook'),
             )
           else
@@ -155,28 +131,3 @@ class _NameFormPageState extends State<NameFormPage> {
   }
 }
 
-class ScrapbookPage extends StatelessWidget {
-  final String name;
-
-  getJSON() async {
-    final data = await supabase
-        .from('Scapbooks')
-        .select('name');
-    return data.toString();
-  }
-  const ScrapbookPage({Key? key, required this.name}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Scrapbook'),
-      ),
-
-      body: Center(
-
-        child: Text("hello $name"),
-      ),
-    );
-  }
-}
