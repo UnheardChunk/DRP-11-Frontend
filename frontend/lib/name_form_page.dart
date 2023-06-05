@@ -18,6 +18,7 @@ class _NameFormPageState extends State<NameFormPage> {
 
   //tracks whether each form has been submitted or not
   List<bool> isFormSubmitted = [];
+  List<bool> isFormEditable = [];
 
 
   //add initial form. ensures there is at least one form when the page is first loaded.
@@ -40,14 +41,17 @@ class _NameFormPageState extends State<NameFormPage> {
     setState(() {
       controllers.add(TextEditingController());
       isFormSubmitted.add(false);
+      isFormEditable.add(true);
     });
   }
 
   Future<void> submitForm(int index, String name) async {
     final nameController = controllers[index];
+
     if (nameController.text.isNotEmpty) {
       setState(() {
         isFormSubmitted[index] = true;
+        isFormEditable[index] = false;
       });
     }
 
@@ -86,6 +90,7 @@ class _NameFormPageState extends State<NameFormPage> {
     final nameController = controllers[index];
     final isSubmitted = isFormSubmitted[index];
     final isTextEntered = nameController.text.isNotEmpty;
+    final isEditable = isFormEditable[index];
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -97,6 +102,7 @@ class _NameFormPageState extends State<NameFormPage> {
               setState(() {
               });
             },
+            enabled: isEditable,
             decoration: const InputDecoration(
               labelText: 'Enter name',
               border: OutlineInputBorder(),
