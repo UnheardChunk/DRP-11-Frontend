@@ -1,31 +1,50 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
-// import 'package:memories_scrapbook/name_form_page.dart';
 
-
-
-class AnotherPage extends StatelessWidget {
+class ScrapbookPage extends StatelessWidget {
   final String name;
 
-  getJSON() async {
+  const ScrapbookPage({Key? key, required this.name}) : super(key: key);
+
+  Future<String> getJSONdata() async {
     final data = await supabase
         .from('Scapbooks')
         .select('name');
     return data.toString();
+
   }
-  const AnotherPage({Key? key, required this.name}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scrapbook'),
+        title: Text('$name\'s scrapbook'),
+
       ),
 
       body: Center(
 
-        child: Text("hello $name"),
+          child: ElevatedButton(
+            onPressed: () => getJSONdata(),
+            child: const Text('Get data'),
+          )
       ),
     );
   }
 }
+
+// Future<Scaffold> navigateToSensesPage(String name) async {
+//   //navigates to new page
+//   Navigator.push(
+//     context,
+//     MaterialPageRoute(
+//       builder: (context) => SensesPage(name: name),
+//     ),
+//   );
+//
+//
+// }
+
+// class SensesPage {
+// }
+
