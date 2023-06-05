@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:memories_scrapbook/main.dart';
+import 'main.dart';
 
 
 class NameFormPage extends StatefulWidget {

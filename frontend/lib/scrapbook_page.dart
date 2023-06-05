@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memories_scrapbook/main.dart';
+import 'main.dart';
 // import 'package:memories_scrapbook/name_form_page.dart';
 
 
