@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
-import 'scrapbook_page.dart';
+import 'scrapbook_tab_page.dart';
 
 
 class NameFormPage extends StatefulWidget {
@@ -60,12 +60,12 @@ class _NameFormPageState extends State<NameFormPage> {
 
   }
 
-  Future<Scaffold> navigateToScrapbookPage(String name) async {
+  Future<Scaffold> navigateToScrapbookTabPage(String name) async {
     //navigates to new page
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ScrapbookPage(name: name),
+        builder: (context) => ScrapbookTabPage(name: name),
       ),
     );
 
@@ -76,6 +76,7 @@ class _NameFormPageState extends State<NameFormPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Scrapbook'),
+
       ),
 
       body: Center(
@@ -111,7 +112,7 @@ class _NameFormPageState extends State<NameFormPage> {
           const SizedBox(height: 16),
           if (isSubmitted)
             ElevatedButton(
-              onPressed: () => navigateToScrapbookPage(nameController.text),
+              onPressed: () => navigateToScrapbookTabPage(nameController.text),
               child: const Text('See scrapbook'),
             )
           else
@@ -130,7 +131,7 @@ class _NameFormPageState extends State<NameFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My scrapbooks'),
+        title: const Text('My scrapbooks')//\nYou have ${controllers.length} scrapbooks'),
       ),
 
       //ListView.builder creates a scrollable linear array of widgets
