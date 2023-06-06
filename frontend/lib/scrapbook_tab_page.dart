@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 
 class ScrapbookTabPage extends StatelessWidget {
   final String name;
@@ -22,10 +21,7 @@ class ScrapbookTabPage extends StatelessWidget {
           ),
           body: const TabBarView(
             children: [
-              ElevatedButton(
-                onPressed: () => {null},
-                child: Text('See scrapbook'),
-              ),
+              Icon(Icons.book),
               Icon(Icons.emoji_emotions)
             ],
           ),
