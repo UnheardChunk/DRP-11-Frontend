@@ -59,7 +59,7 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
 
   }
 
-  Future<Scaffold> navigateToScrapbookTabPage(String name) async {
+  Future<Scaffold> navigateToScrapbookPage(String name) async {
     //navigates to new page
     Navigator.push(
       context,
@@ -111,7 +111,7 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
           const SizedBox(height: 16),
           if (isSubmitted)
             ElevatedButton(
-              onPressed: () => navigateToScrapbookTabPage(nameController.text),
+              onPressed: () => navigateToScrapbookPage(nameController.text),
               child: const Text('See scrapbook'),
             )
           else
