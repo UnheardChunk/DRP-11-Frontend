@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:memories_scrapbook/scrapbook_form.dart';
 
 class ScrapbookTabPage extends StatelessWidget {
   final String name;
+
   const ScrapbookTabPage({Key? key, required this.name}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        length: 3,
+        length: 2,
         child: Scaffold(
           appBar: AppBar(
             bottom: const TabBar(
@@ -21,8 +23,8 @@ class ScrapbookTabPage extends StatelessWidget {
           ),
           body: const TabBarView(
             children: [
-              Icon(Icons.book),
-              Icon(Icons.emoji_emotions)
+              ScrapbookForm(), // Form for "Chapter" tab
+              ScrapbookForm(), // Form for "Senses" tab
             ],
           ),
         ),
@@ -30,53 +32,3 @@ class ScrapbookTabPage extends StatelessWidget {
     );
   }
 }
-
-// class ScrapbookTabPage extends StatelessWidget {
-//   final String name;
-//
-//   const ScrapbookTabPage({Key? key, required this.name}) : super(key: key);
-//
-//   Future<String> getJSONdata() async {
-//     final data = await supabase
-//         .from('Scapbooks')
-//         .select('name');
-//     return data.toString();
-//
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('$name\'s scrapbook'),
-//
-//       ),
-//
-//       body: Center(
-//
-//           child: ElevatedButton(
-//             onPressed: () => getJSONdata(),
-//             child: const Text('Get data'),
-//           )
-//       ),
-//     );
-//   }
-// }
-
-// Future<Scaffold> navigateToSensesPage(String name) async {
-//   //navigates to new page
-//   Navigator.push(
-//     context,
-//     MaterialPageRoute(
-//       builder: (context) => SensesPage(name: name),
-//     ),
-//   );
-//
-//
-// }
-
-// class SensesPage {
-// }
-
-
-

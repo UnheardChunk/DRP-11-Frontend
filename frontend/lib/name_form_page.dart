@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 import 'scrapbook_tab_page.dart';
 
-
 class NameFormPage extends StatefulWidget {
   const NameFormPage({super.key});
 
