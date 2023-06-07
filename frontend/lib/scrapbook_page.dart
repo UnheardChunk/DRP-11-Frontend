@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'chapter_form.dart';
 
-class ScrapbookPage extends StatelessWidget {
+class ScrapbookPage extends StatefulWidget {
   final String name;
 
   const ScrapbookPage({Key? key, required this.name}) : super(key: key);
+
+  @override
+  State<ScrapbookPage> createState() => _ScrapbookPageState();
+}
+
+class _ScrapbookPageState extends State<ScrapbookPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -13,13 +19,17 @@ class ScrapbookPage extends StatelessWidget {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
+            title: Text('${widget.name}\'s scrapbook'),
+            centerTitle: true,
+            leading: BackButton(
+              onPressed: () => Navigator.of(context).pop(),
+            ),
             bottom: const TabBar(
               tabs: [
                 Tab(child: Text('Chapter')),
                 Tab(child: Text('Senses')),
               ],
             ),
-            title: Text('$name\'s scrapbook'),
           ),
           body: const TabBarView(
             children: [
