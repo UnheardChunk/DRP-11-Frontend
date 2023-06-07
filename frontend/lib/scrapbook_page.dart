@@ -27,14 +27,14 @@ class _ScrapbookPageState extends State<ScrapbookPage> {
             bottom: const TabBar(
               tabs: [
                 Tab(child: Text('Chapter')),
-                Tab(child: Text('Senses')),
+                // Tab(child: Text('Senses')),
               ],
             ),
           ),
           body: const TabBarView(
             children: [
               ChapterForm(), // Form for "Chapter" tab
-              ChapterForm(), // Form for "Senses" tab
+              // ChapterForm(), // Form for "Senses" tab
             ],
           ),
         ),
