@@ -59,27 +59,12 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
 
   }
 
-  Future<Scaffold> navigateToScrapbookPage(String name) async {
+  void navigateToScrapbookPage(String name) async {
     //navigates to new page
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ScrapbookPage(name: name),
-      ),
-    );
-
-    final data = await supabase
-        .from('Scapbooks')
-        .select('name, data').single();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Scrapbook'),
-
-      ),
-
-      body: Center(
-        child: Text(data),
       ),
     );
   }
@@ -130,7 +115,11 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My scrapbooks')//\nYou have ${controllers.length} scrapbooks'),
+        title: const Text('My scrapbooks'),//\nYou have ${controllers.length} scrapbooks'),
+        centerTitle: true,
+        leading: BackButton(
+          onPressed:() {},
+        ),
       ),
 
       //ListView.builder creates a scrollable linear array of widgets
