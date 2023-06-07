@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
-import 'scrapbook_tab_page.dart';
+import 'scrapbook_page.dart';
 
-class NameFormPage extends StatefulWidget {
-  const NameFormPage({super.key});
+class ScrapbooksPage extends StatefulWidget {
+  const ScrapbooksPage({super.key});
 
   @override
-  State<NameFormPage> createState() => _NameFormPageState();
+  State<ScrapbooksPage> createState() => _ScrapbooksPageState();
 }
 
-class _NameFormPageState extends State<NameFormPage> {
+class _ScrapbooksPageState extends State<ScrapbooksPage> {
   // static const maxNumScrapbooks = 5;
 
   //list of TextEditingController objects controls text input in each form
@@ -64,7 +64,7 @@ class _NameFormPageState extends State<NameFormPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ScrapbookTabPage(name: name),
+        builder: (context) => ScrapbookPage(name: name),
       ),
     );
 

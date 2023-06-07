@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:memories_scrapbook/scrapbook_form.dart';
+import 'package:memories_scrapbook/chapter_form.dart';
 
-class ScrapbookTabPage extends StatelessWidget {
+class ScrapbookPage extends StatelessWidget {
   final String name;
 
-  const ScrapbookTabPage({Key? key, required this.name}) : super(key: key);
+  const ScrapbookPage({Key? key, required this.name}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +23,8 @@ class ScrapbookTabPage extends StatelessWidget {
           ),
           body: const TabBarView(
             children: [
-              ScrapbookForm(), // Form for "Chapter" tab
-              ScrapbookForm(), // Form for "Senses" tab
+              ChapterForm(), // Form for "Chapter" tab
+              ChapterForm(), // Form for "Senses" tab
             ],
           ),
         ),

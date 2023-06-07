@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ScrapbookForm extends StatefulWidget {
-  const ScrapbookForm({super.key});
+class ChapterForm extends StatefulWidget {
+  const ChapterForm({super.key});
 
   @override
-  _ScrapbookFormState createState() => _ScrapbookFormState();
+  _ChapterFormState createState() => _ChapterFormState();
 }
 
-class _ScrapbookFormState extends State<ScrapbookForm> {
+class _ChapterFormState extends State<ChapterForm> {
   final _formKey = GlobalKey<FormState>();
   List<String> formFields = [''];
 
