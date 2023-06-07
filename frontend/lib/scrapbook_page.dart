@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memories_scrapbook/chapter_form.dart';
+import 'chapter_form.dart';
 
 class ScrapbookPage extends StatelessWidget {
   final String name;
