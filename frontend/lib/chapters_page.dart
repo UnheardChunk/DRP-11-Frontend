@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'chapter_form.dart';
 
-class ScrapbookPage extends StatefulWidget {
+class ChaptersPage extends StatefulWidget {
   final String name;
 
-  const ScrapbookPage({Key? key, required this.name}) : super(key: key);
+  const ChaptersPage({Key? key, required this.name}) : super(key: key);
 
   @override
-  State<ScrapbookPage> createState() => _ScrapbookPageState();
+  State<ChaptersPage> createState() => _ChaptersPageState();
 }
 
-class _ScrapbookPageState extends State<ScrapbookPage> {
+class _ChaptersPageState extends State<ChaptersPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class _ScrapbookPageState extends State<ScrapbookPage> {
             ),
             bottom: const TabBar(
               tabs: [
-                Tab(child: Text('Chapter')),
+                Tab(child: Text('Chapters')),
                 // Tab(child: Text('Senses')),
               ],
             ),

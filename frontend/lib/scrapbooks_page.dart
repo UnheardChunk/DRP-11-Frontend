@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
-import 'scrapbook_page.dart';
+import 'chapters_page.dart';
 
 class ScrapbooksPage extends StatefulWidget {
   const ScrapbooksPage({super.key});
@@ -64,7 +64,7 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ScrapbookPage(name: name),
+        builder: (context) => ChaptersPage(name: name),
       ),
     );
   }
