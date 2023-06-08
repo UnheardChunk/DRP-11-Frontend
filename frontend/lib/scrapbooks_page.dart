@@ -103,6 +103,26 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
 
     );
   }
+
+  // void navigateToMediaPage() async {
+  //   //navigates to new page
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => const MediaPage(),
+  //     ),
+  //   );
+  // }
+
+  void navigateToMediaPage() async {
+    //navigates to new page
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const Home(),
+      ),
+    );
+  }
 }
 
 // Class defining a ListTile for a scrapbook
