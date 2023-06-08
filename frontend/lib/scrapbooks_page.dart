@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'chapters_page.dart';
@@ -108,10 +110,13 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
           padding: const EdgeInsets.all(10),
           child: ListView(children: [
             for (String scrapbook in scrapbooks)
-              ScrapbookTile(
-                name: scrapbook,
-              ),
-          ]),
+              ScrapbookTile(name: scrapbook,),
+            ElevatedButton(onPressed: () {
+              navigateToMediaPage();
+            },
+              child: const Text('Media'),
+            )
+          ]
         ),
       ),
     );
@@ -148,20 +153,21 @@ class ScrapbookTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: ListTile(
-        title: Text(name),
-        trailing: const Icon(Icons.arrow_forward_ios),
-        leading: const Icon(
-          Icons.menu_book,
-          size: 30,
+      child:
+        ListTile(
+          title: Text(name),
+          trailing: const Icon(Icons.arrow_forward_ios),
+          leading: const Icon(Icons.menu_book, size: 30,),
+          iconColor: Colors.black,
+          onTap: () => {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ChaptersPage(name: name)
+              ),
+            )
+          },
         ),
-        iconColor: const Color.fromARGB(255, 66, 132, 182),
-        onTap: () => {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => ChaptersPage(name: name)),
-          )
-        },
-      ),
+      
     );
   }
 }
