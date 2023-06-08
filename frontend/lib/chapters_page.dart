@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'utilities.dart';
+import 'memories_page.dart';
 
 class ChaptersPage extends StatefulWidget {
   final String name;
@@ -12,36 +13,34 @@ class ChaptersPage extends StatefulWidget {
 
 class _ChaptersPageState extends State<ChaptersPage> {
 
+  ChaptersTab chaptersTab = ChaptersTab(index: 0);
+  ChaptersTab emotionsTab = ChaptersTab(index: 1);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: DefaultTabController(
         length: 1,
-        child: Builder(
-          builder: (context) {
-            int index = DefaultTabController.of(context).index;
-            return Scaffold(
-              appBar: AppBar(
-                title: Text('${widget.name}\'s scrapbook'),
-                centerTitle: true,
-                leading: BackButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-                bottom: const TabBar(
-                  tabs: [
-                    Tab(child: Text('Chapters')),
-                    // Tab(child: Text('Senses')),
-                  ],
-                ),
-              ),
-              body: TabBarView(
-                children: [
-                  ChaptersTab(index: index), // Form for "Chapter" tab
-                  // ChaptersTab(index: index + 1), // Form for "Senses" tab
-                ],
-              ),
-            );
-          }
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('${widget.name}\'s scrapbook'),
+            centerTitle: true,
+            leading: BackButton(
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            bottom: const TabBar(
+              tabs: [
+                Tab(child: Text('Chapters')),
+                // Tab(child: Text('Senses')),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              chaptersTab, // Form for "Chapter" tab
+              // emotionsTab, // Form for "Senses" tab
+            ],
+          ),
         ),
       ),
     );
@@ -132,7 +131,7 @@ class _ChaptersTabState extends State<ChaptersTab> {
               GenericTile(
                 name: chapter, 
                 tileIcon: const Icon(Icons.bookmark, size: 30,), 
-                navigatesTo: const Placeholder(),
+                navigatesTo: const MemoriesPage(),
               ),
           ]
         ),
