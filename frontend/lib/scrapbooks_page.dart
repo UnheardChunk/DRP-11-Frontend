@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'chapters_page.dart';
+import 'utilities.dart';
 
 // Creates the scrapbook page
 class ScrapbooksPage extends StatefulWidget {
@@ -96,7 +97,11 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
         child: ListView(
           children: [
             for (String scrapbook in scrapbooks)
-              ScrapbookTile(name: scrapbook,),
+              GenericTile(
+                name: scrapbook, 
+                tileIcon: const Icon(Icons.menu_book, size: 30),
+                navigatesTo: ChaptersPage(name: scrapbook),
+              ),
           ]
         ),
       ),
@@ -123,33 +128,4 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
       ),
     );
   }
-}
-
-// Class defining a ListTile for a scrapbook
-class ScrapbookTile extends StatelessWidget {
-
-  // Name of the scrapbook
-  final String name;
-
-  const ScrapbookTile({super.key, required this.name});
-  
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        title: Text(name),
-        trailing: const Icon(Icons.arrow_forward_ios),
-        leading: const Icon(Icons.menu_book, size: 30,),
-        iconColor: Colors.black,
-        onTap: () => {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ChaptersPage(name: name)
-            ),
-          )
-        },
-      ),
-    );
-  }
-
 }
