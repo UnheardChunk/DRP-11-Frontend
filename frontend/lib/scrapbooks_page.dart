@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 import 'chapters_page.dart';
 
+// Creates the scrapbook page
 class ScrapbooksPage extends StatefulWidget {
   const ScrapbooksPage({super.key});
 
@@ -9,140 +10,126 @@ class ScrapbooksPage extends StatefulWidget {
   State<ScrapbooksPage> createState() => _ScrapbooksPageState();
 }
 
+// The state for the scrapbook page
 class _ScrapbooksPageState extends State<ScrapbooksPage> {
-  // static const maxNumScrapbooks = 5;
 
-  //list of TextEditingController objects controls text input in each form
-  List<TextEditingController> controllers = [];
+  // List of all the scrapbooks the user has
+  List<String> scrapbooks = [];
 
-  //tracks whether each form has been submitted or not
-  List<bool> isFormSubmitted = [];
-  List<bool> isFormEditable = [];
+  // Controller for scrapbook creation
+  late TextEditingController controller;
 
-
-  //add initial form. ensures there is at least one form when the page is first loaded.
+  // Initialises the scrapbook creation controller
   @override
   void initState() {
     super.initState();
-    addForm();
+    
+    controller = TextEditingController();
   }
 
+  // Disposes the scrapbook creation controller
   @override
   void dispose() {
-    for (var controller in controllers) {
-      controller.dispose();
-    }
+    controller.dispose();
     super.dispose();
   }
 
-  void addForm() {
-    //adds a new form to controllers list and sets corresponding isFormSubmitted bool to false.
-    setState(() {
-      controllers.add(TextEditingController());
-      isFormSubmitted.add(false);
-      isFormEditable.add(true);
-    });
-  }
+  // Opens an AlertDialog for creating a new scrapbook
+  Future<String?> openScrapbookCreation() {
+    // Clears the text in the controller
+    controller.clear();
 
-  Future<void> submitForm(int index, String name) async {
-    final nameController = controllers[index];
-
-    if (nameController.text.isNotEmpty) {
-      setState(() {
-        isFormSubmitted[index] = true;
-        isFormEditable[index] = false;
-      });
-    }
-
-    final data = await supabase.from('Scapbooks').insert({'name': name,'data': ""});
-    return data;
-
-  }
-
-  void navigateToScrapbookPage(String name) async {
-    //navigates to new page
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChaptersPage(name: name),
-      ),
-    );
-  }
-
-  //generates form widget
-  //displays a TextFormField for form input, and corresponding 'Submit' or 'See scrapbook' button
-  Widget buildForm(int index) {
-    final nameController = controllers[index];
-    final isSubmitted = isFormSubmitted[index];
-    final isTextEntered = nameController.text.isNotEmpty;
-    final isEditable = isFormEditable[index];
-
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          TextFormField(
-            controller: nameController,
-            onChanged: (value) {
-              setState(() {
-              });
-            },
-            enabled: isEditable,
-            decoration: const InputDecoration(
-              labelText: 'Enter name',
-              border: OutlineInputBorder(),
-            ),
+    return showDialog<String>(
+    context: context, 
+    builder: (context) => AlertDialog(
+        title: const Text("Create Scrapbook"),
+        content: TextField(
+          onSubmitted: (_) => createScrapbook,
+          autofocus: true,
+          decoration: const InputDecoration(
+            hintText: "Enter your scrapbook name",
           ),
-          const SizedBox(height: 16),
-          if (isSubmitted)
-            ElevatedButton(
-              onPressed: () => navigateToScrapbookPage(nameController.text),
-              child: const Text('See scrapbook'),
-            )
-          else
-            ElevatedButton(
-              //can't submit unless text has been entered
-              onPressed:
-              isTextEntered ? () => submitForm(index, nameController.text) : null,
-              child: const Text('Submit'),
-            ),
+          controller: controller,
+        ),
+        actions: [
+          TextButton(
+            onPressed: createScrapbook, 
+            child: const Text("Submit"),
+          )
         ],
       ),
     );
   }
 
+  // Pops the AlertDialog for scrapbook creation when the submit button is pressed
+  void createScrapbook() {
+    Navigator.of(context).pop(controller.text);
+  }
+
+  // Builds the main screen for the scrapbook page
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final name = await openScrapbookCreation();
+          if (name == null || name.isEmpty) return;
+          
+          setState(() async {
+            await supabase.from('Scrapbooks').insert({'name': name,'data': ""});
+            scrapbooks.add(name);
+          });
+        },
+        child: const Icon(Icons.add),
+      ),
       appBar: AppBar(
-        title: const Text('My scrapbooks'),//\nYou have ${controllers.length} scrapbooks'),
+        title: const Text('My scrapbooks'),
         centerTitle: true,
         leading: BackButton(
           onPressed:() {},
         ),
       ),
 
-      //ListView.builder creates a scrollable linear array of widgets
-      body: ListView.builder(
-        itemCount: controllers.length,
-        itemBuilder: (context, index) {
-          if (index == controllers.length - 1) {
-            //creates new form
-            return Column(
-              children: [
-                buildForm(index),
-                FloatingActionButton(
-                  onPressed: addForm,
-                  child: const Icon(Icons.add),
-                ),
-              ],
-            );
-          } else {
-            return buildForm(index);
-          }
-        },
+      body: Container(
+        color: Colors.grey[300],
+        padding: const EdgeInsets.all(10),
+        child: ListView(
+          children: [
+            for (String scrapbook in scrapbooks)
+              ScrapbookTile(name: scrapbook,),
+          ]
+        ),
       ),
 
     );
   }
+}
+
+// Class defining a ListTile for a scrapbook
+class ScrapbookTile extends StatelessWidget {
+
+  // Name of the scrapbook
+  final String name;
+
+  const ScrapbookTile({super.key, required this.name});
+  
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        title: Text(name),
+        trailing: const Icon(Icons.arrow_forward_ios),
+        leading: const Icon(Icons.menu_book, size: 30,),
+        iconColor: Colors.black,
+        onTap: () => {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ChaptersPage(name: name)
+            ),
+          )
+        },
+      ),
+    );
+  }
+
 }
