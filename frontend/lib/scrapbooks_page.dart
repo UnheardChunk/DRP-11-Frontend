@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'chapters_page.dart';
@@ -71,55 +69,57 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        return await showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Text('Confirm that you want to Exit'),
-            content: const Text('Are you sure you want to exit the app?'),
-            actions: <Widget>[
-              TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('No')),
-              TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('Yes')),
-            ],
-          ),
-        );
-      },
-      child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            final name = await openScrapbookCreation();
-            if (name == null || name.isEmpty) return;
+        onWillPop: () async {
+          return await showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              title: const Text('Confirm that you want to Exit'),
+              content: const Text('Are you sure you want to exit the app?'),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('No')),
+                TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text('Yes')),
+              ],
+            ),
+          );
+        },
+        child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              final name = await openScrapbookCreation();
+              if (name == null || name.isEmpty) return;
 
-            setState(() {
-              scrapbooks.add(name);
-              // await supabase.from('Scrapbooks').insert({'name': name,'data': ""});
-            });
-          },
-          child: const Icon(Icons.add),
-        ),
-        appBar: AppBar(
-          title: const Text('My scrapbooks'),
-          centerTitle: true,
-        ),
-        body: Container(
-          color: Colors.grey[300],
-          padding: const EdgeInsets.all(10),
-          child: ListView(children: [
-            for (String scrapbook in scrapbooks)
-              ScrapbookTile(name: scrapbook,),
-            ElevatedButton(onPressed: () {
-              navigateToMediaPage();
+              setState(() {
+                scrapbooks.add(name);
+                // await supabase.from('Scrapbooks').insert({'name': name,'data': ""});
+              });
             },
-              child: const Text('Media'),
-            )
-          ]
-        ),
-      ),
-    );
+            child: const Icon(Icons.add),
+          ),
+          appBar: AppBar(
+            title: const Text('My scrapbooks'),
+            centerTitle: true,
+          ),
+          body: Container(
+            color: Colors.grey[300],
+            padding: const EdgeInsets.all(10),
+            child: ListView(children: [
+              for (String scrapbook in scrapbooks)
+                ScrapbookTile(
+                  name: scrapbook,
+                ),
+              ElevatedButton(
+                onPressed: () {
+                  navigateToMediaPage();
+                },
+                child: const Text('Media'),
+              )
+            ]),
+          ),
+        ));
   }
 
   // void navigateToMediaPage() async {
@@ -153,21 +153,20 @@ class ScrapbookTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child:
-        ListTile(
-          title: Text(name),
-          trailing: const Icon(Icons.arrow_forward_ios),
-          leading: const Icon(Icons.menu_book, size: 30,),
-          iconColor: Colors.black,
-          onTap: () => {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ChaptersPage(name: name)
-              ),
-            )
-          },
+      child: ListTile(
+        title: Text(name),
+        trailing: const Icon(Icons.arrow_forward_ios),
+        leading: const Icon(
+          Icons.menu_book,
+          size: 30,
         ),
-      
+        iconColor: Colors.black,
+        onTap: () => {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => ChaptersPage(name: name)),
+          )
+        },
+      ),
     );
   }
 }
