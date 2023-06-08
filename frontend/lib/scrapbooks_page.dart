@@ -75,9 +75,9 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
           final name = await openScrapbookCreation();
           if (name == null || name.isEmpty) return;
           
-          setState(() async {
-            await supabase.from('Scrapbooks').insert({'name': name,'data': ""});
+          setState(() {
             scrapbooks.add(name);
+            // await supabase.from('Scrapbooks').insert({'name': name,'data': ""});
           });
         },
         child: const Icon(Icons.add),
