@@ -16,7 +16,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        length: 2,
+        length: 1,
         child: Scaffold(
           appBar: AppBar(
             title: Text('${widget.name}\'s scrapbook'),
