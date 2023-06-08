@@ -106,6 +106,10 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
               isTextEntered ? () => submitForm(index, nameController.text) : null,
               child: const Text('Submit'),
             ),
+          ElevatedButton(
+            onPressed: () => navigateToMediaPage()
+          , child: const Text('Next'),
+          )
         ],
       ),
     );
@@ -143,6 +147,26 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
         },
       ),
 
+    );
+  }
+
+  // void navigateToMediaPage() async {
+  //   //navigates to new page
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => const MediaPage(),
+  //     ),
+  //   );
+  // }
+
+  void navigateToMediaPage() async {
+    //navigates to new page
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Home(),
+      ),
     );
   }
 }
