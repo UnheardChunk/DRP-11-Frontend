@@ -165,7 +165,7 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Home(),
+        builder: (context) => const Home(),
       ),
     );
   }

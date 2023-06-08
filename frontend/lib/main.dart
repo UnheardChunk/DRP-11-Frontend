@@ -30,6 +30,8 @@ class MyApp extends StatelessWidget {
 }
 
 class Home extends StatefulWidget {
+  const Home({super.key});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -57,8 +59,8 @@ class _HomeState extends State<Home> {
           return AlertDialog(
             shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            title: Text('Please choose media to select'),
-            content: Container(
+            title: const Text('Please choose media to select'),
+            content: SizedBox(
               height: MediaQuery.of(context).size.height / 6,
               child: Column(
                 children: [
@@ -68,7 +70,7 @@ class _HomeState extends State<Home> {
                       Navigator.pop(context);
                       getImage(ImageSource.gallery);
                     },
-                    child: Row(
+                    child: const Row(
                       children: [
                         Icon(Icons.image),
                         Text('From Gallery'),
@@ -81,7 +83,7 @@ class _HomeState extends State<Home> {
                       Navigator.pop(context);
                       getImage(ImageSource.camera);
                     },
-                    child: Row(
+                    child: const Row(
                       children: [
                         Icon(Icons.camera),
                         Text('From Camera'),
@@ -99,7 +101,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Upload Image'),
+        title: const Text('Upload Image'),
       ),
       body: Center(
         child: Column(
@@ -109,7 +111,7 @@ class _HomeState extends State<Home> {
               onPressed: () {
                 myAlert();
               },
-              child: Text('Upload Photo'),
+              child: const Text('Upload Photo'),
             ),
             const SizedBox(
               height: 10,
