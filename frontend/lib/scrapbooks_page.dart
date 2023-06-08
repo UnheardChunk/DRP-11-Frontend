@@ -13,7 +13,6 @@ class ScrapbooksPage extends StatefulWidget {
 
 // The state for the scrapbook page
 class _ScrapbooksPageState extends State<ScrapbooksPage> {
-
   // List of all the scrapbooks the user has
   List<String> scrapbooks = [];
 
@@ -24,7 +23,7 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
   @override
   void initState() {
     super.initState();
-    
+
     controller = TextEditingController();
   }
 
@@ -41,8 +40,8 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
     controller.clear();
 
     return showDialog<String>(
-    context: context, 
-    builder: (context) => AlertDialog(
+      context: context,
+      builder: (context) => AlertDialog(
         title: const Text("Create Scrapbook"),
         content: TextField(
           onSubmitted: (_) => createScrapbook,
@@ -54,7 +53,7 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
         ),
         actions: [
           TextButton(
-            onPressed: createScrapbook, 
+            onPressed: createScrapbook,
             child: const Text("Submit"),
           )
         ],
@@ -70,43 +69,61 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
   // Builds the main screen for the scrapbook page
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final name = await openScrapbookCreation();
-          if (name == null || name.isEmpty) return;
-          
-          setState(() {
-            scrapbooks.add(name);
-            // await supabase.from('Scrapbooks').insert({'name': name,'data': ""});
-          });
+    return WillPopScope(
+        onWillPop: () async {
+          return await showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              title: const Text('Confirm that you want to Exit'),
+              content: const Text('Are you sure you want to exit the app?'),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('No')),
+                TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text('Yes')),
+              ],
+            ),
+          );
         },
-        child: const Icon(Icons.add),
-      ),
-      appBar: AppBar(
-        title: const Text('My scrapbooks'),
-        centerTitle: true,
-        leading: BackButton(
-          onPressed:() {},
-        ),
-      ),
+        child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              final name = await openScrapbookCreation();
+              if (name == null || name.isEmpty) return;
 
-      body: Container(
-        color: Colors.grey[300],
-        padding: const EdgeInsets.all(10),
-        child: ListView(
-          children: [
-            for (String scrapbook in scrapbooks)
-              GenericTile(
-                name: scrapbook, 
-                tileIcon: const Icon(Icons.menu_book, size: 30),
-                navigatesTo: ChaptersPage(name: scrapbook),
-              ),
-          ]
-        ),
-      ),
-
-    );
+              setState(() {
+                scrapbooks.add(name);
+                // await supabase.from('Scrapbooks').insert({'name': name,'data': ""});
+              });
+            },
+            child: const Icon(Icons.add),
+          ),
+          appBar: AppBar(
+            title: const Text('My scrapbooks'),
+            centerTitle: true,
+          ),
+          body: Container(
+            color: Colors.grey[300],
+            padding: const EdgeInsets.all(10),
+            child: ListView(children: [
+              for (String scrapbook in scrapbooks)
+                GenericTile(
+                  name: scrapbook, 
+                  tileIcon: const Icon(Icons.menu_book, size: 30),
+                  navigatesTo: ChaptersPage(name: scrapbook),
+                ),
+                
+              ElevatedButton(
+                onPressed: () {
+                  navigateToMediaPage();
+                },
+                child: const Text('Media'),
+              )
+            ]),
+          ),
+        ));
   }
 
   // void navigateToMediaPage() async {
