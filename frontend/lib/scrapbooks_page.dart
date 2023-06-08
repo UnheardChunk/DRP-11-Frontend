@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'chapters_page.dart';
+import 'main.dart';
 import 'utilities.dart';
 
 // Creates the scrapbook page
@@ -18,12 +19,16 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
   // Controller for scrapbook creation
   late TextEditingController controller;
 
+
+
+  Future<List<Map<String, dynamic>>>? _data ;
   // Initialises the scrapbook creation controller
   @override
   void initState() {
     super.initState();
 
     controller = TextEditingController();
+
   }
 
   // Disposes the scrapbook creation controller
@@ -61,62 +66,85 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
   }
 
   // Pops the AlertDialog for scrapbook creation when the submit button is pressed
-  void createScrapbook() {
-    Navigator.of(context).pop(controller.text);
+  void createScrapbook() async {
+    await supabase
+        .from('Scrapbooks')
+        .insert({'name': controller.text});
+    if (context.mounted) Navigator.of(context).pop(controller.text);
+
   }
+
+
+
+  Future<List<Map<String, dynamic>>> getData() async {
+    return await supabase.from("Scrapbooks").select();
+  }
+
+
 
   // Builds the main screen for the scrapbook page
   @override
   Widget build(BuildContext context) {
+    _data = getData();
     return WillPopScope(
-        onWillPop: () async {
-          return await showDialog(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title: const Text('Confirm that you want to Exit'),
-              content: const Text('Are you sure you want to exit the app?'),
-              actions: <Widget>[
-                TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: const Text('No')),
-                TextButton(
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: const Text('Yes')),
-              ],
-            ),
-          );
-        },
-        child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              final name = await openScrapbookCreation();
-              if (name == null || name.isEmpty) return;
+      onWillPop: () async {
+        return await showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text('Confirm that you want to Exit'),
+            content: const Text('Are you sure you want to exit the app?'),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('No')),
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text('Yes')),
+            ],
+          ),
+        );
+      },
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            final name = await openScrapbookCreation();
+            if (name == null || name.isEmpty) return;
 
-              setState(() {
-                scrapbooks.add(name);
-                // await supabase.from('Scrapbooks').insert({'name': name,'data': ""});
-              });
-            },
-            child: const Icon(Icons.add),
-          ),
-          appBar: AppBar(
-            title: const Text('My scrapbooks'),
-            centerTitle: true,
-          ),
-          body: Container(
-            color: Colors.grey[300],
-            padding: const EdgeInsets.all(10),
-            child: ListView(
-              children: [
-                for (String scrapbook in scrapbooks)
-                  GenericTile(
-                    name: scrapbook, 
+            setState(() {
+              scrapbooks.add(name);
+            });
+          },
+          child: const Icon(Icons.add),
+        ),
+        appBar: AppBar(
+          title: const Text('My scrapbooks'),
+          centerTitle: true,
+        ),
+        body: FutureBuilder<List<Map<String, dynamic>>>(
+          future: _data,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            final data = snapshot.data!;
+            return Container(
+              color: Colors.grey[300],
+              padding: const EdgeInsets.all(10),
+              child: ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  final scrapbook = data[index];
+                  return GenericTile(
+                    name: scrapbook["name"],
                     tileIcon: const Icon(Icons.menu_book, size: 30),
-                    navigatesTo: ChaptersPage(name: scrapbook),
-                  ),
-              ]
-            ),
-          ),
-        ));
+                    navigatesTo: ChaptersPage(name: scrapbook["name"]),
+                  );
+                },
+              )
+            );
+          },
+        ),
+      )
+    );
   }
 }
