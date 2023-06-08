@@ -3,6 +3,7 @@ import 'chapters_page.dart';
 import 'main.dart';
 import 'utilities.dart';
 
+
 // Creates the scrapbook page
 class ScrapbooksPage extends StatefulWidget {
   const ScrapbooksPage({super.key});
@@ -75,17 +76,10 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
   }
 
 
-
-  Future<List<Map<String, dynamic>>> getData() async {
-    return await supabase.from("Scrapbooks").select();
-  }
-
-
-
   // Builds the main screen for the scrapbook page
   @override
   Widget build(BuildContext context) {
-    _data = getData();
+    final _data = supabase.from("Scrapbooks").select<List<Map<String, dynamic>>>();
     return WillPopScope(
       onWillPop: () async {
         return await showDialog(
@@ -137,7 +131,7 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
                   return GenericTile(
                     name: scrapbook["name"],
                     tileIcon: const Icon(Icons.menu_book, size: 30),
-                    navigatesTo: ChaptersPage(name: scrapbook["name"]),
+                    navigatesTo: ChaptersPage(uuid: scrapbook["id"], name: scrapbook["name"]),
                   );
                 },
               )
