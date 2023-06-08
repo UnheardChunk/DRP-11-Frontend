@@ -62,7 +62,7 @@ class ChaptersTab extends StatefulWidget {
 
 class _ChaptersTabState extends State<ChaptersTab> {
 
-  List<String> chapters = ["Wedding"];
+  List<String> chapters = [];
 
   late TextEditingController controller;
 
