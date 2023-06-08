@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 import 'chapters_page.dart';
 import 'utilities.dart';
 
@@ -107,42 +106,17 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
           body: Container(
             color: Colors.grey[300],
             padding: const EdgeInsets.all(10),
-            child: ListView(children: [
-              for (String scrapbook in scrapbooks)
-                GenericTile(
-                  name: scrapbook, 
-                  tileIcon: const Icon(Icons.menu_book, size: 30),
-                  navigatesTo: ChaptersPage(name: scrapbook),
-                ),
-                
-              ElevatedButton(
-                onPressed: () {
-                  navigateToMediaPage();
-                },
-                child: const Text('Media'),
-              )
-            ]),
+            child: ListView(
+              children: [
+                for (String scrapbook in scrapbooks)
+                  GenericTile(
+                    name: scrapbook, 
+                    tileIcon: const Icon(Icons.menu_book, size: 30),
+                    navigatesTo: ChaptersPage(name: scrapbook),
+                  ),
+              ]
+            ),
           ),
         ));
-  }
-
-  // void navigateToMediaPage() async {
-  //   //navigates to new page
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => const MediaPage(),
-  //     ),
-  //   );
-  // }
-
-  void navigateToMediaPage() async {
-    //navigates to new page
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const Home(),
-      ),
-    );
   }
 }
