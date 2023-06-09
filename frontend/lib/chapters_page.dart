@@ -1,39 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:memories_scrapbook/main.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'main.dart';
 import 'utilities.dart';
 import 'memories_page.dart';
 
-
 class ChaptersPage extends StatefulWidget {
+
   final String uuid;
   final String name;
 
   const ChaptersPage({Key? key, required this.uuid, required this.name}) : super(key: key);
 
   @override
-  State<ChaptersPage> createState() => _ChaptersPageState(uuid, name);
+  State<ChaptersPage> createState() => _ChaptersPageState();
 }
-
-
 
 class _ChaptersPageState extends State<ChaptersPage> {
 
-  final String uuid;
-  final String name;
-
-
-
-
-  _ChaptersPageState(this.uuid, this.name) : super();
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-        body: DefaultTabController(
-            length: 1,
-            child: Scaffold(
+      body: DefaultTabController(
+        length: 1,
+        child: Scaffold(
           appBar: AppBar(
             title: Text('${widget.name}\'s scrapbook'),
             centerTitle: true,
@@ -48,18 +36,13 @@ class _ChaptersPageState extends State<ChaptersPage> {
             ),
           ),
           body:  TabBarView(
-                children: [
-              ChaptersTab(uuid, index: 0), // Form for "Chapter" tab
-                  // ChaptersTab(uuid, index: 1), // Form for "Senses" tab
-                ],
-              ),
-                  ),
-
-
-
-
-
-        )
+            children: [
+              ChaptersTab(widget.uuid, index: 0), // Form for "Chapter" tab
+              // ChaptersTab(uuid, index: 1), // Form for "Senses" tab
+            ],
+          ),
+        ),
+      )
     );
   }
 }
@@ -74,17 +57,14 @@ class ChaptersTab extends StatefulWidget {
   }
 
   @override
-  State<ChaptersTab> createState() => _ChaptersTabState(uuid);
+  State<ChaptersTab> createState() => _ChaptersTabState();
 }
 
 class _ChaptersTabState extends State<ChaptersTab> {
 
   List<String> chapters = [];
-  final String uuid;
 
   late TextEditingController controller;
-
-  _ChaptersTabState(this.uuid);
 
   @override
   void initState() {
@@ -108,7 +88,7 @@ class _ChaptersTabState extends State<ChaptersTab> {
     builder: (context) => AlertDialog(
         title: const Text("Create Chapter"),
         content: TextField(
-          onSubmitted: (_) => createChapter(uuid),
+          onSubmitted: (_) => createChapter(widget.uuid),
           autofocus: true,
           decoration: const InputDecoration(
             hintText: "Enter the name of this chapter",
@@ -117,7 +97,7 @@ class _ChaptersTabState extends State<ChaptersTab> {
         ),
         actions: [
           TextButton(
-            onPressed: () => createChapter(uuid),
+            onPressed: () => createChapter(widget.uuid),
             child: const Text("Submit"),
           )
         ],
@@ -129,12 +109,12 @@ class _ChaptersTabState extends State<ChaptersTab> {
     await supabase
         .from('Chapters')
         .insert({'scrapbook': uuid, 'name': controller.text});
-    Navigator.of(context).pop(controller.text);
+    if (context.mounted) Navigator.of(context).pop(controller.text);
   }
 
   @override
   Widget build(BuildContext context) {
-    final future = supabase.from("Chapters").select<List<Map<String, dynamic>>>().eq("scrapbook", uuid);
+    final future = supabase.from("Chapters").select<List<Map<String, dynamic>>>().eq("scrapbook", widget.uuid);
 
     return Scaffold(
       floatingActionButton: widget.allowChapterCreation ? FloatingActionButton(
@@ -159,34 +139,22 @@ class _ChaptersTabState extends State<ChaptersTab> {
             }
             final data = snapshot.data!;
             return Container(
-                color: Colors.grey[300],
-                padding: const EdgeInsets.all(10),
-                child: ListView.builder(
-                  itemCount: data.length,
-                  itemBuilder: (context, index) {
-                    final chapters = data[index];
-                    return GenericTile(
-                      name: chapters["name"],
-                      tileIcon: const Icon(Icons.menu_book, size: 30),
-                      navigatesTo: const MemoriesPage(),
-                    );
-                  },
-                )
+              color: Colors.grey[300],
+              padding: const EdgeInsets.all(10),
+              child: ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  final chapters = data[index];
+                  return GenericTile(
+                    name: chapters["name"],
+                    tileIcon: const Icon(Icons.menu_book, size: 30),
+                    navigatesTo: const MemoriesPage(),
+                  );
+                },
+              )
             );
           },
         )
-
-
-        // ListView(
-        //   children: [
-        //     for (String chapter in chapters)
-        //       GenericTile(
-        //         name: chapter,
-        //         tileIcon: const Icon(Icons.bookmark, size: 30,),
-        //         navigatesTo: const MemoriesPage(),
-        //       ),
-        //   ]
-        // ),
       ),
     );
   }
