@@ -68,6 +68,9 @@ class _MemoriesPageState extends State<MemoriesPage> {
                     ],
                   ),
                 ),
+                const SizedBox(
+                  height: 10,
+                ),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
