@@ -92,6 +92,10 @@ class _MemoriesPageState extends State<MemoriesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      floatingActionButton: FloatingActionButton(
+        onPressed: mediaAlert,
+        child: const Icon(Icons.add),
+      ),
       appBar: AppBar(
         title: const Text('Upload Image'),
       ),
@@ -101,15 +105,6 @@ class _MemoriesPageState extends State<MemoriesPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  mediaAlert();
-                },
-                child: const Text('Upload Photo'),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
               if (images.isNotEmpty)
                 Column(
                   children: images.map((image) {
