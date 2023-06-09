@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'package:tuple/tuple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:io';
 import 'main.dart';
@@ -16,13 +16,15 @@ class MemoriesPage extends StatefulWidget {
 }
 
 class _MemoriesPageState extends State<MemoriesPage> {
-  List<Future<Uint8List>> images = [];
+  List<Tuple2<Future<Uint8List>, String>> images = [];
 
   final ImagePicker picker = ImagePicker();
+  late TextEditingController controller;
 
   @override
   void initState() {
     super.initState();
+    controller = TextEditingController();
     initialise();
   }
 
@@ -30,7 +32,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
     final paths = await supabase.storage.from(widget.bucketId).list();
     for (FileObject path in paths) {
       setState(() {
-        images.add(supabase.storage.from(widget.bucketId).download(path.name));
+        images.add(Tuple2(supabase.storage.from(widget.bucketId).download(path.name), path.name));
       });
     }
   }
@@ -38,10 +40,47 @@ class _MemoriesPageState extends State<MemoriesPage> {
   //we can upload image from camera or from gallery based on parameter
   Future getImage(ImageSource media) async {
     var img = await picker.pickImage(source: media);
-    await supabase.storage.from(widget.bucketId).upload(img!.name, File(img.path));
+
+    await displayBox(img);
+  }
+
+  uploadImage(XFile? img, String caption) async {
+    await supabase.storage.from(widget.bucketId).upload(caption, File(img!.path));
     setState(() {
-      images.add(img.readAsBytes());
+      images.add(Tuple2(img.readAsBytes(), caption));
     });
+    if (context.mounted) Navigator.of(context).pop(controller.text);
+  }
+
+  Future displayBox(XFile? img) {
+    controller.clear();
+
+    return showDialog<String>(
+        context: context,
+        builder: (context) => AlertDialog(
+      title: const Text("Add caption"),
+      content: TextField(
+        onSubmitted: (_) => uploadImage(img, controller.text),
+        autofocus: true,
+        decoration: const InputDecoration(
+          hintText: "Enter a caption",
+        ),
+        controller: controller,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => uploadImage(img, controller.text),
+          child: const Text("Submit"),
+        )
+      ],
+    ),
+    );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   //show popup dialog
@@ -112,27 +151,38 @@ class _MemoriesPageState extends State<MemoriesPage> {
                 Column(
                   children: images.map((image) {
                     return FutureBuilder(
-                        future: image,
+                        future: image.item1,
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
                             return const Center(
                                 child: CircularProgressIndicator());
                           }
                           final img = snapshot.data!;
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.memory(
-                                img,
-                                fit: BoxFit.cover,
-                                width: MediaQuery.of(context).size.width,
-                                height: 300,
-                              ),
+                          return Column(
+                            children: <Widget> [Padding(
+                              padding: const EdgeInsets.only(left: 0, top: 5, right: 0, bottom: 5),
+                              child:
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.memory(
+                                    img,
+                                    fit: BoxFit.fitWidth,
+                                    width: MediaQuery.of(context).size.width,
+                                    //height: 700,
+                                  ),
+                                ),
                             ),
+                             Text(image.item2),
+                          ]
                           );
                         });
                   }).toList(),
+                  // Textfield(
+                  //   decoration: InputDecoration(
+                  //     border: OutlineInputBorder(),
+                  //     hintText: 'Enter',
+                  //   )
+                  // )
                 )
               else
                 const Text(
