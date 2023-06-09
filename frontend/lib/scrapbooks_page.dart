@@ -20,9 +20,6 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
   // Controller for scrapbook creation
   late TextEditingController controller;
 
-
-
-  Future<List<Map<String, dynamic>>>? _data ;
   // Initialises the scrapbook creation controller
   @override
   void initState() {
@@ -75,11 +72,10 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
 
   }
 
-
   // Builds the main screen for the scrapbook page
   @override
   Widget build(BuildContext context) {
-    final _data = supabase.from("Scrapbooks").select<List<Map<String, dynamic>>>();
+    final data = supabase.from("Scrapbooks").select<List<Map<String, dynamic>>>();
     return WillPopScope(
       onWillPop: () async {
         return await showDialog(
@@ -115,7 +111,7 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
           centerTitle: true,
         ),
         body: FutureBuilder<List<Map<String, dynamic>>>(
-          future: _data,
+          future: data,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
