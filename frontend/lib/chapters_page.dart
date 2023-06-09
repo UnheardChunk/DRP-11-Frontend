@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:postgrest/src/postgrest_builder.dart';
 import 'main.dart';
 import 'utilities.dart';
 import 'memories_page.dart';
@@ -19,7 +20,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: DefaultTabController(
-      length: 1,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           title: Text('${widget.name}\'s scrapbook'),
@@ -30,14 +31,14 @@ class _ChaptersPageState extends State<ChaptersPage> {
           bottom: const TabBar(
             tabs: [
               Tab(child: Text('Chapters')),
-              // Tab(child: Text('Senses')),
+              Tab(child: Text('Emotions')),
             ],
           ),
         ),
         body: TabBarView(
           children: [
             ChaptersTab(widget.uuid, index: 0), // Form for "Chapter" tab
-            // ChaptersTab(uuid, index: 1), // Form for "Senses" tab
+            ChaptersTab(widget.uuid, index: 1), // Form for "Emotions" tab
           ],
         ),
       ),
@@ -46,6 +47,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
 }
 
 class ChaptersTab extends StatefulWidget {
+
   late final bool allowChapterCreation;
   final String uuid;
 
@@ -58,6 +60,7 @@ class ChaptersTab extends StatefulWidget {
 }
 
 class _ChaptersTabState extends State<ChaptersTab> {
+
   List<String> chapters = [];
 
   late TextEditingController controller;
@@ -67,6 +70,9 @@ class _ChaptersTabState extends State<ChaptersTab> {
     super.initState();
 
     controller = TextEditingController();
+    if (!widget.allowChapterCreation) {
+      chapters = ["Happy", "Soothing", "Exciting", "Sad", "Distressing"];
+    }
   }
 
   @override
@@ -136,31 +142,47 @@ class _ChaptersTabState extends State<ChaptersTab> {
               child: const Icon(Icons.add))
           : Container(),
       body: Container(
+        color: Colors.grey[300],
+        padding: const EdgeInsets.all(10),
+        child: EventsWidget(future: future)
+      ),
+    );
+  }
+}
+
+class EventsWidget extends StatelessWidget {
+  const EventsWidget({
+    super.key,
+    required this.future,
+  });
+
+  final PostgrestFilterBuilder<List<Map<String, dynamic>>> future;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: future,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        final data = snapshot.data!;
+        return Container(
           color: Colors.grey[300],
           padding: const EdgeInsets.all(10),
-          child: FutureBuilder<List<Map<String, dynamic>>>(
-            future: future,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              final data = snapshot.data!;
-              return Container(
-                  color: Colors.grey[300],
-                  padding: const EdgeInsets.all(10),
-                  child: ListView.builder(
-                    itemCount: data.length,
-                    itemBuilder: (context, index) {
-                      final chapters = data[index];
-                      return GenericTile(
-                        name: chapters["name"],
-                        tileIcon: const Icon(Icons.menu_book, size: 30),
-                        navigatesTo: MemoriesPage(chapters["bucket_id"]),
-                      );
-                    },
-                  ));
+          child: ListView.builder(
+            itemCount: data.length,
+            itemBuilder: (context, index) {
+              final chapters = data[index];
+              return GenericTile(
+                name: chapters["name"],
+                tileIcon: const Icon(Icons.menu_book, size: 30),
+                navigatesTo: MemoriesPage(chapters["bucket_id"]),
+              );
             },
-          )),
+          )
+        );
+      },
     );
   }
 }
