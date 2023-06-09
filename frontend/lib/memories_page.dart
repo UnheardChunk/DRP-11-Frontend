@@ -120,14 +120,14 @@ class _MemoriesPageState extends State<MemoriesPage> {
                           }
                           final img = snapshot.data!;
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.only(left: 0, top: 5, right: 0, bottom: 5),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: Image.memory(
                                 img,
-                                fit: BoxFit.cover,
+                                fit: BoxFit.fitWidth,
                                 width: MediaQuery.of(context).size.width,
-                                height: 300,
+                                //height: 700,
                               ),
                             ),
                           );
