@@ -1,30 +1,49 @@
+import 'dart:typed_data';
 
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:io';
-
+import 'main.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MemoriesPage extends StatefulWidget {
-  const MemoriesPage({super.key});
+  final String bucketId;
+
+  const MemoriesPage(this.bucketId, {super.key});
 
   @override
-  State<MemoriesPage> createState() => _MemoriesPageState();
+  State<MemoriesPage> createState() => _MemoriesPageState(bucketId);
 }
 
 class _MemoriesPageState extends State<MemoriesPage> {
-
-  List<XFile?> images = [];
+  List<Future<Uint8List>> images = [];
 
   final ImagePicker picker = ImagePicker();
+  String bucketId;
+
+  _MemoriesPageState(this.bucketId);
+
+  @override
+  void initState() {
+    super.initState();
+    initialise();
+  }
+
+  initialise() async {
+    final paths = await supabase.storage.from(bucketId).list();
+    for (FileObject path in paths) {
+      setState(() {
+        images.add(supabase.storage.from(bucketId).download(path.name));
+      });
+    }
+  }
 
   //we can upload image from camera or from gallery based on parameter
   Future getImage(ImageSource media) async {
     var img = await picker.pickImage(source: media);
-
+    await supabase.storage.from(bucketId).upload(img!.name, File(img.path));
     setState(() {
-      if (img != null) {
-        images.add(img);
-      }
+      images.add(img.readAsBytes());
     });
   }
 
@@ -70,13 +89,12 @@ class _MemoriesPageState extends State<MemoriesPage> {
         );
       },
     );
-
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset : false,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Upload Image'),
       ),
@@ -98,18 +116,27 @@ class _MemoriesPageState extends State<MemoriesPage> {
               if (images.isNotEmpty)
                 Column(
                   children: images.map((image) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.file(
-                          File(image!.path),
-                          fit: BoxFit.cover,
-                          width: MediaQuery.of(context).size.width,
-                          height: 300,
-                        ),
-                      ),
-                    );
+                    return FutureBuilder(
+                        future: image,
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                          final img = snapshot.data!;
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.memory(
+                                img,
+                                fit: BoxFit.cover,
+                                width: MediaQuery.of(context).size.width,
+                                height: 300,
+                              ),
+                            ),
+                          );
+                        });
                   }).toList(),
                 )
               else
@@ -123,5 +150,4 @@ class _MemoriesPageState extends State<MemoriesPage> {
       ),
     );
   }
-
 }
