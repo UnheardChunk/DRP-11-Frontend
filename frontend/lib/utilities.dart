@@ -7,13 +7,16 @@ class GenericTile extends StatelessWidget {
   final String name;
   final Icon tileIcon;
   final Widget navigatesTo;
+  final Color colour;
 
   const GenericTile({super.key, required this.name, 
-                       required this.tileIcon, required this.navigatesTo});
+                     required this.tileIcon, required this.navigatesTo,
+                     this.colour = Colors.white});
   
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: colour,
       child: ListTile(
         title: Text(name),
         trailing: const Icon(Icons.arrow_forward_ios),
