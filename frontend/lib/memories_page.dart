@@ -12,16 +12,13 @@ class MemoriesPage extends StatefulWidget {
   const MemoriesPage(this.bucketId, {super.key});
 
   @override
-  State<MemoriesPage> createState() => _MemoriesPageState(bucketId);
+  State<MemoriesPage> createState() => _MemoriesPageState();
 }
 
 class _MemoriesPageState extends State<MemoriesPage> {
   List<Future<Uint8List>> images = [];
 
   final ImagePicker picker = ImagePicker();
-  String bucketId;
-
-  _MemoriesPageState(this.bucketId);
 
   @override
   void initState() {
@@ -30,10 +27,10 @@ class _MemoriesPageState extends State<MemoriesPage> {
   }
 
   initialise() async {
-    final paths = await supabase.storage.from(bucketId).list();
+    final paths = await supabase.storage.from(widget.bucketId).list();
     for (FileObject path in paths) {
       setState(() {
-        images.add(supabase.storage.from(bucketId).download(path.name));
+        images.add(supabase.storage.from(widget.bucketId).download(path.name));
       });
     }
   }
@@ -41,7 +38,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
   //we can upload image from camera or from gallery based on parameter
   Future getImage(ImageSource media) async {
     var img = await picker.pickImage(source: media);
-    await supabase.storage.from(bucketId).upload(img!.name, File(img.path));
+    await supabase.storage.from(widget.bucketId).upload(img!.name, File(img.path));
     setState(() {
       images.add(img.readAsBytes());
     });
