@@ -59,7 +59,8 @@ class _MemoriesPageState extends State<MemoriesPage> {
         context: context,
         builder: (context) => AlertDialog(
       title: const Text("Add caption"),
-      content: TextField(
+      content:
+        TextField(
         onSubmitted: (_) => uploadImage(img, controller.text),
         autofocus: true,
         decoration: const InputDecoration(
@@ -73,7 +74,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
           child: const Text("Submit"),
         )
       ],
-    ),
+        ),
     );
   }
 
