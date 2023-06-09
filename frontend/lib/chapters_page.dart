@@ -70,9 +70,6 @@ class _ChaptersTabState extends State<ChaptersTab> {
     super.initState();
 
     controller = TextEditingController();
-    if (!widget.allowChapterCreation) {
-      chapters = ["Happy", "Soothing", "Exciting", "Sad", "Distressing"];
-    }
   }
 
   @override
@@ -144,8 +141,40 @@ class _ChaptersTabState extends State<ChaptersTab> {
       body: Container(
         color: Colors.grey[300],
         padding: const EdgeInsets.all(10),
-        child: EventsWidget(future: future)
+        child: Container(
+          color: Colors.grey[300],
+          padding: const EdgeInsets.all(10),
+          child: widget.allowChapterCreation ? EventsWidget(future: future) : EmotionsWidget(),
+        ),
       ),
+    );
+  }
+}
+
+class EmotionsWidget extends StatelessWidget {
+  EmotionsWidget({super.key,});
+
+  final List<String> emotions = ["Happy", "Soothing", "Exciting", "Sad", "Distressing"];
+  final List<Color> emotionColours = [
+    Colors.yellow, 
+    Colors.green, 
+    Colors.purple, 
+    Colors.blue, 
+    Colors.red
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        for (var i = 0; i < emotions.length; i++)
+          GenericTile(
+            name: emotions[i], 
+            tileIcon: const Icon(null), 
+            navigatesTo: const Placeholder(),
+            colour: emotionColours[i],
+          )
+      ],
     );
   }
 }
