@@ -143,11 +143,11 @@ class _ChaptersTabState extends State<ChaptersTab> {
         child: widget.allowChapterCreation 
           ? GenericFutureListView(
             future: future,
-            genericTileBuilder: (chapters) {
+            genericTileBuilder: (chapter) {
               return GenericTile(
-                name: chapters["name"],
+                name: chapter["name"],
                 tileIcon: const Icon(Icons.menu_book, size: 30),
-                navigatesTo: MemoriesPage(chapters["bucket_id"]),
+                navigatesTo: MemoriesPage(chapter["bucket_id"]),
               );
             },
           ) 
