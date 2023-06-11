@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-// Class defining a ListTile for a scrapbook
+// Class defining a generic ListTile
 class GenericTile extends StatelessWidget {
 
-  // Name of the scrapbook
+  // Name of the tile
   final String name;
   final Icon tileIcon;
   final Widget navigatesTo;
@@ -30,6 +31,43 @@ class GenericTile extends StatelessWidget {
           )
         },
       ),
+    );
+  }
+}
+
+// Class defining list view using supabase database
+class GenericFutureListView extends StatelessWidget {
+
+  const GenericFutureListView({
+    super.key,
+    required this.future,
+    required this.genericTileBuilder,
+  });
+
+  // Future containing data to build GenericTile
+  final PostgrestFilterBuilder<List<Map<String, dynamic>>> future;
+
+  // Function to build the GenericTile from a row of the table
+  final GenericTile Function(Map<String, dynamic>) genericTileBuilder; 
+
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: future,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        final data = snapshot.data!;
+        return ListView.builder(
+          itemCount: data.length,
+          itemBuilder: (context, index) {
+            final row = data[index];
+            return genericTileBuilder(row);
+          },
+        );
+      },
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:postgrest/src/postgrest_builder.dart';
 import 'main.dart';
 import 'utilities.dart';
 import 'memories_page.dart';
@@ -182,39 +181,6 @@ class EmotionsWidget extends StatelessWidget {
             colour: emotionColours[i],
           )
       ],
-    );
-  }
-}
-
-class GenericFutureListView extends StatelessWidget {
-
-  const GenericFutureListView({
-    super.key,
-    required this.future,
-    required this.genericTileBuilder,
-  });
-
-  final PostgrestFilterBuilder<List<Map<String, dynamic>>> future;
-  final GenericTile Function(Map<String, dynamic>) genericTileBuilder; 
-
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<Map<String, dynamic>>>(
-      future: future,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        final data = snapshot.data!;
-        return ListView.builder(
-          itemCount: data.length,
-          itemBuilder: (context, index) {
-            final row = data[index];
-            return genericTileBuilder(row);
-          },
-        );
-      },
     );
   }
 }
