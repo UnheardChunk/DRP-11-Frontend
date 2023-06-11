@@ -141,11 +141,18 @@ class _ChaptersTabState extends State<ChaptersTab> {
       body: Container(
         color: Colors.grey[300],
         padding: const EdgeInsets.all(10),
-        child: Container(
-          color: Colors.grey[300],
-          padding: const EdgeInsets.all(10),
-          child: widget.allowChapterCreation ? EventsWidget(future: future) : EmotionsWidget(),
-        ),
+        child: widget.allowChapterCreation 
+          ? GenericFutureListView(
+            future: future,
+            genericTileBuilder: (chapters) {
+              return GenericTile(
+                name: chapters["name"],
+                tileIcon: const Icon(Icons.menu_book, size: 30),
+                navigatesTo: MemoriesPage(chapters["bucket_id"]),
+              );
+            },
+          ) 
+          : EmotionsWidget(),
       ),
     );
   }
@@ -179,13 +186,17 @@ class EmotionsWidget extends StatelessWidget {
   }
 }
 
-class EventsWidget extends StatelessWidget {
-  const EventsWidget({
+class GenericFutureListView extends StatelessWidget {
+
+  const GenericFutureListView({
     super.key,
     required this.future,
+    required this.genericTileBuilder,
   });
 
   final PostgrestFilterBuilder<List<Map<String, dynamic>>> future;
+  final GenericTile Function(Map<String, dynamic>) genericTileBuilder; 
+
 
   @override
   Widget build(BuildContext context) {
@@ -196,20 +207,12 @@ class EventsWidget extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         final data = snapshot.data!;
-        return Container(
-          color: Colors.grey[300],
-          padding: const EdgeInsets.all(10),
-          child: ListView.builder(
-            itemCount: data.length,
-            itemBuilder: (context, index) {
-              final chapters = data[index];
-              return GenericTile(
-                name: chapters["name"],
-                tileIcon: const Icon(Icons.menu_book, size: 30),
-                navigatesTo: MemoriesPage(chapters["bucket_id"]),
-              );
-            },
-          )
+        return ListView.builder(
+          itemCount: data.length,
+          itemBuilder: (context, index) {
+            final row = data[index];
+            return genericTileBuilder(row);
+          },
         );
       },
     );
