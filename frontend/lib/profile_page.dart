@@ -55,204 +55,193 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      color: Colors.grey[300],
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SectionHeader(
-                text: 'About Me', icon: Icon(Icons.portrait_sharp)),
-            // Name ----------------------------------------------------------------
-            Field(
-                labelText: 'Name',
-                text: textFields[0],
+      body: Container(
+        color: Colors.grey[300],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SectionHeader(
+                  text: 'About Me', icon: Icon(Icons.portrait_sharp)),
+              // Name ----------------------------------------------------------------
+              Field(
+                  labelText: 'Name',
+                  text: textFields[0],
+                  isEditing: isEditing,
+                  controller: controllers[0]),
+
+              // Where I live --------------------------------------------------------
+              Field(
+                  labelText: 'Where I live (area not the full address)',
+                  text: textFields[1],
+                  isEditing: isEditing,
+                  controller: controllers[1]),
+
+              // Carers --------------------------------------------------------------
+              Field(
+                  labelText: 'The carers/people who know me the best',
+                  text: textFields[2],
+                  isEditing: isEditing,
+                  controller: controllers[2]),
+
+              // I would like you to know --------------------------------------------
+              Field(
+                labelText: 'I would like you to know',
+                text: textFields[3],
                 isEditing: isEditing,
-                controller: controllers[0]),
+                controller: controllers[3],
+              ),
 
-            // Where I live --------------------------------------------------------
-            Field(
-                labelText: 'Where I live (area not the full address)',
-                text: textFields[1],
-                isEditing: isEditing,
-                controller: controllers[1]),
+              // Personal History ----------------------------------------------------
+              Field(
+                  labelText:
+                      'My personal history, family and friends, pets and any treasured possessions',
+                  text: textFields[4],
+                  isEditing: isEditing,
+                  controller: controllers[4]),
 
-            // Carers --------------------------------------------------------------
-            Field(
-                labelText: 'The carers/people who know me the best',
-                text: textFields[2],
-                isEditing: isEditing,
-                controller: controllers[2]),
+              const SectionHeader(
+                  text: 'My Background', icon: Icon(Icons.house_rounded)),
 
-            // I would like you to know --------------------------------------------
-            Field(
-              labelText: 'I would like you to know',
-              text: textFields[3],
-              isEditing: isEditing,
-              controller: controllers[3],
-            ),
+              // Cultural and Religious Background ---------------------------------
+              Field(
+                  labelText: 'My cultural, religious and spiritual background',
+                  text: textFields[5],
+                  isEditing: isEditing,
+                  controller: controllers[5]),
 
-            // Personal History ----------------------------------------------------
-            Field(
-                labelText:
-                    'My personal history, family and friends, pets and any treasured possessions',
-                text: textFields[4],
-                isEditing: isEditing,
-                controller: controllers[4]),
+              // Interests and jobs
+              Field(
+                  labelText: 'My interests, jobs and achievments',
+                  text: textFields[6],
+                  isEditing: isEditing,
+                  controller: controllers[6]),
 
-            const SectionHeader(
-                text: 'My Background', icon: Icon(Icons.house_rounded)),
+              // Favourite Places --------------------------------------------------
+              Field(
+                  labelText: 'Favourite placed I have lived and visted',
+                  text: textFields[7],
+                  isEditing: isEditing,
+                  controller: controllers[7]),
 
-            // Cultural and Religious Background ---------------------------------
-            Field(
-                labelText: 'My cultural, religious and spiritual background',
-                text: textFields[5],
-                isEditing: isEditing,
-                controller: controllers[5]),
+              const SectionHeader(
+                  text: 'My habits and routines',
+                  icon: Icon(Icons.access_alarm_sharp)),
 
-            // Interests and jobs
-            Field(
-                labelText: 'My interests, jobs and achievments',
-                text: textFields[6],
-                isEditing: isEditing,
-                controller: controllers[6]),
+              // Routines ----------------------------------------------------------
+              Field(
+                  labelText: 'The following routines are important to me',
+                  text: textFields[8],
+                  isEditing: isEditing,
+                  controller: controllers[8]),
 
-            // Favourite Places --------------------------------------------------
-            Field(
-                labelText: 'Favourite placed I have lived and visted',
-                text: textFields[7],
-                isEditing: isEditing,
-                controller: controllers[7]),
+              // Things for myself -------------------------------------------------
+              Field(
+                  labelText: 'Things I like to do for myself',
+                  text: textFields[9],
+                  isEditing: isEditing,
+                  controller: controllers[9]),
 
-            const SectionHeader(
-                text: 'My habits and routines',
-                icon: Icon(Icons.access_alarm_sharp)),
+              // Things I need help with -------------------------------------------
+              Field(
+                  labelText: 'Things I might want help with',
+                  text: textFields[10],
+                  isEditing: isEditing,
+                  controller: controllers[10]),
 
-            // Routines ----------------------------------------------------------
-            Field(
-                labelText: 'The following routines are important to me',
-                text: textFields[8],
-                isEditing: isEditing,
-                controller: controllers[8]),
+              // Things that upset
+              Field(
+                  labelText: 'Things that may worry or upset me',
+                  text: textFields[11],
+                  isEditing: isEditing,
+                  controller: controllers[11]),
 
-            // Things for myself -------------------------------------------------
-            Field(
-                labelText: 'Things I like to do for myself',
-                text: textFields[9],
-                isEditing: isEditing,
-                controller: controllers[9]),
+              // Makes me feel better
+              Field(
+                  labelText:
+                      'What makes me feel better if I am anxious or upset',
+                  text: textFields[12],
+                  isEditing: isEditing,
+                  controller: controllers[12]),
 
-            // Things I need help with -------------------------------------------
-            Field(
-                labelText: 'Things I might want help with',
-                text: textFields[10],
-                isEditing: isEditing,
-                controller: controllers[10]),
+              const SectionHeader(
+                  text: 'My communication and mobility',
+                  icon: Icon(Icons.chat)),
 
-            // Things that upset
-            Field(
-                labelText: 'Things that may worry or upset me',
-                text: textFields[11],
-                isEditing: isEditing,
-                controller: controllers[11]),
+              // Hearing and eyesight
+              Field(
+                  labelText: 'My hearing and eyesight',
+                  text: textFields[13],
+                  isEditing: isEditing,
+                  controller: controllers[13]),
 
-            // Makes me feel better
-            Field(
-                labelText: 'What makes me feel better if I am anxious or upset',
-                text: textFields[12],
-                isEditing: isEditing,
-                controller: controllers[12]),
+              // How to communicate ----------------------------------------------
+              Field(
+                  labelText: 'How we can communicate',
+                  text: textFields[14],
+                  isEditing: isEditing,
+                  controller: controllers[14]),
 
-            const SectionHeader(
-                text: 'My communication and mobility', icon: Icon(Icons.chat)),
+              // Mobility --------------------------------------------------------
+              Field(
+                  labelText: 'My mobility',
+                  text: textFields[15],
+                  isEditing: isEditing,
+                  controller: controllers[15]),
 
-            // Hearing and eyesight
-            Field(
-                labelText: 'My hearing and eyesight',
-                text: textFields[13],
-                isEditing: isEditing,
-                controller: controllers[13]),
+              const SectionHeader(
+                  text: 'My personal habits', icon: Icon(Icons.shower_sharp)),
 
-            // How to communicate ----------------------------------------------
-            Field(
-                labelText: 'How we can communicate',
-                text: textFields[14],
-                isEditing: isEditing,
-                controller: controllers[14]),
+              // Things to help sleep --------------------------------------------
+              Field(
+                  labelText: 'Things that help me sleep',
+                  text: textFields[16],
+                  isEditing: isEditing,
+                  controller: controllers[16]),
 
-            // Mobility --------------------------------------------------------
-            Field(
-                labelText: 'My mobility',
-                text: textFields[15],
-                isEditing: isEditing,
-                controller: controllers[15]),
+              // Personal care ---------------------------------------------------
+              Field(
+                  labelText: 'My personal care',
+                  text: textFields[17],
+                  isEditing: isEditing,
+                  controller: controllers[17]),
 
-            const SectionHeader(
-                text: 'My personal habits', icon: Icon(Icons.shower_sharp)),
+              // Medication ------------------------------------------------------
+              Field(
+                  labelText: 'How I take my medication',
+                  text: textFields[18],
+                  isEditing: isEditing,
+                  controller: controllers[18]),
 
-            // Things to help sleep --------------------------------------------
-            Field(
-                labelText: 'Things that help me sleep',
-                text: textFields[16],
-                isEditing: isEditing,
-                controller: controllers[16]),
+              // Eating and drinking ---------------------------------------------
+              Field(
+                  labelText: 'My eating and drinking',
+                  text: textFields[19],
+                  isEditing: isEditing,
+                  controller: controllers[19]),
 
-            // Personal care ---------------------------------------------------
-            Field(
-                labelText: 'My personal care',
-                text: textFields[17],
-                isEditing: isEditing,
-                controller: controllers[17]),
+              const SectionHeader(text: 'Other', icon: Icon(Icons.info)),
 
-            // Medication ------------------------------------------------------
-            Field(
-                labelText: 'How I take my medication',
-                text: textFields[18],
-                isEditing: isEditing,
-                controller: controllers[18]),
+              // Other notes -----------------------------------------------------
+              Field(
+                  labelText: 'Other notes about me',
+                  text: textFields[20],
+                  isEditing: isEditing,
+                  controller: controllers[20]),
 
-            // Eating and drinking ---------------------------------------------
-            Field(
-                labelText: 'My eating and drinking',
-                text: textFields[19],
-                isEditing: isEditing,
-                controller: controllers[19]),
-
-            const SectionHeader(text: 'Other', icon: Icon(Icons.info)),
-
-            // Other notes -----------------------------------------------------
-            Field(
-                labelText: 'Other notes about me',
-                text: textFields[20],
-                isEditing: isEditing,
-                controller: controllers[20]),
-
-            // Date completed
-            Field(
-                labelText: 'Date Completed',
-                text: textFields[21],
-                isEditing: isEditing,
-                controller: controllers[21]),
-
-            // Edit button -----------------------------------------------------
-            const SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: toggleEdit,
-                  child: Text(isEditing ? 'Cancel' : 'Edit'),
-                ),
-                if (isEditing)
-                  ElevatedButton(
-                    onPressed: saveChanges,
-                    child: const Text('Save'),
-                  )
-              ],
-            ),
-          ],
+              // Date completed
+              Field(
+                  labelText: 'Date Completed',
+                  text: textFields[21],
+                  isEditing: isEditing,
+                  controller: controllers[21]),
+            ],
+          ),
         ),
       ),
-    ));
+      floatingActionButton: FloatingActionButton(
+          onPressed: () => toggleEdit(),
+          child: isEditing ? const Text('Save') : const Icon(Icons.edit)),
+    );
   }
 }
