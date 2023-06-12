@@ -90,6 +90,7 @@ class SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        const SizedBox(height: 24.0),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -100,7 +101,7 @@ class SectionHeader extends StatelessWidget {
                 textAlign: TextAlign.left,
                 text,
                 style: const TextStyle(
-                    fontSize: 22.0,
+                    fontSize: 24.0,
                     fontWeight: FontWeight.bold,
                     color: Color.fromARGB(255, 226, 75, 98)),
               ),

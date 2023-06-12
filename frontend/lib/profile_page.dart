@@ -27,6 +27,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   String hearing = "";
   String communicate = "";
   String mobility = "";
+  String sleep = "";
+  String care = "";
+  String medication = "";
+  String eating = "";
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _placeController = TextEditingController();
@@ -46,6 +50,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   final TextEditingController _hearingController = TextEditingController();
   final TextEditingController _communicateController = TextEditingController();
   final TextEditingController _mobilityController = TextEditingController();
+  final TextEditingController _sleepController = TextEditingController();
+  final TextEditingController _careController = TextEditingController();
+  final TextEditingController _medicationController = TextEditingController();
+  final TextEditingController _eatingController = TextEditingController();
 
   @override
   void initState() {
@@ -66,6 +74,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     _hearingController.text = hearing;
     _communicateController.text = communicate;
     _mobilityController.text = mobility;
+    _sleepController.text = sleep;
+    _careController.text = care;
+    _medicationController.text = medication;
+    _eatingController.text = eating;
   }
 
   @override
@@ -86,6 +98,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     _hearingController.dispose();
     _communicateController.dispose();
     _mobilityController.dispose();
+    _sleepController.dispose();
+    _careController.dispose();
+    _medicationController.dispose();
+    _eatingController.text;
     super.dispose();
   }
 
@@ -109,6 +125,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
         _hearingController.text = hearing;
         _communicateController.text = communicate;
         _mobilityController.text = mobility;
+        _sleepController.text = sleep;
+        _careController.text = care;
+        _medicationController.text = medication;
+        _eatingController.text = eating;
       }
     });
   }
@@ -131,6 +151,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       hearing = _hearingController.text;
       communicate = _communicateController.text;
       mobility = _mobilityController.text;
+      sleep = _sleepController.text;
+      care = _careController.text;
+      medication = _medicationController.text;
+      eating = _eatingController.text;
       isEditing = false;
     });
   }
@@ -269,6 +293,38 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 text: mobility,
                 isEditing: isEditing,
                 controller: _mobilityController),
+
+            const SectionHeader(
+                text: 'My personal habits', icon: Icon(Icons.shower_sharp)),
+
+            // Things to help sleep --------------------------------------------
+            Field(
+                labelText: 'Things that help me sleep',
+                text: sleep,
+                isEditing: isEditing,
+                controller: _sleepController),
+
+            // Personal care ---------------------------------------------------
+            Field(
+                labelText: 'My personal care',
+                text: care,
+                isEditing: isEditing,
+                controller: _careController),
+
+            // Medication ------------------------------------------------------
+            Field(
+                labelText: 'How I take my medication',
+                text: medication,
+                isEditing: isEditing,
+                controller: _medicationController),
+
+            // Eating and drinking
+            Field(
+                labelText: 'My eating and drinking',
+                text: eating,
+                isEditing: isEditing,
+                controller: _eatingController),
+
             // Edit button -----------------------------------------------------
             const SizedBox(height: 16.0),
             Row(
