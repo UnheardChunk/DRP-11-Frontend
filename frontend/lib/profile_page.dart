@@ -240,7 +240,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () => toggleEdit(),
+          onPressed: () {
+            isEditing ? saveChanges() : toggleEdit();
+          },
           child: isEditing ? const Text('Save') : const Icon(Icons.edit)),
     );
   }
