@@ -138,12 +138,39 @@ class _MemoriesPageState extends State<MemoriesPage> {
     );
   }
 
-
-  @override
-  Widget build(BuildContext context) {
+  Future<Tuple2<String, String>?> openResponseCreation() {
     List<String> emotionsList = ['Happy', 'Soothing', 'Exciting', 'Sad', 'Distressing'];
     String dropdownValue = emotionsList.first;
 
+    return showDialog<Tuple2<String, String>>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          titlePadding: const EdgeInsets.all(10),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Add response'),
+              DropdownButton<String>(
+                value: dropdownValue,
+                onChanged: (String? value) {},
+                items: emotionsList.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+          content: const Text(""),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
@@ -182,50 +209,10 @@ class _MemoriesPageState extends State<MemoriesPage> {
                                 width: MediaQuery.of(context).size.width,
                               ),
                             ),
-                            InkWell(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Add an emotion'),
-                                      content: DropdownButton<String>(
-                                        value: dropdownValue,
-                                        icon: const Icon(Icons.arrow_downward),
-                                        elevation: 16,
-                                        style: const TextStyle(color: Colors.deepPurple),
-                                        underline: Container(
-                                          height: 2,
-                                          color: Colors.deepPurpleAccent,
-                                        ),
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            dropdownValue = value!;
-                                          });
-                                          Navigator.of(context).pop(); // Close the dialog
-                                        },
-                                        items: emotionsList
-                                            .map<DropdownMenuItem<String>>((String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                              child: const Icon(
-                                Icons.emoji_emotions,
-                                size: 30,
-                                color: Colors.yellowAccent,
-                              ),
-                            ),
                             Align(
                               alignment: Alignment.topRight,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: openResponseCreation,
                                 child: const Icon(Icons.edit_note, size: 30,)  
                               ),
                             ),
