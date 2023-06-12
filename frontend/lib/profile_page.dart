@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'utilities.dart';
 
 class ProfileWidget extends StatefulWidget {
   const ProfileWidget({super.key});
@@ -98,46 +99,5 @@ class _ProfileWidgetState extends State<ProfileWidget> {
         ),
       ],
     ));
-  }
-}
-
-class Field extends StatelessWidget {
-  final String labelText;
-  final String text;
-  final bool isEditing;
-  final TextEditingController controller;
-  const Field(
-      {required this.labelText,
-      required this.text,
-      required this.isEditing,
-      required this.controller,
-      super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          labelText,
-          style: const TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 53, 113, 217)),
-        ),
-        const SizedBox(height: 8.0),
-        isEditing
-            ? TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  hintText: 'Enter $labelText',
-                ),
-              )
-            : Text(
-                text,
-                style: const TextStyle(fontSize: 16.0),
-              ),
-        const SizedBox(height: 8.0),
-      ],
-    );
   }
 }
