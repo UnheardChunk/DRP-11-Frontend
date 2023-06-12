@@ -251,33 +251,4 @@ class _MemoriesPageState extends State<MemoriesPage> {
     );
   }
 
-  Future<String?> displayEmotionBox() {
-    controller.clear();
-
-    return showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Add emotion"),
-        content: TextField(
-          onSubmitted: (value) {
-            Navigator.pop(context, value); // Return the entered text
-          },
-          autofocus: true,
-          decoration: const InputDecoration(
-            hintText: "Enter an emotion",
-          ),
-          controller: controller,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context, controller.text); // Return the entered text
-            },
-            child: const Text("Submit"),
-          ),
-        ],
-      ),
-    );
-  }
-
 }
