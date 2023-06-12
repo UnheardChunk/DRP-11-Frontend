@@ -31,6 +31,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   String care = "";
   String medication = "";
   String eating = "";
+  String notes = "";
+  String date = "";
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _placeController = TextEditingController();
@@ -54,6 +56,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   final TextEditingController _careController = TextEditingController();
   final TextEditingController _medicationController = TextEditingController();
   final TextEditingController _eatingController = TextEditingController();
+  final TextEditingController _notesController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
 
   @override
   void initState() {
@@ -78,6 +82,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     _careController.text = care;
     _medicationController.text = medication;
     _eatingController.text = eating;
+    _notesController.text = notes;
+    _dateController.text = date;
   }
 
   @override
@@ -101,7 +107,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     _sleepController.dispose();
     _careController.dispose();
     _medicationController.dispose();
-    _eatingController.text;
+    _eatingController.dispose();
+    _notesController.dispose();
+    _dateController.dispose();
     super.dispose();
   }
 
@@ -129,6 +137,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
         _careController.text = care;
         _medicationController.text = medication;
         _eatingController.text = eating;
+        _notesController.text = notes;
+        _dateController.text = date;
       }
     });
   }
@@ -155,6 +165,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       care = _careController.text;
       medication = _medicationController.text;
       eating = _eatingController.text;
+      notes = _notesController.text;
+      date = _dateController.text;
       isEditing = false;
     });
   }
@@ -318,12 +330,28 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 isEditing: isEditing,
                 controller: _medicationController),
 
-            // Eating and drinking
+            // Eating and drinking ---------------------------------------------
             Field(
                 labelText: 'My eating and drinking',
                 text: eating,
                 isEditing: isEditing,
                 controller: _eatingController),
+
+            const SectionHeader(text: 'Other', icon: Icon(Icons.info)),
+
+            // Other notes -----------------------------------------------------
+            Field(
+                labelText: 'Other notes about me',
+                text: notes,
+                isEditing: isEditing,
+                controller: _notesController),
+
+            // Date completed
+            Field(
+                labelText: 'Date Completed',
+                text: date,
+                isEditing: isEditing,
+                controller: _dateController),
 
             // Edit button -----------------------------------------------------
             const SizedBox(height: 16.0),
