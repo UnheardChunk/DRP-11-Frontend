@@ -149,11 +149,89 @@ class _ChaptersTabState extends State<ChaptersTab> {
           child: widget.allowChapterCreation
               ? EventsWidget(future: future)
               : widget.isProfileTab
-                  ? const Placeholder()
+                  ? ProfileWidget()
                   : EmotionsWidget(),
         ),
       ),
     );
+  }
+}
+
+class ProfileWidget extends StatefulWidget {
+  const ProfileWidget({super.key});
+
+  @override
+  State<ProfileWidget> createState() => _ProfileWidgetState();
+}
+
+class _ProfileWidgetState extends State<ProfileWidget> {
+  bool isEditing = true;
+  String name = "";
+
+  final TextEditingController _nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController.text = name;
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  void toggleEdit() {
+    setState(() {
+      isEditing = !isEditing;
+      if (isEditing) {
+        _nameController.text = name;
+      }
+    });
+  }
+
+  void saveChanges() {
+    setState(() {
+      name = _nameController.text;
+      isEditing = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text('Name: '),
+        isEditing
+            ? TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  hintText: 'Enter your name',
+                ),
+              )
+            : Text(
+                name,
+                style: TextStyle(fontSize: 16.0),
+              ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: toggleEdit,
+              child: Text(isEditing ? 'Cancel' : 'Edit'),
+            ),
+            if (isEditing)
+              ElevatedButton(
+                onPressed: saveChanges,
+                child: const Text('Save'),
+              )
+          ],
+        ),
+      ],
+    ));
   }
 }
 
