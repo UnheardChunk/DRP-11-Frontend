@@ -9,14 +9,19 @@ class ProfileWidget extends StatefulWidget {
 }
 
 class _ProfileWidgetState extends State<ProfileWidget> {
-  bool isEditing = true;
+  bool isEditing = false;
   String name = "";
   String place = "";
   String carers = "";
+  String iWouldLikeYouToKnow = "";
+  String personalHistory = "";
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _placeController = TextEditingController();
   final TextEditingController _carersController = TextEditingController();
+  final TextEditingController _toKnowController = TextEditingController();
+  final TextEditingController _personalHistoryController =
+      TextEditingController();
 
   @override
   void initState() {
@@ -24,6 +29,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     _nameController.text = name;
     _placeController.text = place;
     _carersController.text = carers;
+    _toKnowController.text = iWouldLikeYouToKnow;
+    _personalHistoryController.text = personalHistory;
   }
 
   @override
@@ -31,6 +38,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     _nameController.dispose();
     _placeController.dispose();
     _carersController.dispose();
+    _toKnowController.dispose();
+    _personalHistoryController.dispose();
     super.dispose();
   }
 
@@ -41,6 +50,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
         _nameController.text = name;
         _placeController.text = place;
         _carersController.text = carers;
+        _toKnowController.text = iWouldLikeYouToKnow;
+        _personalHistoryController.text = personalHistory;
       }
     });
   }
@@ -50,6 +61,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       name = _nameController.text;
       place = _placeController.text;
       carers = _carersController.text;
+      iWouldLikeYouToKnow = _toKnowController.text;
+      personalHistory = _personalHistoryController.text;
       isEditing = false;
     });
   }
@@ -60,6 +73,22 @@ class _ProfileWidgetState extends State<ProfileWidget> {
         body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.portrait),
+            SizedBox(width: 16.0),
+            Text(
+              textAlign: TextAlign.start,
+              'About me',
+              style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 226, 75, 98)),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20.0),
         // Name ----------------------------------------------------------------
         Field(
             labelText: 'Name',
@@ -81,6 +110,21 @@ class _ProfileWidgetState extends State<ProfileWidget> {
             isEditing: isEditing,
             controller: _carersController),
 
+        // I would like you to know --------------------------------------------
+        Field(
+          labelText: 'I would like you to know',
+          text: iWouldLikeYouToKnow,
+          isEditing: isEditing,
+          controller: _toKnowController,
+        ),
+
+        // Personal History ----------------------------------------------------
+        Field(
+            labelText:
+                'My personal history, family and friends, pets and any treasured possessions',
+            text: personalHistory,
+            isEditing: isEditing,
+            controller: _personalHistoryController),
         // Edit button ---------------------------------------------------------
         const SizedBox(height: 16.0),
         Row(

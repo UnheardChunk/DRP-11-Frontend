@@ -49,8 +49,10 @@ class Field extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
+          textAlign: TextAlign.center,
           labelText,
           style: const TextStyle(
               fontSize: 18.0,
