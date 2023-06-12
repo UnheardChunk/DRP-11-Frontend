@@ -20,7 +20,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: Text('${widget.name}\'s scrapbook'),
@@ -32,6 +32,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
             tabs: [
               Tab(child: Text('Chapters')),
               Tab(child: Text('Emotions')),
+              Tab(child: Text('Profile')),
             ],
           ),
         ),
@@ -39,6 +40,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
           children: [
             ChaptersTab(widget.uuid, index: 0), // Form for "Chapter" tab
             ChaptersTab(widget.uuid, index: 1), // Form for "Emotions" tab
+            ChaptersTab(widget.uuid, index: 2), // Form for "Profile" tab
           ],
         ),
       ),
@@ -47,7 +49,6 @@ class _ChaptersPageState extends State<ChaptersPage> {
 }
 
 class ChaptersTab extends StatefulWidget {
-
   late final bool allowChapterCreation;
   final String uuid;
 
@@ -60,7 +61,6 @@ class ChaptersTab extends StatefulWidget {
 }
 
 class _ChaptersTabState extends State<ChaptersTab> {
-
   List<String> chapters = [];
 
   late TextEditingController controller;
@@ -142,9 +142,11 @@ class _ChaptersTabState extends State<ChaptersTab> {
         color: Colors.grey[300],
         padding: const EdgeInsets.all(10),
         child: Container(
-          color: Colors.grey[300],
+          color: Color.fromARGB(255, 36, 146, 214),
           padding: const EdgeInsets.all(10),
-          child: widget.allowChapterCreation ? EventsWidget(future: future) : EmotionsWidget(),
+          child: widget.allowChapterCreation
+              ? EventsWidget(future: future)
+              : EmotionsWidget(),
         ),
       ),
     );
@@ -152,14 +154,22 @@ class _ChaptersTabState extends State<ChaptersTab> {
 }
 
 class EmotionsWidget extends StatelessWidget {
-  EmotionsWidget({super.key,});
+  EmotionsWidget({
+    super.key,
+  });
 
-  final List<String> emotions = ["Happy", "Soothing", "Exciting", "Sad", "Distressing"];
+  final List<String> emotions = [
+    "Happy",
+    "Soothing",
+    "Exciting",
+    "Sad",
+    "Distressing"
+  ];
   final List<Color> emotionColours = [
-    Colors.yellow, 
-    Colors.green, 
-    Colors.purple, 
-    Colors.blue, 
+    Colors.yellow,
+    Colors.green,
+    Colors.purple,
+    Colors.blue,
     Colors.red
   ];
 
@@ -169,8 +179,8 @@ class EmotionsWidget extends StatelessWidget {
       children: [
         for (var i = 0; i < emotions.length; i++)
           GenericTile(
-            name: emotions[i], 
-            tileIcon: const Icon(null), 
+            name: emotions[i],
+            tileIcon: const Icon(null),
             navigatesTo: const Placeholder(),
             colour: emotionColours[i],
           )
@@ -197,20 +207,19 @@ class EventsWidget extends StatelessWidget {
         }
         final data = snapshot.data!;
         return Container(
-          color: Colors.grey[300],
-          padding: const EdgeInsets.all(10),
-          child: ListView.builder(
-            itemCount: data.length,
-            itemBuilder: (context, index) {
-              final chapters = data[index];
-              return GenericTile(
-                name: chapters["name"],
-                tileIcon: const Icon(Icons.menu_book, size: 30),
-                navigatesTo: MemoriesPage(chapters["bucket_id"]),
-              );
-            },
-          )
-        );
+            color: Colors.grey[300],
+            padding: const EdgeInsets.all(10),
+            child: ListView.builder(
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                final chapters = data[index];
+                return GenericTile(
+                  name: chapters["name"],
+                  tileIcon: const Icon(Icons.menu_book, size: 30),
+                  navigatesTo: MemoriesPage(chapters["bucket_id"]),
+                );
+              },
+            ));
       },
     );
   }
