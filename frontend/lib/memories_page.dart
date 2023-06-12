@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:memories_scrapbook/utilities.dart';
 import 'package:tuple/tuple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:io';
@@ -142,47 +143,52 @@ class _MemoriesPageState extends State<MemoriesPage> {
       appBar: AppBar(
         title: const Text('Upload Image'),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (images.isNotEmpty)
-                Column(
-                  children: images.map((image) {
-                    return FutureBuilder(
-                        future: image.item1,
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          }
-                          final img = snapshot.data!;
-                          return Column(
-                            children: <Widget> [Padding(
-                              padding: const EdgeInsets.only(left: 0, top: 5, right: 0, bottom: 5),
-                              child:
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Image.memory(
-                                    img,
-                                    fit: BoxFit.fitWidth,
-                                    width: MediaQuery.of(context).size.width,
-                                  ),
-                                ),
+      body: GenericContainer(
+        child: images.isNotEmpty
+          ? SingleChildScrollView(
+            child: ListView(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              children: images.map((image) {
+                return FutureBuilder(
+                  future: image.item1,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(
+                          child: CircularProgressIndicator());
+                    }
+                    final img = snapshot.data!;
+                    return Column(
+                      children: [
+                        Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.memory(
+                                img,
+                                fit: BoxFit.fitWidth,
+                                width: MediaQuery.of(context).size.width,
+                              ),
                             ),
-                             Text(image.item2),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                child: const Icon(Icons.edit_note, size: 30,)  
+                              ),
+                            ),
                           ]
-                          );
-                        });
-                  }).toList(),
-                )
-              else
-                Container(),
-            ],
-          ),
-        ),
+                        ),
+                        Text(image.item2),
+                        const SizedBox(height: 25,),
+                      ]
+                    );
+                  }
+                );
+              }).toList(),
+            ),
+          )
+          : Container(),
       ),
     );
   }
