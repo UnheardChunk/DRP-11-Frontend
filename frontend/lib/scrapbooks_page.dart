@@ -110,9 +110,7 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
           title: const Text('My scrapbooks'),
           centerTitle: true,
         ),
-        body: Container(
-          color: Colors.grey[300],
-          padding: const EdgeInsets.all(10),
+        body: GenericContainer(
           child: GenericFutureListView(
             future: data,
             genericTileBuilder: (scrapbook) {
