@@ -60,70 +60,25 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         // Name ----------------------------------------------------------------
-        const Text(
-          'Name ',
-          style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 53, 113, 217)),
-        ),
-        const SizedBox(height: 8.0),
-        isEditing
-            ? TextField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  hintText: 'Enter your name',
-                ),
-              )
-            : Text(
-                name,
-                style: const TextStyle(fontSize: 16.0),
-              ),
-        const SizedBox(height: 8.0),
+        Field(
+            labelText: 'Name',
+            text: name,
+            isEditing: isEditing,
+            controller: _nameController),
 
         // Where I live --------------------------------------------------------
-        const Text(
-          'Where I live (area not the full address)',
-          style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 53, 113, 217)),
-        ),
-        const SizedBox(height: 8.0),
-        isEditing
-            ? TextField(
-                controller: _placeController,
-                decoration: const InputDecoration(
-                  hintText: 'Enter where you live',
-                ),
-              )
-            : Text(
-                place,
-                style: const TextStyle(fontSize: 16.0),
-              ),
-        const SizedBox(height: 8.0),
+        Field(
+            labelText: 'Where I live (area not the full address)',
+            text: place,
+            isEditing: isEditing,
+            controller: _placeController),
 
         // Carers --------------------------------------------------------------
-        const Text(
-          'The carers/people who know me the best',
-          style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 53, 113, 217)),
-        ),
-        const SizedBox(height: 8.0),
-        isEditing
-            ? TextField(
-                controller: _carersController,
-                decoration: const InputDecoration(
-                  hintText: 'Enter where you live',
-                ),
-              )
-            : Text(
-                carers,
-                style: const TextStyle(fontSize: 16.0),
-              ),
-        const SizedBox(height: 8.0),
+        Field(
+            labelText: 'The carers/people who know me the best',
+            text: carers,
+            isEditing: isEditing,
+            controller: _carersController),
 
         // Edit button ---------------------------------------------------------
         const SizedBox(height: 16.0),
