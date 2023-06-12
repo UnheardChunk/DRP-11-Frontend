@@ -71,3 +71,21 @@ class GenericFutureListView extends StatelessWidget {
     );
   }
 }
+
+class GenericContainer extends StatelessWidget {
+  const GenericContainer({
+    super.key,
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.grey[300],
+      padding: const EdgeInsets.all(10),
+      child: child,
+    );
+  }
+}
