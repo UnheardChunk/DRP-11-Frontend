@@ -11,105 +11,24 @@ class ProfileWidget extends StatefulWidget {
 class _ProfileWidgetState extends State<ProfileWidget> {
   bool isEditing = false;
 
-  String name = "";
-  String place = "";
-  String carers = "";
-  String iWouldLikeYouToKnow = "";
-  String personalHistory = "";
-  String culture = "";
-  String jobs = "";
-  String favPlaces = "";
-  String routines = "";
-  String thingsForMyself = "";
-  String help = "";
-  String upset = "";
-  String better = "";
-  String hearing = "";
-  String communicate = "";
-  String mobility = "";
-  String sleep = "";
-  String care = "";
-  String medication = "";
-  String eating = "";
-  String notes = "";
-  String date = "";
-
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _placeController = TextEditingController();
-  final TextEditingController _carersController = TextEditingController();
-  final TextEditingController _toKnowController = TextEditingController();
-  final TextEditingController _personalHistoryController =
-      TextEditingController();
-  final TextEditingController _cultureController = TextEditingController();
-  final TextEditingController _jobController = TextEditingController();
-  final TextEditingController _favPlacesController = TextEditingController();
-  final TextEditingController _routineController = TextEditingController();
-  final TextEditingController _thingsForMyselfController =
-      TextEditingController();
-  final TextEditingController _helpController = TextEditingController();
-  final TextEditingController _upsetController = TextEditingController();
-  final TextEditingController _betterController = TextEditingController();
-  final TextEditingController _hearingController = TextEditingController();
-  final TextEditingController _communicateController = TextEditingController();
-  final TextEditingController _mobilityController = TextEditingController();
-  final TextEditingController _sleepController = TextEditingController();
-  final TextEditingController _careController = TextEditingController();
-  final TextEditingController _medicationController = TextEditingController();
-  final TextEditingController _eatingController = TextEditingController();
-  final TextEditingController _notesController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
+  int count = 22;
+  final List<String> textFields = List.generate(22, (index) => "");
+  final List<TextEditingController> controllers =
+      List.generate(22, (index) => TextEditingController());
 
   @override
   void initState() {
     super.initState();
-    _nameController.text = name;
-    _placeController.text = place;
-    _carersController.text = carers;
-    _toKnowController.text = iWouldLikeYouToKnow;
-    _personalHistoryController.text = personalHistory;
-    _cultureController.text = culture;
-    _jobController.text = jobs;
-    _favPlacesController.text = favPlaces;
-    _routineController.text = routines;
-    _thingsForMyselfController.text = thingsForMyself;
-    _helpController.text = help;
-    _upsetController.text = upset;
-    _betterController.text = better;
-    _hearingController.text = hearing;
-    _communicateController.text = communicate;
-    _mobilityController.text = mobility;
-    _sleepController.text = sleep;
-    _careController.text = care;
-    _medicationController.text = medication;
-    _eatingController.text = eating;
-    _notesController.text = notes;
-    _dateController.text = date;
+    for (int i = 0; i < count; i++) {
+      controllers[i].text = textFields[i];
+    }
   }
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _placeController.dispose();
-    _carersController.dispose();
-    _toKnowController.dispose();
-    _personalHistoryController.dispose();
-    _cultureController.dispose();
-    _jobController.dispose();
-    _favPlacesController.dispose();
-    _routineController.dispose();
-    _thingsForMyselfController.dispose();
-    _helpController.dispose();
-    _upsetController.dispose();
-    _betterController.dispose();
-    _hearingController.dispose();
-    _communicateController.dispose();
-    _mobilityController.dispose();
-    _sleepController.dispose();
-    _careController.dispose();
-    _medicationController.dispose();
-    _eatingController.dispose();
-    _notesController.dispose();
-    _dateController.dispose();
+    for (int i = 0; i < count; i++) {
+      controllers[i].dispose();
+    }
     super.dispose();
   }
 
@@ -117,56 +36,18 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     setState(() {
       isEditing = !isEditing;
       if (isEditing) {
-        _nameController.text = name;
-        _placeController.text = place;
-        _carersController.text = carers;
-        _toKnowController.text = iWouldLikeYouToKnow;
-        _personalHistoryController.text = personalHistory;
-        _cultureController.text = culture;
-        _jobController.text = jobs;
-        _favPlacesController.text = favPlaces;
-        _routineController.text = routines;
-        _thingsForMyselfController.text = thingsForMyself;
-        _helpController.text = help;
-        _upsetController.text = upset;
-        _betterController.text = better;
-        _hearingController.text = hearing;
-        _communicateController.text = communicate;
-        _mobilityController.text = mobility;
-        _sleepController.text = sleep;
-        _careController.text = care;
-        _medicationController.text = medication;
-        _eatingController.text = eating;
-        _notesController.text = notes;
-        _dateController.text = date;
+        for (int i = 0; i < count; i++) {
+          controllers[i].text = textFields[i];
+        }
       }
     });
   }
 
   void saveChanges() {
     setState(() {
-      name = _nameController.text;
-      place = _placeController.text;
-      carers = _carersController.text;
-      iWouldLikeYouToKnow = _toKnowController.text;
-      personalHistory = _personalHistoryController.text;
-      culture = _cultureController.text;
-      jobs = _jobController.text;
-      favPlaces = _favPlacesController.text;
-      routines = _routineController.text;
-      thingsForMyself = _thingsForMyselfController.text;
-      help = _helpController.text;
-      upset = _upsetController.text;
-      better = _betterController.text;
-      hearing = _hearingController.text;
-      communicate = _communicateController.text;
-      mobility = _mobilityController.text;
-      sleep = _sleepController.text;
-      care = _careController.text;
-      medication = _medicationController.text;
-      eating = _eatingController.text;
-      notes = _notesController.text;
-      date = _dateController.text;
+      for (int i = 0; i < count; i++) {
+        textFields[i] = controllers[i].text;
+      }
       isEditing = false;
     });
   }
@@ -185,39 +66,39 @@ class _ProfileWidgetState extends State<ProfileWidget> {
             // Name ----------------------------------------------------------------
             Field(
                 labelText: 'Name',
-                text: name,
+                text: textFields[0],
                 isEditing: isEditing,
-                controller: _nameController),
+                controller: controllers[0]),
 
             // Where I live --------------------------------------------------------
             Field(
                 labelText: 'Where I live (area not the full address)',
-                text: place,
+                text: textFields[1],
                 isEditing: isEditing,
-                controller: _placeController),
+                controller: controllers[1]),
 
             // Carers --------------------------------------------------------------
             Field(
                 labelText: 'The carers/people who know me the best',
-                text: carers,
+                text: textFields[2],
                 isEditing: isEditing,
-                controller: _carersController),
+                controller: controllers[2]),
 
             // I would like you to know --------------------------------------------
             Field(
               labelText: 'I would like you to know',
-              text: iWouldLikeYouToKnow,
+              text: textFields[3],
               isEditing: isEditing,
-              controller: _toKnowController,
+              controller: controllers[3],
             ),
 
             // Personal History ----------------------------------------------------
             Field(
                 labelText:
                     'My personal history, family and friends, pets and any treasured possessions',
-                text: personalHistory,
+                text: textFields[4],
                 isEditing: isEditing,
-                controller: _personalHistoryController),
+                controller: controllers[4]),
 
             const SectionHeader(
                 text: 'My Background', icon: Icon(Icons.house_rounded)),
@@ -225,23 +106,23 @@ class _ProfileWidgetState extends State<ProfileWidget> {
             // Cultural and Religious Background ---------------------------------
             Field(
                 labelText: 'My cultural, religious and spiritual background',
-                text: culture,
+                text: textFields[5],
                 isEditing: isEditing,
-                controller: _cultureController),
+                controller: controllers[5]),
 
             // Interests and jobs
             Field(
                 labelText: 'My interests, jobs and achievments',
-                text: jobs,
+                text: textFields[6],
                 isEditing: isEditing,
-                controller: _jobController),
+                controller: controllers[6]),
 
             // Favourite Places --------------------------------------------------
             Field(
                 labelText: 'Favourite placed I have lived and visted',
-                text: favPlaces,
+                text: textFields[7],
                 isEditing: isEditing,
-                controller: _favPlacesController),
+                controller: controllers[7]),
 
             const SectionHeader(
                 text: 'My habits and routines',
@@ -250,37 +131,37 @@ class _ProfileWidgetState extends State<ProfileWidget> {
             // Routines ----------------------------------------------------------
             Field(
                 labelText: 'The following routines are important to me',
-                text: routines,
+                text: textFields[8],
                 isEditing: isEditing,
-                controller: _routineController),
+                controller: controllers[8]),
 
             // Things for myself -------------------------------------------------
             Field(
                 labelText: 'Things I like to do for myself',
-                text: thingsForMyself,
+                text: textFields[9],
                 isEditing: isEditing,
-                controller: _thingsForMyselfController),
+                controller: controllers[9]),
 
             // Things I need help with -------------------------------------------
             Field(
                 labelText: 'Things I might want help with',
-                text: help,
+                text: textFields[10],
                 isEditing: isEditing,
-                controller: _helpController),
+                controller: controllers[10]),
 
             // Things that upset
             Field(
                 labelText: 'Things that may worry or upset me',
-                text: upset,
+                text: textFields[11],
                 isEditing: isEditing,
-                controller: _upsetController),
+                controller: controllers[11]),
 
             // Makes me feel better
             Field(
                 labelText: 'What makes me feel better if I am anxious or upset',
-                text: better,
+                text: textFields[12],
                 isEditing: isEditing,
-                controller: _upsetController),
+                controller: controllers[12]),
 
             const SectionHeader(
                 text: 'My communication and mobility', icon: Icon(Icons.chat)),
@@ -288,23 +169,23 @@ class _ProfileWidgetState extends State<ProfileWidget> {
             // Hearing and eyesight
             Field(
                 labelText: 'My hearing and eyesight',
-                text: hearing,
+                text: textFields[13],
                 isEditing: isEditing,
-                controller: _hearingController),
+                controller: controllers[13]),
 
             // How to communicate ----------------------------------------------
             Field(
                 labelText: 'How we can communicate',
-                text: communicate,
+                text: textFields[14],
                 isEditing: isEditing,
-                controller: _communicateController),
+                controller: controllers[14]),
 
             // Mobility --------------------------------------------------------
             Field(
                 labelText: 'My mobility',
-                text: mobility,
+                text: textFields[15],
                 isEditing: isEditing,
-                controller: _mobilityController),
+                controller: controllers[15]),
 
             const SectionHeader(
                 text: 'My personal habits', icon: Icon(Icons.shower_sharp)),
@@ -312,46 +193,46 @@ class _ProfileWidgetState extends State<ProfileWidget> {
             // Things to help sleep --------------------------------------------
             Field(
                 labelText: 'Things that help me sleep',
-                text: sleep,
+                text: textFields[16],
                 isEditing: isEditing,
-                controller: _sleepController),
+                controller: controllers[16]),
 
             // Personal care ---------------------------------------------------
             Field(
                 labelText: 'My personal care',
-                text: care,
+                text: textFields[17],
                 isEditing: isEditing,
-                controller: _careController),
+                controller: controllers[17]),
 
             // Medication ------------------------------------------------------
             Field(
                 labelText: 'How I take my medication',
-                text: medication,
+                text: textFields[18],
                 isEditing: isEditing,
-                controller: _medicationController),
+                controller: controllers[18]),
 
             // Eating and drinking ---------------------------------------------
             Field(
                 labelText: 'My eating and drinking',
-                text: eating,
+                text: textFields[19],
                 isEditing: isEditing,
-                controller: _eatingController),
+                controller: controllers[19]),
 
             const SectionHeader(text: 'Other', icon: Icon(Icons.info)),
 
             // Other notes -----------------------------------------------------
             Field(
                 labelText: 'Other notes about me',
-                text: notes,
+                text: textFields[20],
                 isEditing: isEditing,
-                controller: _notesController),
+                controller: controllers[20]),
 
             // Date completed
             Field(
                 labelText: 'Date Completed',
-                text: date,
+                text: textFields[21],
                 isEditing: isEditing,
-                controller: _dateController),
+                controller: controllers[21]),
 
             // Edit button -----------------------------------------------------
             const SizedBox(height: 16.0),
