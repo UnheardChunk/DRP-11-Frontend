@@ -12,17 +12,14 @@ class MemoriesPage extends StatefulWidget {
   const MemoriesPage(this.bucketId, {super.key});
 
   @override
-  State<MemoriesPage> createState() => _MemoriesPageState(bucketId);
+  State<MemoriesPage> createState() => _MemoriesPageState();
 }
 
 class _MemoriesPageState extends State<MemoriesPage> {
   List<Tuple2<Future<Uint8List>, String>> images = [];
 
   final ImagePicker picker = ImagePicker();
-  final String bucketId;
   late TextEditingController controller;
-
-  _MemoriesPageState(this.bucketId);
 
   @override
   void initState() {
@@ -34,7 +31,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
   initialise() async {
     final paths = await supabase.storage.from(widget.bucketId).list();
     for (FileObject path in paths) {
-      final caption = await supabase.from("Files").select("caption").eq("bucket_id", bucketId).eq("name", path.name).single();
+      final caption = await supabase.from("Files").select("caption").eq("bucket_id", widget.bucketId).eq("name", path.name).single();
       setState(() {
         images.add(Tuple2(supabase.storage.from(widget.bucketId).download(path.name), caption["caption"]));
       });
@@ -67,7 +64,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
       title: const Text("Add caption"),
       content:
         TextField(
-        onSubmitted: (_) => uploadImage(img, controller.text, bucketId),
+        onSubmitted: (_) => uploadImage(img, controller.text, widget.bucketId),
         autofocus: true,
         decoration: const InputDecoration(
           hintText: "Enter a caption",
@@ -76,7 +73,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
       ),
       actions: [
         TextButton(
-          onPressed: () => uploadImage(img, controller.text, bucketId),
+          onPressed: () => uploadImage(img, controller.text, widget.bucketId),
           child: const Text("Submit"),
         )
       ],
