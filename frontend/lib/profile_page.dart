@@ -19,6 +19,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   String culture = "";
   String jobs = "";
   String favPlaces = "";
+  String routines = "";
+  String thingsForMyself = "";
+  String help = "";
+  String upset = "";
+  String better = "";
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _placeController = TextEditingController();
@@ -29,6 +34,12 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   final TextEditingController _cultureController = TextEditingController();
   final TextEditingController _jobController = TextEditingController();
   final TextEditingController _favPlacesController = TextEditingController();
+  final TextEditingController _routineController = TextEditingController();
+  final TextEditingController _thingsForMyselfController =
+      TextEditingController();
+  final TextEditingController _helpController = TextEditingController();
+  final TextEditingController _upsetController = TextEditingController();
+  final TextEditingController _betterController = TextEditingController();
 
   @override
   void initState() {
@@ -41,6 +52,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     _cultureController.text = culture;
     _jobController.text = jobs;
     _favPlacesController.text = favPlaces;
+    _routineController.text = routines;
+    _thingsForMyselfController.text = thingsForMyself;
+    _helpController.text = help;
+    _upsetController.text = upset;
+    _betterController.text = better;
   }
 
   @override
@@ -53,6 +69,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     _cultureController.dispose();
     _jobController.dispose();
     _favPlacesController.dispose();
+    _routineController.dispose();
+    _thingsForMyselfController.dispose();
+    _helpController.dispose();
+    _upsetController.dispose();
+    _betterController.dispose();
     super.dispose();
   }
 
@@ -68,6 +89,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
         _cultureController.text = culture;
         _jobController.text = jobs;
         _favPlacesController.text = favPlaces;
+        _routineController.text = routines;
+        _thingsForMyselfController.text = thingsForMyself;
+        _helpController.text = help;
+        _upsetController.text = upset;
+        _betterController.text = better;
       }
     });
   }
@@ -82,6 +108,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       culture = _cultureController.text;
       jobs = _jobController.text;
       favPlaces = _favPlacesController.text;
+      routines = _routineController.text;
+      thingsForMyself = _thingsForMyselfController.text;
+      help = _helpController.text;
+      upset = _upsetController.text;
+      better = _betterController.text;
       isEditing = false;
     });
   }
@@ -89,90 +120,131 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const SectionHeader(
-              text: 'About Me', icon: Icon(Icons.portrait_sharp)),
-          // Name ----------------------------------------------------------------
-          Field(
-              labelText: 'Name',
-              text: name,
+        body: Container(
+      color: Colors.grey[300],
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SectionHeader(
+                text: 'About Me', icon: Icon(Icons.portrait_sharp)),
+            // Name ----------------------------------------------------------------
+            Field(
+                labelText: 'Name',
+                text: name,
+                isEditing: isEditing,
+                controller: _nameController),
+
+            // Where I live --------------------------------------------------------
+            Field(
+                labelText: 'Where I live (area not the full address)',
+                text: place,
+                isEditing: isEditing,
+                controller: _placeController),
+
+            // Carers --------------------------------------------------------------
+            Field(
+                labelText: 'The carers/people who know me the best',
+                text: carers,
+                isEditing: isEditing,
+                controller: _carersController),
+
+            // I would like you to know --------------------------------------------
+            Field(
+              labelText: 'I would like you to know',
+              text: iWouldLikeYouToKnow,
               isEditing: isEditing,
-              controller: _nameController),
+              controller: _toKnowController,
+            ),
 
-          // Where I live --------------------------------------------------------
-          Field(
-              labelText: 'Where I live (area not the full address)',
-              text: place,
-              isEditing: isEditing,
-              controller: _placeController),
+            // Personal History ----------------------------------------------------
+            Field(
+                labelText:
+                    'My personal history, family and friends, pets and any treasured possessions',
+                text: personalHistory,
+                isEditing: isEditing,
+                controller: _personalHistoryController),
 
-          // Carers --------------------------------------------------------------
-          Field(
-              labelText: 'The carers/people who know me the best',
-              text: carers,
-              isEditing: isEditing,
-              controller: _carersController),
+            const SectionHeader(
+                text: 'My Background', icon: Icon(Icons.house_rounded)),
 
-          // I would like you to know --------------------------------------------
-          Field(
-            labelText: 'I would like you to know',
-            text: iWouldLikeYouToKnow,
-            isEditing: isEditing,
-            controller: _toKnowController,
-          ),
+            // Cultural and Religious Background ---------------------------------
+            Field(
+                labelText: 'My cultural, religious and spiritual background',
+                text: culture,
+                isEditing: isEditing,
+                controller: _cultureController),
 
-          // Personal History ----------------------------------------------------
-          Field(
-              labelText:
-                  'My personal history, family and friends, pets and any treasured possessions',
-              text: personalHistory,
-              isEditing: isEditing,
-              controller: _personalHistoryController),
+            // Interests and jobs
+            Field(
+                labelText: 'My interests, jobs and achievments',
+                text: jobs,
+                isEditing: isEditing,
+                controller: _jobController),
 
-          const SectionHeader(
-              text: 'My Background', icon: Icon(Icons.house_rounded)),
+            // Favourite Places --------------------------------------------------
+            Field(
+                labelText: 'Favourite placed I have lived and visted',
+                text: favPlaces,
+                isEditing: isEditing,
+                controller: _favPlacesController),
 
-          // Cultural and Religious Background ---------------------------------
-          Field(
-              labelText: 'My cultural, religious and spiritual background',
-              text: culture,
-              isEditing: isEditing,
-              controller: _cultureController),
+            const SectionHeader(
+                text: 'My habits and routines',
+                icon: Icon(Icons.access_alarm_sharp)),
 
-          // Interests and jobs
-          Field(
-              labelText: 'My interests, jobs and achievments',
-              text: jobs,
-              isEditing: isEditing,
-              controller: _jobController),
+            // Routines ----------------------------------------------------------
+            Field(
+                labelText: 'The following routines are important to me',
+                text: routines,
+                isEditing: isEditing,
+                controller: _routineController),
 
-          // Favourite Places --------------------------------------------------
-          Field(
-              labelText: 'Favourite placed I have lived and visted',
-              text: favPlaces,
-              isEditing: isEditing,
-              controller: _favPlacesController),
+            // Things for myself -------------------------------------------------
+            Field(
+                labelText: 'Things I like to do for myself',
+                text: thingsForMyself,
+                isEditing: isEditing,
+                controller: _thingsForMyselfController),
 
-          // Edit button -------------------------------------------------------
-          const SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: toggleEdit,
-                child: Text(isEditing ? 'Cancel' : 'Edit'),
-              ),
-              if (isEditing)
+            // Things I need help with -------------------------------------------
+            Field(
+                labelText: 'Things I might want help with',
+                text: help,
+                isEditing: isEditing,
+                controller: _helpController),
+
+            // Things that upset
+            Field(
+                labelText: 'Things that may worry or upset me',
+                text: upset,
+                isEditing: isEditing,
+                controller: _upsetController),
+
+            // Makes me feel better
+            Field(
+                labelText: 'What makes me feel better if I am anxious or upset',
+                text: better,
+                isEditing: isEditing,
+                controller: _upsetController),
+            // Edit button -------------------------------------------------------
+            const SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
                 ElevatedButton(
-                  onPressed: saveChanges,
-                  child: const Text('Save'),
-                )
-            ],
-          ),
-        ],
+                  onPressed: toggleEdit,
+                  child: Text(isEditing ? 'Cancel' : 'Edit'),
+                ),
+                if (isEditing)
+                  ElevatedButton(
+                    onPressed: saveChanges,
+                    child: const Text('Save'),
+                  )
+              ],
+            ),
+          ],
+        ),
       ),
     ));
   }
