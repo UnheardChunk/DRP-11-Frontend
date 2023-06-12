@@ -169,7 +169,6 @@ class _MemoriesPageState extends State<MemoriesPage> {
                                     img,
                                     fit: BoxFit.fitWidth,
                                     width: MediaQuery.of(context).size.width,
-                                    //height: 700,
                                   ),
                                 ),
                             ),
