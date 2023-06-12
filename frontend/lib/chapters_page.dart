@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:postgrest/src/postgrest_builder.dart';
 import 'main.dart';
 import 'utilities.dart';
 import 'memories_page.dart';
@@ -137,9 +138,7 @@ class _ChaptersTabState extends State<ChaptersTab> {
               },
               child: const Icon(Icons.add))
           : Container(),
-      body: Container(
-        color: Colors.grey[300],
-        padding: const EdgeInsets.all(10),
+      body: GenericContainer(
         child: widget.allowChapterCreation 
           ? GenericFutureListView(
             future: future,
@@ -153,6 +152,24 @@ class _ChaptersTabState extends State<ChaptersTab> {
           ) 
           : EmotionsWidget(),
       ),
+    );
+  }
+}
+
+class GenericContainer extends StatelessWidget {
+  const GenericContainer({
+    super.key,
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.grey[300],
+      padding: const EdgeInsets.all(10),
+      child: child,
     );
   }
 }
