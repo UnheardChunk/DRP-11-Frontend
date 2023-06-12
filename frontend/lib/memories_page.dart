@@ -178,18 +178,9 @@ class _MemoriesPageState extends State<MemoriesPage> {
                           );
                         });
                   }).toList(),
-                  // Textfield(
-                  //   decoration: InputDecoration(
-                  //     border: OutlineInputBorder(),
-                  //     hintText: 'Enter',
-                  //   )
-                  // )
                 )
               else
-                const Text(
-                  "",
-                  style: TextStyle(fontSize: 20),
-                ),
+                Container(),
             ],
           ),
         ),
