@@ -76,3 +76,37 @@ class Field extends StatelessWidget {
     );
   }
 }
+
+class SectionHeader extends StatelessWidget {
+  final String text;
+  final Icon icon;
+
+  const SectionHeader({
+    super.key,
+    required this.text,
+    required this.icon,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            icon,
+            const SizedBox(width: 16.0),
+            Text(
+              textAlign: TextAlign.start,
+              text,
+              style: const TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 226, 75, 98)),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20.0),
+      ],
+    );
+  }
+}

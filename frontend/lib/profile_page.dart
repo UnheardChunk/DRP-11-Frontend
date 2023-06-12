@@ -73,22 +73,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
         body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.portrait),
-            SizedBox(width: 16.0),
-            Text(
-              textAlign: TextAlign.start,
-              'About me',
-              style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 226, 75, 98)),
-            ),
-          ],
-        ),
-        const SizedBox(height: 20.0),
+        const SectionHeader(text: 'About Me', icon: Icon(Icons.portrait)),
         // Name ----------------------------------------------------------------
         Field(
             labelText: 'Name',
