@@ -95,13 +95,15 @@ class SectionHeader extends StatelessWidget {
           children: [
             icon,
             const SizedBox(width: 16.0),
-            Text(
-              textAlign: TextAlign.start,
-              text,
-              style: const TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 226, 75, 98)),
+            Flexible(
+              child: Text(
+                textAlign: TextAlign.left,
+                text,
+                style: const TextStyle(
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 226, 75, 98)),
+              ),
             ),
           ],
         ),

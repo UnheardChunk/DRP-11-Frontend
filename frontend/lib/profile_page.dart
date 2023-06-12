@@ -24,6 +24,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   String help = "";
   String upset = "";
   String better = "";
+  String hearing = "";
+  String communicate = "";
+  String mobility = "";
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _placeController = TextEditingController();
@@ -40,6 +43,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   final TextEditingController _helpController = TextEditingController();
   final TextEditingController _upsetController = TextEditingController();
   final TextEditingController _betterController = TextEditingController();
+  final TextEditingController _hearingController = TextEditingController();
+  final TextEditingController _communicateController = TextEditingController();
+  final TextEditingController _mobilityController = TextEditingController();
 
   @override
   void initState() {
@@ -57,6 +63,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     _helpController.text = help;
     _upsetController.text = upset;
     _betterController.text = better;
+    _hearingController.text = hearing;
+    _communicateController.text = communicate;
+    _mobilityController.text = mobility;
   }
 
   @override
@@ -74,6 +83,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     _helpController.dispose();
     _upsetController.dispose();
     _betterController.dispose();
+    _hearingController.dispose();
+    _communicateController.dispose();
+    _mobilityController.dispose();
     super.dispose();
   }
 
@@ -94,6 +106,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
         _helpController.text = help;
         _upsetController.text = upset;
         _betterController.text = better;
+        _hearingController.text = hearing;
+        _communicateController.text = communicate;
+        _mobilityController.text = mobility;
       }
     });
   }
@@ -113,6 +128,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       help = _helpController.text;
       upset = _upsetController.text;
       better = _betterController.text;
+      hearing = _hearingController.text;
+      communicate = _communicateController.text;
+      mobility = _mobilityController.text;
       isEditing = false;
     });
   }
@@ -227,7 +245,31 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 text: better,
                 isEditing: isEditing,
                 controller: _upsetController),
-            // Edit button -------------------------------------------------------
+
+            const SectionHeader(
+                text: 'My communication and mobility', icon: Icon(Icons.chat)),
+
+            // Hearing and eyesight
+            Field(
+                labelText: 'My hearing and eyesight',
+                text: hearing,
+                isEditing: isEditing,
+                controller: _hearingController),
+
+            // How to communicate ----------------------------------------------
+            Field(
+                labelText: 'How we can communicate',
+                text: communicate,
+                isEditing: isEditing,
+                controller: _communicateController),
+
+            // Mobility --------------------------------------------------------
+            Field(
+                labelText: 'My mobility',
+                text: mobility,
+                isEditing: isEditing,
+                controller: _mobilityController),
+            // Edit button -----------------------------------------------------
             const SizedBox(height: 16.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
