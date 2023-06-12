@@ -19,11 +19,13 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   void initState() {
     super.initState();
     _nameController.text = name;
+    _placeController.text = place;
   }
 
   @override
   void dispose() {
     _nameController.dispose();
+    _placeController.dispose();
     super.dispose();
   }
 
@@ -32,6 +34,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       isEditing = !isEditing;
       if (isEditing) {
         _nameController.text = name;
+        _placeController.text = place;
       }
     });
   }
@@ -39,6 +42,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   void saveChanges() {
     setState(() {
       name = _nameController.text;
+      place = _placeController.text;
       isEditing = false;
     });
   }
@@ -49,6 +53,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
         body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
+        // Name ----------------------------------------------------------------
         const Text(
           'Name ',
           style: TextStyle(
@@ -68,6 +73,30 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 name,
                 style: const TextStyle(fontSize: 16.0),
               ),
+        const SizedBox(height: 8.0),
+
+        // Where I live --------------------------------------------------------
+        const Text(
+          'Where I live (area not the full address)',
+          style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 53, 113, 217)),
+        ),
+        const SizedBox(height: 8.0),
+        isEditing
+            ? TextField(
+                controller: _placeController,
+                decoration: const InputDecoration(
+                  hintText: 'Enter where you live',
+                ),
+              )
+            : Text(
+                place,
+                style: const TextStyle(fontSize: 16.0),
+              ),
+
+        // Edit button ---------------------------------------------------------
         const SizedBox(height: 16.0),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
