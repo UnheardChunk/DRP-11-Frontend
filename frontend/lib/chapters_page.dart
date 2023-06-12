@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:postgrest/src/postgrest_builder.dart';
 import 'main.dart';
 import 'utilities.dart';
 import 'memories_page.dart';
@@ -138,14 +137,19 @@ class _ChaptersTabState extends State<ChaptersTab> {
               },
               child: const Icon(Icons.add))
           : Container(),
-      body: Container(
-        color: Colors.grey[300],
-        padding: const EdgeInsets.all(10),
-        child: Container(
-          color: Colors.grey[300],
-          padding: const EdgeInsets.all(10),
-          child: widget.allowChapterCreation ? EventsWidget(future: future) : EmotionsWidget(),
-        ),
+      body: GenericContainer(
+        child: widget.allowChapterCreation 
+          ? GenericFutureListView(
+            future: future,
+            genericTileBuilder: (chapter) {
+              return GenericTile(
+                name: chapter["name"],
+                tileIcon: const Icon(Icons.menu_book, size: 30),
+                navigatesTo: MemoriesPage(chapter["bucket_id"]),
+              );
+            },
+          ) 
+          : EmotionsWidget(),
       ),
     );
   }
@@ -175,43 +179,6 @@ class EmotionsWidget extends StatelessWidget {
             colour: emotionColours[i],
           )
       ],
-    );
-  }
-}
-
-class EventsWidget extends StatelessWidget {
-  const EventsWidget({
-    super.key,
-    required this.future,
-  });
-
-  final PostgrestFilterBuilder<List<Map<String, dynamic>>> future;
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<Map<String, dynamic>>>(
-      future: future,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        final data = snapshot.data!;
-        return Container(
-          color: Colors.grey[300],
-          padding: const EdgeInsets.all(10),
-          child: ListView.builder(
-            itemCount: data.length,
-            itemBuilder: (context, index) {
-              final chapters = data[index];
-              return GenericTile(
-                name: chapters["name"],
-                tileIcon: const Icon(Icons.menu_book, size: 30),
-                navigatesTo: MemoriesPage(chapters["bucket_id"]),
-              );
-            },
-          )
-        );
-      },
     );
   }
 }

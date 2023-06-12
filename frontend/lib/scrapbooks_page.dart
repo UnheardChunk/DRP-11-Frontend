@@ -110,29 +110,17 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
           title: const Text('My scrapbooks'),
           centerTitle: true,
         ),
-        body: FutureBuilder<List<Map<String, dynamic>>>(
-          future: data,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            final data = snapshot.data!;
-            return Container(
-              color: Colors.grey[300],
-              padding: const EdgeInsets.all(10),
-              child: ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  final scrapbook = data[index];
-                  return GenericTile(
-                    name: scrapbook["name"],
-                    tileIcon: const Icon(Icons.menu_book, size: 30),
-                    navigatesTo: ChaptersPage(uuid: scrapbook["id"], name: scrapbook["name"]),
-                  );
-                },
-              )
-            );
-          },
+        body: GenericContainer(
+          child: GenericFutureListView(
+            future: data,
+            genericTileBuilder: (scrapbook) {
+              return GenericTile(
+                name: scrapbook["name"],
+                tileIcon: const Icon(Icons.menu_book, size: 30),
+                navigatesTo: ChaptersPage(uuid: scrapbook["id"], name: scrapbook["name"]),
+              );
+            },
+          )
         ),
       )
     );
