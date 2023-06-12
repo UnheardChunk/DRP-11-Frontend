@@ -50,10 +50,12 @@ class _ChaptersPageState extends State<ChaptersPage> {
 
 class ChaptersTab extends StatefulWidget {
   late final bool allowChapterCreation;
+  late final bool isProfileTab;
   final String uuid;
 
   ChaptersTab(this.uuid, {super.key, required index}) {
     allowChapterCreation = index == 0;
+    isProfileTab = index == 2;
   }
 
   @override
@@ -142,11 +144,13 @@ class _ChaptersTabState extends State<ChaptersTab> {
         color: Colors.grey[300],
         padding: const EdgeInsets.all(10),
         child: Container(
-          color: Color.fromARGB(255, 36, 146, 214),
+          color: Colors.grey[300],
           padding: const EdgeInsets.all(10),
           child: widget.allowChapterCreation
               ? EventsWidget(future: future)
-              : EmotionsWidget(),
+              : widget.isProfileTab
+                  ? const Placeholder()
+                  : EmotionsWidget(),
         ),
       ),
     );
