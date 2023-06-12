@@ -31,7 +31,11 @@ class _MemoriesPageState extends State<MemoriesPage> {
   initialise() async {
     final paths = await supabase.storage.from(widget.bucketId).list();
     for (FileObject path in paths) {
-      final caption = await supabase.from("Files").select("caption").eq("bucket_id", widget.bucketId).eq("name", path.name).single();
+      final caption = await supabase.from("Files")
+                                    .select("caption")
+                                    .eq("bucket_id", widget.bucketId)
+                                    .eq("name", path.name)
+                                    .single();
       setState(() {
         images.add(Tuple2(supabase.storage.from(widget.bucketId).download(path.name), caption["caption"]));
       });
