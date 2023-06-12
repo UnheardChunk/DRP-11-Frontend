@@ -12,14 +12,17 @@ class MemoriesPage extends StatefulWidget {
   const MemoriesPage(this.bucketId, {super.key});
 
   @override
-  State<MemoriesPage> createState() => _MemoriesPageState();
+  State<MemoriesPage> createState() => _MemoriesPageState(bucketId);
 }
 
 class _MemoriesPageState extends State<MemoriesPage> {
   List<Tuple2<Future<Uint8List>, String>> images = [];
 
   final ImagePicker picker = ImagePicker();
+  final String bucketId;
   late TextEditingController controller;
+
+  _MemoriesPageState(this.bucketId);
 
   @override
   void initState() {
@@ -31,8 +34,9 @@ class _MemoriesPageState extends State<MemoriesPage> {
   initialise() async {
     final paths = await supabase.storage.from(widget.bucketId).list();
     for (FileObject path in paths) {
+      final caption = await supabase.from("Files").select("caption").eq("bucket_id", bucketId).eq("name", path.name).single();
       setState(() {
-        images.add(Tuple2(supabase.storage.from(widget.bucketId).download(path.name), path.name));
+        images.add(Tuple2(supabase.storage.from(widget.bucketId).download(path.name), caption["caption"]));
       });
     }
   }
@@ -44,8 +48,9 @@ class _MemoriesPageState extends State<MemoriesPage> {
     await displayBox(img);
   }
 
-  uploadImage(XFile? img, String caption) async {
-    await supabase.storage.from(widget.bucketId).upload(caption, File(img!.path));
+  uploadImage(XFile? img, String caption, String bucketId) async {
+    await supabase.storage.from(widget.bucketId).upload(img!.name, File(img.path));
+    await supabase.from("Files").insert({"bucket_id": bucketId, "name": img.name, "caption": caption});
     setState(() {
       images.add(Tuple2(img.readAsBytes(), caption));
     });
@@ -61,7 +66,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
       title: const Text("Add caption"),
       content:
         TextField(
-        onSubmitted: (_) => uploadImage(img, controller.text),
+        onSubmitted: (_) => uploadImage(img, controller.text, bucketId),
         autofocus: true,
         decoration: const InputDecoration(
           hintText: "Enter a caption",
@@ -70,7 +75,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
       ),
       actions: [
         TextButton(
-          onPressed: () => uploadImage(img, controller.text),
+          onPressed: () => uploadImage(img, controller.text, bucketId),
           child: const Text("Submit"),
         )
       ],
