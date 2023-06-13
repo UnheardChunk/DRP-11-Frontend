@@ -17,14 +17,12 @@ class MemoriesPage extends StatefulWidget {
 }
 
 class _MemoriesPageState extends State<MemoriesPage> {
-  List<Tuple2<Future<Uint8List>, String>> images = [];
+  List<Tuple2<Future<Uint8List>, Map<String, dynamic>>> images = [];
 
   final ImagePicker picker = ImagePicker();
   late TextEditingController captionController;
   late TextEditingController responseController;
-
-  List<String> emotionsList = ['No Emotion', 'Happy', 'Soothing', 'Exciting', 'Sad', 'Distressing'];
-  String emotion = "No Emotion";
+  late List<String> emotionsList;
 
   @override
   void initState() {
@@ -36,14 +34,17 @@ class _MemoriesPageState extends State<MemoriesPage> {
 
   initialise() async {
     final paths = await supabase.storage.from(widget.bucketId).list();
+    final List<Map<String, dynamic>> emotions = await supabase.from("Emotions").select();
+    emotionsList = (emotions.map((e) => e["emotion"] as String)).toList();
+
     for (FileObject path in paths) {
-      final caption = await supabase.from("Files")
-                                    .select("caption")
+      final metadata = await supabase.from("Files")
+                                    .select()
                                     .eq("bucket_id", widget.bucketId)
                                     .eq("name", path.name)
                                     .single();
       setState(() {
-        images.add(Tuple2(supabase.storage.from(widget.bucketId).download(path.name), caption["caption"]));
+        images.add(Tuple2(supabase.storage.from(widget.bucketId).download(path.name), metadata));
       });
     }
   }
@@ -59,7 +60,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
     await supabase.storage.from(widget.bucketId).upload(img!.name, File(img.path));
     await supabase.from("Files").insert({"bucket_id": bucketId, "name": img.name, "caption": caption});
     setState(() {
-      images.add(Tuple2(img.readAsBytes(), caption));
+      images.add(Tuple2(img.readAsBytes(), <String, dynamic>{"caption": caption, "name": img.name, "emotion": "No Emotion", "response": null}));
     });
     if (context.mounted) Navigator.of(context).pop(captionController.text);
 
@@ -144,8 +145,9 @@ class _MemoriesPageState extends State<MemoriesPage> {
     );
   }
 
-  Future<Tuple2<String, String>?> openResponseCreation() {
-    String dropdownValue = emotion;
+  Future<Tuple2<String, String>?> openResponseCreation(Map metadata) {
+    String dropdownValue = metadata["emotion"];
+    responseController.text = metadata["response"] ?? "";
 
     return showDialog<Tuple2<String, String>>(
       context: context,
@@ -158,9 +160,9 @@ class _MemoriesPageState extends State<MemoriesPage> {
               const Text('Add response'),
               DropdownButton<String>(
                 value: dropdownValue,
-                onChanged: (String? value) {
+                onChanged: (String? emotion) async {
                   setState(() {
-                    dropdownValue = value!;
+                    dropdownValue = emotion!;
                   });
                 },
                 items: emotionsList.map<DropdownMenuItem<String>>((String value) {
@@ -173,7 +175,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
             ],
           ),
           content: TextField(
-            onSubmitted: (_) => createResponse(dropdownValue),
+            onSubmitted: (_) => createResponse(dropdownValue, metadata["name"]),
             autofocus: true,
             decoration: const InputDecoration(
               hintText: "Enter a response to this memory"
@@ -182,7 +184,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
           ),
           actions: [
             TextButton(
-              onPressed: () => createResponse(dropdownValue), 
+              onPressed: () => createResponse(dropdownValue, metadata["name"]),
               child: const Text("Submit"),
             ),
           ],
@@ -191,7 +193,9 @@ class _MemoriesPageState extends State<MemoriesPage> {
     );
   }
 
-  void createResponse(String emotion) {
+  void createResponse(String emotion, String path) async {
+    print(path);
+    await supabase.from("Files").update({"response": responseController.text, "emotion": emotion}).eq("bucket_id", widget.bucketId ).eq("name", path);
     if (context.mounted) Navigator.of(context).pop(Tuple2(responseController.text, emotion));
   }
 
@@ -239,11 +243,12 @@ class _MemoriesPageState extends State<MemoriesPage> {
                               alignment: Alignment.topRight,
                               child: ElevatedButton(
                                 onPressed: () async {
-                                  final response = await openResponseCreation();
+                                  final response = await openResponseCreation(image.item2);
                                   if (response == null) return;
 
                                   setState(() {
-                                    emotion = response!.item2;
+                                    image.item2["response"] = response!.item1;
+                                    image.item2["emotion"] = response.item2;
                                   });
                                 },
                                 child: const Icon(Icons.edit_note, size: 30,)  
@@ -251,7 +256,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
                             ),
                           ]
                         ),
-                        Text(image.item2),
+                        Text(image.item2["caption"]),
                         const SizedBox(height: 25,),
                       ]
                     );
