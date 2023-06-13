@@ -111,7 +111,7 @@ class Field extends StatelessWidget {
                 text,
                 style: const TextStyle(fontSize: 16.0),
               ),
-        const SizedBox(height: 8.0),
+        const SizedBox(height: 30),
       ],
     );
   }
