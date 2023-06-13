@@ -20,12 +20,17 @@ class _MemoriesPageState extends State<MemoriesPage> {
   List<Tuple2<Future<Uint8List>, String>> images = [];
 
   final ImagePicker picker = ImagePicker();
-  late TextEditingController controller;
+  late TextEditingController captionController;
+  late TextEditingController responseController;
+
+  List<String> emotionsList = ['No Emotion', 'Happy', 'Soothing', 'Exciting', 'Sad', 'Distressing'];
+  String emotion = "No Emotion";
 
   @override
   void initState() {
     super.initState();
-    controller = TextEditingController();
+    captionController = TextEditingController();
+    responseController = TextEditingController();
     initialise();
   }
 
@@ -56,12 +61,12 @@ class _MemoriesPageState extends State<MemoriesPage> {
     setState(() {
       images.add(Tuple2(img.readAsBytes(), caption));
     });
-    if (context.mounted) Navigator.of(context).pop(controller.text);
+    if (context.mounted) Navigator.of(context).pop(captionController.text);
 
   }
 
   Future displayBox(XFile? img) {
-    controller.clear();
+    captionController.clear();
 
     return showDialog<String>(
         context: context,
@@ -69,16 +74,16 @@ class _MemoriesPageState extends State<MemoriesPage> {
       title: const Text("Add caption"),
       content:
         TextField(
-        onSubmitted: (_) => uploadImage(img, controller.text, widget.bucketId),
+        onSubmitted: (_) => uploadImage(img, captionController.text, widget.bucketId),
         autofocus: true,
         decoration: const InputDecoration(
           hintText: "Enter a caption",
         ),
-        controller: controller,
+        controller: captionController,
       ),
       actions: [
         TextButton(
-          onPressed: () => uploadImage(img, controller.text, widget.bucketId),
+          onPressed: () => uploadImage(img, captionController.text, widget.bucketId),
           child: const Text("Submit"),
         )
       ],
@@ -88,7 +93,8 @@ class _MemoriesPageState extends State<MemoriesPage> {
 
   @override
   void dispose() {
-    controller.dispose();
+    captionController.dispose();
+    responseController.dispose();
     super.dispose();
   }
 
@@ -139,21 +145,24 @@ class _MemoriesPageState extends State<MemoriesPage> {
   }
 
   Future<Tuple2<String, String>?> openResponseCreation() {
-    List<String> emotionsList = ['Happy', 'Soothing', 'Exciting', 'Sad', 'Distressing'];
-    String dropdownValue = emotionsList.first;
+    String dropdownValue = emotion;
 
     return showDialog<Tuple2<String, String>>(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          titlePadding: const EdgeInsets.all(10),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          titlePadding: const EdgeInsets.symmetric(horizontal: 15),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Add response'),
               DropdownButton<String>(
                 value: dropdownValue,
-                onChanged: (String? value) {},
+                onChanged: (String? value) {
+                  setState(() {
+                    dropdownValue = value!;
+                  });
+                },
                 items: emotionsList.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -163,10 +172,27 @@ class _MemoriesPageState extends State<MemoriesPage> {
               ),
             ],
           ),
-          content: const Text(""),
-        );
-      },
+          content: TextField(
+            onSubmitted: (_) => createResponse(dropdownValue),
+            autofocus: true,
+            decoration: const InputDecoration(
+              hintText: "Enter a response to this memory"
+            ),
+            controller: responseController,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => createResponse(dropdownValue), 
+              child: const Text("Submit"),
+            ),
+          ],
+        )
+      )
     );
+  }
+
+  void createResponse(String emotion) {
+    if (context.mounted) Navigator.of(context).pop(Tuple2(responseController.text, emotion));
   }
 
   @override
@@ -212,7 +238,14 @@ class _MemoriesPageState extends State<MemoriesPage> {
                             Align(
                               alignment: Alignment.topRight,
                               child: ElevatedButton(
-                                onPressed: openResponseCreation,
+                                onPressed: () async {
+                                  final response = await openResponseCreation();
+                                  if (response == null) return;
+
+                                  setState(() {
+                                    emotion = response!.item2;
+                                  });
+                                },
                                 child: const Icon(Icons.edit_note, size: 30,)  
                               ),
                             ),
