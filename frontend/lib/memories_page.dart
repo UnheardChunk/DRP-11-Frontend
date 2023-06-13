@@ -1,5 +1,6 @@
 import 'dart:typed_data';
-import 'package:memories_scrapbook/utilities.dart';
+import 'chapters_page.dart';
+import 'utilities.dart';
 import 'package:tuple/tuple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:io';
@@ -8,9 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MemoriesPage extends StatefulWidget {
-  final String bucketId;
+  final List<String> bucketIds;
+  final MemoryOrganisationType organisationType;
+  final String emotion;
 
-  const MemoriesPage(this.bucketId, {super.key});
+  const MemoriesPage(this.bucketIds, this.organisationType, {super.key, this.emotion = ""});
 
   @override
   State<MemoriesPage> createState() => _MemoriesPageState();
@@ -32,21 +35,49 @@ class _MemoriesPageState extends State<MemoriesPage> {
     initialise();
   }
 
-  initialise() async {
-    final paths = await supabase.storage.from(widget.bucketId).list();
+  Future<void> fetchChapterMemories(String bucketId, FileObject path) async {
+    final metadata = await supabase.from("Files")
+                                   .select()
+                                   .eq("bucket_id", bucketId)
+                                   .eq("name", path.name)
+                                   .single();
+    setState(() {
+      images.add(Tuple2(supabase.storage.from(bucketId).download(path.name), metadata));
+    });
+  }
+
+  Future<void> fetchEmotionMemories(String bucketId, FileObject path, String emotion) async {
+    final metadata = await supabase.from("Files")
+                                   .select<Map<String, dynamic>?>()
+                                   .eq("bucket_id", bucketId)
+                                   .eq("name", path.name)
+                                   .eq("emotion", emotion)
+                                   .maybeSingle();
+    if (metadata == null) return;
+
+    setState(() {
+      images.add(Tuple2(supabase.storage.from(bucketId).download(path.name), metadata));
+    });
+  }
+
+  Future<void> fetchMemories(String bucketId) async {
+    final paths = await supabase.storage.from(bucketId).list();
     final List<Map<String, dynamic>> emotions = await supabase.from("Emotions").select();
     emotionsList = (emotions.map((e) => e["emotion"] as String)).toList();
 
     for (FileObject path in paths) {
-      final metadata = await supabase.from("Files")
-                                    .select()
-                                    .eq("bucket_id", widget.bucketId)
-                                    .eq("name", path.name)
-                                    .single();
-      setState(() {
-        images.add(Tuple2(supabase.storage.from(widget.bucketId).download(path.name), metadata));
-      });
+      switch (widget.organisationType) {
+        case MemoryOrganisationType.chapters:
+          await fetchChapterMemories(bucketId, path);
+          break;
+        default:
+          await fetchEmotionMemories(bucketId, path, widget.emotion);
+      }
     }
+  }
+
+  void initialise() async {
+    widget.bucketIds.forEach(fetchMemories);
   }
 
   //we can upload image from camera or from gallery based on parameter
@@ -56,8 +87,8 @@ class _MemoriesPageState extends State<MemoriesPage> {
     await displayBox(img);
   }
 
-  uploadImage(XFile? img, String caption, String bucketId) async {
-    await supabase.storage.from(widget.bucketId).upload(img!.name, File(img.path));
+  void uploadImage(XFile? img, String caption, String bucketId) async {
+    await supabase.storage.from(bucketId).upload(img!.name, File(img.path));
     await supabase.from("Files").insert({"bucket_id": bucketId, "name": img.name, "caption": caption});
     setState(() {
       images.add(Tuple2(img.readAsBytes(), <String, dynamic>{"caption": caption, "name": img.name, "emotion": "No Emotion", "response": null}));
@@ -75,7 +106,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
       title: const Text("Add caption"),
       content:
         TextField(
-        onSubmitted: (_) => uploadImage(img, captionController.text, widget.bucketId),
+        onSubmitted: (_) => uploadImage(img, captionController.text, widget.bucketIds[0]),
         autofocus: true,
         decoration: const InputDecoration(
           hintText: "Enter a caption",
@@ -84,7 +115,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
       ),
       actions: [
         TextButton(
-          onPressed: () => uploadImage(img, captionController.text, widget.bucketId),
+          onPressed: () => uploadImage(img, captionController.text, widget.bucketIds[0]),
           child: const Text("Submit"),
         )
       ],
@@ -194,8 +225,10 @@ class _MemoriesPageState extends State<MemoriesPage> {
   }
 
   void createResponse(String emotion, String path) async {
-    print(path);
-    await supabase.from("Files").update({"response": responseController.text, "emotion": emotion}).eq("bucket_id", widget.bucketId ).eq("name", path);
+    await supabase.from("Files")
+                  .update({"response": responseController.text, "emotion": emotion})
+                  .eq("bucket_id", widget.bucketIds[0])
+                  .eq("name", path);
     if (context.mounted) Navigator.of(context).pop(Tuple2(responseController.text, emotion));
   }
 
@@ -203,12 +236,12 @@ class _MemoriesPageState extends State<MemoriesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButton: FloatingActionButton(
-        onPressed:
-          mediaAlert,
-
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: widget.organisationType == MemoryOrganisationType.chapters 
+        ? FloatingActionButton(
+          onPressed: mediaAlert,
+          child: const Icon(Icons.add),
+        )
+        : Container(),
       appBar: AppBar(
         title: const Text('Upload Image'),
       ),
