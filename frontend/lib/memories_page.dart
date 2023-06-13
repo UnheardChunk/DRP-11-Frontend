@@ -243,7 +243,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
                                   if (response == null) return;
 
                                   setState(() {
-                                    emotion = response!.item2;
+                                    emotion = response.item2;
                                   });
                                 },
                                 child: const Icon(Icons.edit_note, size: 30,)  
