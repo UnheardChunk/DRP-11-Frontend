@@ -11,7 +11,7 @@ class ProfileWidget extends StatefulWidget {
 class _ProfileWidgetState extends State<ProfileWidget> {
   bool isEditing = false;
 
-  int count = 22;
+  final int count = 22;
   final List<String> textFields = List.generate(22, (index) => "");
   final List<TextEditingController> controllers =
       List.generate(22, (index) => TextEditingController());
