@@ -247,7 +247,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
                                   if (response == null) return;
 
                                   setState(() {
-                                    image.item2["response"] = response!.item1;
+                                    image.item2["response"] = response.item1;
                                     image.item2["emotion"] = response.item2;
                                   });
                                 },
