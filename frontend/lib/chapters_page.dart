@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'main.dart';
 import 'utilities.dart';
 import 'memories_page.dart';
@@ -148,21 +149,25 @@ class _ChaptersTabState extends State<ChaptersTab> {
               return GenericTile(
                 name: chapter["name"],
                 tileIcon: const Icon(Icons.menu_book, size: 30),
-                navigatesTo: MemoriesPage(chapter["bucket_id"]),
+                navigatesTo: MemoriesPage([chapter["bucket_id"]], MemoryOrganisationType.chapters),
               );
             },
           ) 
           : widget.isProfileTab
             ? const ProfileWidget()
-            : EmotionsWidget(),
+            : EmotionsWidget(allChapters: future,),
       ),
     );
   }
 }
 
 class EmotionsWidget extends StatelessWidget {
+
+  final PostgrestFilterBuilder<List<Map<String, dynamic>>> allChapters;
+  
   EmotionsWidget({
     super.key,
+    required this.allChapters,
   });
 
   final List<String> emotions = [
@@ -182,16 +187,33 @@ class EmotionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        for (var i = 0; i < emotions.length; i++)
-          GenericTile(
-            name: emotions[i],
-            tileIcon: const Icon(null),
-            navigatesTo: const Placeholder(),
-            colour: emotionColours[i],
-          )
-      ],
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: allChapters,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        List<String> bucketIds = [];
+        for (Map<String, dynamic> chapter in snapshot.data!) {
+          bucketIds.add(chapter["bucket_id"]);
+        }
+        return ListView(
+          children: [
+            for (var i = 0; i < emotions.length; i++)
+              GenericTile(
+                name: emotions[i],
+                tileIcon: const Icon(null),
+                navigatesTo: MemoriesPage(bucketIds, MemoryOrganisationType.emotions, emotion: emotions[i],),
+                colour: emotionColours[i],
+              )
+          ],
+        );
+      }
     );
   }
+}
+
+enum MemoryOrganisationType {
+  emotions,
+  chapters;
 }
