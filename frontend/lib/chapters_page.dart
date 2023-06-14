@@ -149,7 +149,11 @@ class _ChaptersTabState extends State<ChaptersTab> {
               return GenericTile(
                 name: chapter["name"],
                 tileIcon: const Icon(Icons.menu_book, size: 30),
-                navigatesTo: MemoriesPage([chapter["bucket_id"]], MemoryOrganisationType.chapters),
+                navigatesTo: MemoriesPage(
+                  [chapter["bucket_id"]], 
+                  MemoryOrganisationType.chapters,
+                  name: chapter["name"],
+                ),
               );
             },
           ) 
@@ -203,7 +207,12 @@ class EmotionsWidget extends StatelessWidget {
               GenericTile(
                 name: emotions[i],
                 tileIcon: const Icon(null),
-                navigatesTo: MemoriesPage(bucketIds, MemoryOrganisationType.emotions, emotion: emotions[i],),
+                navigatesTo: MemoriesPage(
+                  bucketIds, 
+                  MemoryOrganisationType.emotions, 
+                  emotion: emotions[i],
+                  name: emotions[i],
+                ),
                 colour: emotionColours[i],
               )
           ],
