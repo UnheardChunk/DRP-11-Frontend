@@ -141,20 +141,20 @@ class _ChaptersTabState extends State<ChaptersTab> {
               child: const Icon(Icons.add))
           : Container(),
       body: GenericContainer(
-        child: widget.allowChapterCreation 
-          ? GenericFutureListView(
-            future: future,
-            genericTileBuilder: (chapter) {
-              return GenericTile(
-                name: chapter["name"],
-                tileIcon: const Icon(Icons.menu_book, size: 30),
-                navigatesTo: MemoriesPage(chapter["bucket_id"]),
-              );
-            },
-          ) 
-          : widget.isProfileTab
-            ? const ProfileWidget()
-            : EmotionsWidget(),
+        child: widget.allowChapterCreation
+            ? GenericFutureListView(
+                future: future,
+                genericTileBuilder: (chapter) {
+                  return GenericTile(
+                    name: chapter["name"],
+                    tileIcon: const Icon(Icons.menu_book, size: 30),
+                    navigatesTo: MemoriesPage(chapter["bucket_id"]),
+                  );
+                },
+              )
+            : widget.isProfileTab
+                ? ProfileWidget(uuid: widget.uuid)
+                : EmotionsWidget(),
       ),
     );
   }

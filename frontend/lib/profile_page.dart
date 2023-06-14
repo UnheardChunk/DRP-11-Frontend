@@ -20,6 +20,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   void initState() {
     super.initState();
     for (int i = 0; i < count; i++) {
+      // Retrieve textFields from database
       controllers[i].text = textFields[i];
     }
   }
@@ -50,7 +51,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       }
       isEditing = false;
     });
-    // Send to database
+    // Send array to database
   }
 
   @override
@@ -146,14 +147,16 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               // Things I need help with -------------------------------------------
               Field(
                   labelText: 'Things I might want help with',
-                  text: textFields[10].isEmpty ? "Not provided" : textFields[10],
+                  text:
+                      textFields[10].isEmpty ? "Not provided" : textFields[10],
                   isEditing: isEditing,
                   controller: controllers[10]),
 
               // Things that upset
               Field(
                   labelText: 'Things that may worry or upset me',
-                  text: textFields[11].isEmpty ? "Not provided" : textFields[11],
+                  text:
+                      textFields[11].isEmpty ? "Not provided" : textFields[11],
                   isEditing: isEditing,
                   controller: controllers[11]),
 
@@ -161,7 +164,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               Field(
                   labelText:
                       'What makes me feel better if I am anxious or upset',
-                  text: textFields[12].isEmpty ? "Not provided" : textFields[12],
+                  text:
+                      textFields[12].isEmpty ? "Not provided" : textFields[12],
                   isEditing: isEditing,
                   controller: controllers[12]),
 
@@ -172,21 +176,24 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               // Hearing and eyesight
               Field(
                   labelText: 'My hearing and eyesight',
-                  text: textFields[13].isEmpty ? "Not provided" : textFields[13],
+                  text:
+                      textFields[13].isEmpty ? "Not provided" : textFields[13],
                   isEditing: isEditing,
                   controller: controllers[13]),
 
               // How to communicate ----------------------------------------------
               Field(
                   labelText: 'How we can communicate',
-                  text: textFields[14].isEmpty ? "Not provided" : textFields[14],
+                  text:
+                      textFields[14].isEmpty ? "Not provided" : textFields[14],
                   isEditing: isEditing,
                   controller: controllers[14]),
 
               // Mobility --------------------------------------------------------
               Field(
                   labelText: 'My mobility',
-                  text: textFields[15].isEmpty ? "Not provided" : textFields[15],
+                  text:
+                      textFields[15].isEmpty ? "Not provided" : textFields[15],
                   isEditing: isEditing,
                   controller: controllers[15]),
 
@@ -196,28 +203,32 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               // Things to help sleep --------------------------------------------
               Field(
                   labelText: 'Things that help me sleep',
-                  text: textFields[16].isEmpty ? "Not provided" : textFields[16],
+                  text:
+                      textFields[16].isEmpty ? "Not provided" : textFields[16],
                   isEditing: isEditing,
                   controller: controllers[16]),
 
               // Personal care ---------------------------------------------------
               Field(
                   labelText: 'My personal care',
-                  text: textFields[17].isEmpty ? "Not provided" : textFields[17],
+                  text:
+                      textFields[17].isEmpty ? "Not provided" : textFields[17],
                   isEditing: isEditing,
                   controller: controllers[17]),
 
               // Medication ------------------------------------------------------
               Field(
                   labelText: 'How I take my medication',
-                  text: textFields[18].isEmpty ? "Not provided" : textFields[18],
+                  text:
+                      textFields[18].isEmpty ? "Not provided" : textFields[18],
                   isEditing: isEditing,
                   controller: controllers[18]),
 
               // Eating and drinking ---------------------------------------------
               Field(
                   labelText: 'My eating and drinking',
-                  text: textFields[19].isEmpty ? "Not provided" : textFields[19],
+                  text:
+                      textFields[19].isEmpty ? "Not provided" : textFields[19],
                   isEditing: isEditing,
                   controller: controllers[19]),
 
@@ -226,14 +237,16 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               // Other notes -----------------------------------------------------
               Field(
                   labelText: 'Other notes about me',
-                  text: textFields[20].isEmpty ? "Not provided" : textFields[20],
+                  text:
+                      textFields[20].isEmpty ? "Not provided" : textFields[20],
                   isEditing: isEditing,
                   controller: controllers[20]),
 
               // Date completed
               Field(
                   labelText: 'Date Completed',
-                  text: textFields[21].isEmpty ? "Not provided" : textFields[21],
+                  text:
+                      textFields[21].isEmpty ? "Not provided" : textFields[21],
                   isEditing: isEditing,
                   controller: controllers[21]),
             ],
