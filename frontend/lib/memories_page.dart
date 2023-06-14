@@ -206,7 +206,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
             ],
           ),
           content: TextField(
-            onSubmitted: (_) => createResponse(dropdownValue, metadata["name"]),
+            onSubmitted: (_) => createResponse(dropdownValue, metadata["name"], metadata["bucket_id"]),
             autofocus: true,
             decoration: const InputDecoration(
               hintText: "Enter a response to this memory"
@@ -215,7 +215,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
           ),
           actions: [
             TextButton(
-              onPressed: () => createResponse(dropdownValue, metadata["name"]),
+              onPressed: () => createResponse(dropdownValue, metadata["name"], metadata["bucket_id"]),
               child: const Text("Submit"),
             ),
           ],
@@ -224,10 +224,10 @@ class _MemoriesPageState extends State<MemoriesPage> {
     );
   }
 
-  void createResponse(String emotion, String path) async {
+  void createResponse(String emotion, String path, String bucketId) async {
     await supabase.from("Files")
                   .update({"response": responseController.text, "emotion": emotion})
-                  .eq("bucket_id", widget.bucketIds[0])
+                  .eq("bucket_id", bucketId)
                   .eq("name", path);
     if (context.mounted) Navigator.of(context).pop(Tuple2(responseController.text, emotion));
   }
