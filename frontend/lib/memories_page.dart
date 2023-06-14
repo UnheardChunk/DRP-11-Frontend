@@ -252,7 +252,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
         )
         : Container(),
       appBar: AppBar(
-        title: const Text('Upload Image'),
+        title: Text('${widget.name} Memories'),
       ),
       body: GenericContainer(
         child: images.isNotEmpty
