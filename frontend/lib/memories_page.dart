@@ -247,9 +247,9 @@ class _MemoriesPageState extends State<MemoriesPage> {
       resizeToAvoidBottomInset: false,
       floatingActionButton: widget.organisationType == MemoryOrganisationType.chapters 
         ? FloatingActionButton(
-          onPressed: mediaAlert,
-          child: const Icon(Icons.add),
-        )
+            onPressed: mediaAlert,
+            child: const Icon(Icons.add),
+          )
         : Container(),
       appBar: AppBar(
         title: Text('${widget.name} Memories'),
