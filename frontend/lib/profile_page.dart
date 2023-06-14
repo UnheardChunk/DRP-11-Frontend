@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'main.dart';
 import 'utilities.dart';
 
 class ProfileWidget extends StatefulWidget {
-  const ProfileWidget({super.key});
+  final String uuid;
+  const ProfileWidget({super.key, required this.uuid});
 
   @override
   State<ProfileWidget> createState() => _ProfileWidgetState();
@@ -19,8 +21,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   @override
   void initState() {
     super.initState();
+    // Retrieve textFields from database
+
     for (int i = 0; i < count; i++) {
-      // Retrieve textFields from database
       controllers[i].text = textFields[i];
     }
   }
@@ -44,7 +47,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     });
   }
 
-  void saveChanges() {
+  void saveChanges() async {
     setState(() {
       for (int i = 0; i < count; i++) {
         textFields[i] = controllers[i].text;
@@ -52,6 +55,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       isEditing = false;
     });
     // Send array to database
+    print(textFields);
+    print(widget.uuid);
+    await supabase
+        .from('Scrapbooks')
+        .update({'profile': textFields}).match({'id': widget.uuid});
   }
 
   @override
