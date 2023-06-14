@@ -148,7 +148,7 @@ class _ChaptersTabState extends State<ChaptersTab> {
             genericTileBuilder: (chapter) {
               return GenericTile(
                 name: chapter["name"],
-                tileIcon: const Icon(Icons.menu_book, size: 30),
+                tileIcon: const Icon(Icons.bookmark_outline, size: 30),
                 navigatesTo: MemoriesPage(
                   [chapter["bucket_id"]], 
                   MemoryOrganisationType.chapters,
