@@ -257,56 +257,56 @@ class _MemoriesPageState extends State<MemoriesPage> {
       body: GenericContainer(
         child: images.isNotEmpty
           ? SingleChildScrollView(
-            child: ListView(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              children: images.map((image) {
-                return FutureBuilder(
-                  future: image.item1,
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Center(
-                          child: CircularProgressIndicator());
-                    }
-                    final img = snapshot.data!;
-                    return Column(
-                      children: [
-                        Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.memory(
-                                img,
-                                fit: BoxFit.fitWidth,
-                                width: MediaQuery.of(context).size.width,
+              child: ListView(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                children: images.map((image) {
+                  return FutureBuilder(
+                    future: image.item1,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(
+                            child: CircularProgressIndicator());
+                      }
+                      final img = snapshot.data!;
+                      return Column(
+                        children: [
+                          Stack(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.memory(
+                                  img,
+                                  fit: BoxFit.fitWidth,
+                                  width: MediaQuery.of(context).size.width,
+                                ),
                               ),
-                            ),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  final response = await openResponseCreation(image.item2);
-                                  if (response == null) return;
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    final response = await openResponseCreation(image.item2);
+                                    if (response == null) return;
 
-                                  setState(() {
-                                    image.item2["response"] = response.item1;
-                                    image.item2["emotion"] = response.item2;
-                                  });
-                                },
-                                child: const Icon(Icons.edit_note, size: 30,)  
+                                    setState(() {
+                                      image.item2["response"] = response.item1;
+                                      image.item2["emotion"] = response.item2;
+                                    });
+                                  },
+                                  child: const Icon(Icons.edit_note, size: 30,)  
+                                ),
                               ),
-                            ),
-                          ]
-                        ),
-                        Text(image.item2["caption"]),
-                        const SizedBox(height: 25,),
-                      ]
-                    );
-                  }
-                );
-              }).toList(),
-            ),
-          )
+                            ]
+                          ),
+                          Text(image.item2["caption"]),
+                          const SizedBox(height: 25,),
+                        ]
+                      );
+                    }
+                  );
+                }).toList(),
+              ),
+            )
           : Container(),
       ),
     );
