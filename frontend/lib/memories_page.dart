@@ -9,11 +9,20 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MemoriesPage extends StatefulWidget {
+  final String name;
   final List<String> bucketIds;
   final MemoryOrganisationType organisationType;
   final String emotion;
 
-  const MemoriesPage(this.bucketIds, this.organisationType, {super.key, this.emotion = ""});
+  const MemoriesPage(
+    this.bucketIds, 
+    this.organisationType, 
+    {
+      super.key, 
+      this.emotion = "", 
+      required this.name
+    }
+  );
 
   @override
   State<MemoriesPage> createState() => _MemoriesPageState();
