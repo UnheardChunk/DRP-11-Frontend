@@ -3,7 +3,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 // Class defining a generic ListTile
 class GenericTile extends StatelessWidget {
-
   // Name of the tile
   final String name;
   final Icon tileIcon;
@@ -38,7 +37,6 @@ class GenericTile extends StatelessWidget {
 
 // Class defining list view using supabase database
 class GenericFutureListView extends StatelessWidget {
-
   const GenericFutureListView({
     super.key,
     required this.future,
@@ -49,8 +47,7 @@ class GenericFutureListView extends StatelessWidget {
   final PostgrestFilterBuilder<List<Map<String, dynamic>>> future;
 
   // Function to build the GenericTile from a row of the table
-  final GenericTile Function(Map<String, dynamic>) genericTileBuilder; 
-
+  final GenericTile Function(Map<String, dynamic>) genericTileBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +69,6 @@ class GenericFutureListView extends StatelessWidget {
     );
   }
 }
-
 
 class Field extends StatelessWidget {
   final String labelText;
@@ -117,7 +113,6 @@ class Field extends StatelessWidget {
   }
 }
 
-
 class SectionHeader extends StatelessWidget {
   final String text;
   final Icon icon;
@@ -155,7 +150,6 @@ class SectionHeader extends StatelessWidget {
   }
 }
 
-
 class GenericContainer extends StatelessWidget {
   const GenericContainer({
     super.key,
@@ -173,5 +167,3 @@ class GenericContainer extends StatelessWidget {
     );
   }
 }
-
-

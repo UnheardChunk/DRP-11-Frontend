@@ -142,33 +142,34 @@ class _ChaptersTabState extends State<ChaptersTab> {
               child: const Icon(Icons.add))
           : Container(),
       body: GenericContainer(
-        child: widget.allowChapterCreation 
-          ? GenericFutureListView(
-            future: future,
-            genericTileBuilder: (chapter) {
-              return GenericTile(
-                name: chapter["name"],
-                tileIcon: const Icon(Icons.bookmark_outline, size: 30),
-                navigatesTo: MemoriesPage(
-                  [chapter["bucket_id"]], 
-                  MemoryOrganisationType.chapters,
-                  name: chapter["name"],
-                ),
-              );
-            },
-          ) 
-          : widget.isProfileTab
-            ? ProfileWidget(uuid: widget.uuid)
-            : EmotionsWidget(allChapters: future,),
+        child: widget.allowChapterCreation
+            ? GenericFutureListView(
+                future: future,
+                genericTileBuilder: (chapter) {
+                  return GenericTile(
+                    name: chapter["name"],
+                    tileIcon: const Icon(Icons.bookmark_outline, size: 30),
+                    navigatesTo: MemoriesPage(
+                      [chapter["bucket_id"]],
+                      MemoryOrganisationType.chapters,
+                      name: chapter["name"],
+                    ),
+                  );
+                },
+              )
+            : widget.isProfileTab
+                ? ProfileWidget(uuid: widget.uuid)
+                : EmotionsWidget(
+                    allChapters: future,
+                  ),
       ),
     );
   }
 }
 
 class EmotionsWidget extends StatelessWidget {
-
   final PostgrestFilterBuilder<List<Map<String, dynamic>>> allChapters;
-  
+
   EmotionsWidget({
     super.key,
     required this.allChapters,
@@ -192,33 +193,32 @@ class EmotionsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Map<String, dynamic>>>(
-      future: allChapters,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        List<String> bucketIds = [];
-        for (Map<String, dynamic> chapter in snapshot.data!) {
-          bucketIds.add(chapter["bucket_id"]);
-        }
-        return ListView(
-          children: [
-            for (var i = 0; i < emotions.length; i++)
-              GenericTile(
-                name: emotions[i],
-                tileIcon: const Icon(null),
-                navigatesTo: MemoriesPage(
-                  bucketIds, 
-                  MemoryOrganisationType.emotions, 
-                  emotion: emotions[i],
+        future: allChapters,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          List<String> bucketIds = [];
+          for (Map<String, dynamic> chapter in snapshot.data!) {
+            bucketIds.add(chapter["bucket_id"]);
+          }
+          return ListView(
+            children: [
+              for (var i = 0; i < emotions.length; i++)
+                GenericTile(
                   name: emotions[i],
-                ),
-                colour: emotionColours[i],
-              )
-          ],
-        );
-      }
-    );
+                  tileIcon: const Icon(null),
+                  navigatesTo: MemoriesPage(
+                    bucketIds,
+                    MemoryOrganisationType.emotions,
+                    emotion: emotions[i],
+                    name: emotions[i],
+                  ),
+                  colour: emotionColours[i],
+                )
+            ],
+          );
+        });
   }
 }
 

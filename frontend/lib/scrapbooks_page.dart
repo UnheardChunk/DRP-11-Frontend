@@ -3,7 +3,6 @@ import 'chapters_page.dart';
 import 'main.dart';
 import 'utilities.dart';
 
-
 // Creates the scrapbook page
 class ScrapbooksPage extends StatefulWidget {
   const ScrapbooksPage({super.key});
@@ -26,7 +25,6 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
     super.initState();
 
     controller = TextEditingController();
-
   }
 
   // Disposes the scrapbook creation controller
@@ -65,64 +63,61 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
 
   // Pops the AlertDialog for scrapbook creation when the submit button is pressed
   void createScrapbook() async {
-    await supabase
-        .from('Scrapbooks')
-        .insert({'name': controller.text});
+    await supabase.from('Scrapbooks').insert({'name': controller.text});
     if (context.mounted) Navigator.of(context).pop(controller.text);
-
   }
 
   // Builds the main screen for the scrapbook page
   @override
   Widget build(BuildContext context) {
-    final data = supabase.from("Scrapbooks").select<List<Map<String, dynamic>>>();
+    final data =
+        supabase.from("Scrapbooks").select<List<Map<String, dynamic>>>();
     return WillPopScope(
-      onWillPop: () async {
-        return await showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Text('Confirm that you want to Exit'),
-            content: const Text('Are you sure you want to exit the app?'),
-            actions: <Widget>[
-              TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('No')),
-              TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('Yes')),
-            ],
-          ),
-        );
-      },
-      child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            final name = await openScrapbookCreation();
-            if (name == null || name.isEmpty) return;
+        onWillPop: () async {
+          return await showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              title: const Text('Confirm that you want to Exit'),
+              content: const Text('Are you sure you want to exit the app?'),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('No')),
+                TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text('Yes')),
+              ],
+            ),
+          );
+        },
+        child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              final name = await openScrapbookCreation();
+              if (name == null || name.isEmpty) return;
 
-            setState(() {
-              scrapbooks.add(name);
-            });
-          },
-          child: const Icon(Icons.add),
-        ),
-        appBar: AppBar(
-          title: const Text('My scrapbooks'),
-          centerTitle: true,
-        ),
-        body: GenericContainer(
-          child: GenericFutureListView(
+              setState(() {
+                scrapbooks.add(name);
+              });
+            },
+            child: const Icon(Icons.add),
+          ),
+          appBar: AppBar(
+            title: const Text('My scrapbooks'),
+            centerTitle: true,
+          ),
+          body: GenericContainer(
+              child: GenericFutureListView(
             future: data,
             genericTileBuilder: (scrapbook) {
               return GenericTile(
                 name: scrapbook["name"],
                 tileIcon: const Icon(Icons.menu_book, size: 30),
-                navigatesTo: ChaptersPage(uuid: scrapbook["id"], name: scrapbook["name"]),
+                navigatesTo: ChaptersPage(
+                    uuid: scrapbook["id"], name: scrapbook["name"]),
               );
             },
-          )
-        ),
-      )
-    );
+          )),
+        ));
   }
 }

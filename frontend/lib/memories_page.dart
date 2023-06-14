@@ -14,15 +14,8 @@ class MemoriesPage extends StatefulWidget {
   final MemoryOrganisationType organisationType;
   final String emotion;
 
-  const MemoriesPage(
-    this.bucketIds, 
-    this.organisationType, 
-    {
-      super.key, 
-      this.emotion = "", 
-      required this.name
-    }
-  );
+  const MemoriesPage(this.bucketIds, this.organisationType,
+      {super.key, this.emotion = "", required this.name});
 
   @override
   State<MemoriesPage> createState() => _MemoriesPageState();
@@ -45,33 +38,39 @@ class _MemoriesPageState extends State<MemoriesPage> {
   }
 
   Future<void> fetchChapterMemories(String bucketId, FileObject path) async {
-    final metadata = await supabase.from("Files")
-                                   .select()
-                                   .eq("bucket_id", bucketId)
-                                   .eq("name", path.name)
-                                   .single();
+    final metadata = await supabase
+        .from("Files")
+        .select()
+        .eq("bucket_id", bucketId)
+        .eq("name", path.name)
+        .single();
     setState(() {
-      images.add(Tuple2(supabase.storage.from(bucketId).download(path.name), metadata));
+      images.add(Tuple2(
+          supabase.storage.from(bucketId).download(path.name), metadata));
     });
   }
 
-  Future<void> fetchEmotionMemories(String bucketId, FileObject path, String emotion) async {
-    final metadata = await supabase.from("Files")
-                                   .select<Map<String, dynamic>?>()
-                                   .eq("bucket_id", bucketId)
-                                   .eq("name", path.name)
-                                   .eq("emotion", emotion)
-                                   .maybeSingle();
+  Future<void> fetchEmotionMemories(
+      String bucketId, FileObject path, String emotion) async {
+    final metadata = await supabase
+        .from("Files")
+        .select<Map<String, dynamic>?>()
+        .eq("bucket_id", bucketId)
+        .eq("name", path.name)
+        .eq("emotion", emotion)
+        .maybeSingle();
     if (metadata == null) return;
 
     setState(() {
-      images.add(Tuple2(supabase.storage.from(bucketId).download(path.name), metadata));
+      images.add(Tuple2(
+          supabase.storage.from(bucketId).download(path.name), metadata));
     });
   }
 
   Future<void> fetchMemories(String bucketId) async {
     final paths = await supabase.storage.from(bucketId).list();
-    final List<Map<String, dynamic>> emotions = await supabase.from("Emotions").select();
+    final List<Map<String, dynamic>> emotions =
+        await supabase.from("Emotions").select();
     emotionsList = (emotions.map((e) => e["emotion"] as String)).toList();
 
     for (FileObject path in paths) {
@@ -98,37 +97,44 @@ class _MemoriesPageState extends State<MemoriesPage> {
 
   void uploadImage(XFile? img, String caption, String bucketId) async {
     await supabase.storage.from(bucketId).upload(img!.name, File(img.path));
-    await supabase.from("Files").insert({"bucket_id": bucketId, "name": img.name, "caption": caption});
+    await supabase
+        .from("Files")
+        .insert({"bucket_id": bucketId, "name": img.name, "caption": caption});
     setState(() {
-      images.add(Tuple2(img.readAsBytes(), <String, dynamic>{"caption": caption, "name": img.name, "emotion": "No Emotion", "response": null}));
+      images.add(Tuple2(img.readAsBytes(), <String, dynamic>{
+        "caption": caption,
+        "name": img.name,
+        "emotion": "No Emotion",
+        "response": null
+      }));
     });
     if (context.mounted) Navigator.of(context).pop(captionController.text);
-
   }
 
   Future displayBox(XFile? img) {
     captionController.clear();
 
     return showDialog<String>(
-        context: context,
-        builder: (context) => AlertDialog(
-      title: const Text("Add caption"),
-      content:
-        TextField(
-        onSubmitted: (_) => uploadImage(img, captionController.text, widget.bucketIds[0]),
-        autofocus: true,
-        decoration: const InputDecoration(
-          hintText: "Enter a caption",
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Add caption"),
+        content: TextField(
+          onSubmitted: (_) =>
+              uploadImage(img, captionController.text, widget.bucketIds[0]),
+          autofocus: true,
+          decoration: const InputDecoration(
+            hintText: "Enter a caption",
+          ),
+          controller: captionController,
         ),
-        controller: captionController,
+        actions: [
+          TextButton(
+            onPressed: () =>
+                uploadImage(img, captionController.text, widget.bucketIds[0]),
+            child: const Text("Submit"),
+          )
+        ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () => uploadImage(img, captionController.text, widget.bucketIds[0]),
-          child: const Text("Submit"),
-        )
-      ],
-        ),
     );
   }
 
@@ -151,7 +157,8 @@ class _MemoriesPageState extends State<MemoriesPage> {
             height: MediaQuery.of(context).size.height / 6,
             child: Column(
               children: [
-                  ElevatedButton(onPressed: () {
+                ElevatedButton(
+                  onPressed: () {
                     Navigator.pop(context);
                     getImage(ImageSource.gallery);
                   },
@@ -190,89 +197,91 @@ class _MemoriesPageState extends State<MemoriesPage> {
     responseController.text = metadata["response"] ?? "";
 
     return showDialog<Tuple2<String, String>>(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          titlePadding: const EdgeInsets.symmetric(horizontal: 15),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Add response'),
-              DropdownButton<String>(
-                value: dropdownValue,
-                onChanged: (String? emotion) async {
-                  setState(() {
-                    dropdownValue = emotion!;
-                  });
-                },
-                items: emotionsList.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ],
-          ),
-          content: TextField(
-            onSubmitted: (_) => createResponse(dropdownValue, metadata["name"], metadata["bucket_id"]),
-            autofocus: true,
-            decoration: const InputDecoration(
-              hintText: "Enter a response to this memory"
-            ),
-            controller: responseController,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => createResponse(dropdownValue, metadata["name"], metadata["bucket_id"]),
-              child: const Text("Submit"),
-            ),
-          ],
-        )
-      )
-    );
+        context: context,
+        builder: (context) => StatefulBuilder(
+            builder: (context, setState) => AlertDialog(
+                  titlePadding: const EdgeInsets.symmetric(horizontal: 15),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Add response'),
+                      DropdownButton<String>(
+                        value: dropdownValue,
+                        onChanged: (String? emotion) async {
+                          setState(() {
+                            dropdownValue = emotion!;
+                          });
+                        },
+                        items: emotionsList
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                  content: TextField(
+                    onSubmitted: (_) => createResponse(
+                        dropdownValue, metadata["name"], metadata["bucket_id"]),
+                    autofocus: true,
+                    decoration: const InputDecoration(
+                        hintText: "Enter a response to this memory"),
+                    controller: responseController,
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => createResponse(dropdownValue,
+                          metadata["name"], metadata["bucket_id"]),
+                      child: const Text("Submit"),
+                    ),
+                  ],
+                )));
   }
 
   void createResponse(String emotion, String path, String bucketId) async {
-    await supabase.from("Files")
-                  .update({"response": responseController.text, "emotion": emotion})
-                  .eq("bucket_id", bucketId)
-                  .eq("name", path);
-    if (context.mounted) Navigator.of(context).pop(Tuple2(responseController.text, emotion));
+    await supabase
+        .from("Files")
+        .update({"response": responseController.text, "emotion": emotion})
+        .eq("bucket_id", bucketId)
+        .eq("name", path);
+    if (context.mounted) {
+      Navigator.of(context).pop(Tuple2(responseController.text, emotion));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButton: widget.organisationType == MemoryOrganisationType.chapters 
-        ? FloatingActionButton(
-            onPressed: mediaAlert,
-            child: const Icon(Icons.add),
-          )
-        : Container(),
+      floatingActionButton:
+          widget.organisationType == MemoryOrganisationType.chapters
+              ? FloatingActionButton(
+                  onPressed: mediaAlert,
+                  child: const Icon(Icons.add),
+                )
+              : Container(),
       appBar: AppBar(
         title: Text('${widget.name} Memories'),
       ),
       body: GenericContainer(
         child: images.isNotEmpty
-          ? SingleChildScrollView(
-              child: ListView(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                children: images.map((image) {
-                  return FutureBuilder(
-                    future: image.item1,
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return const Center(
-                            child: CircularProgressIndicator());
-                      }
-                      final img = snapshot.data!;
-                      return Column(
-                        children: [
-                          Stack(
-                            children: [
+            ? SingleChildScrollView(
+                child: ListView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  children: images.map((image) {
+                    return FutureBuilder(
+                        future: image.item1,
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                          final img = snapshot.data!;
+                          return Column(children: [
+                            Stack(children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.memory(
@@ -284,32 +293,35 @@ class _MemoriesPageState extends State<MemoriesPage> {
                               Align(
                                 alignment: Alignment.topRight,
                                 child: ElevatedButton(
-                                  onPressed: () async {
-                                    final response = await openResponseCreation(image.item2);
-                                    if (response == null) return;
+                                    onPressed: () async {
+                                      final response =
+                                          await openResponseCreation(
+                                              image.item2);
+                                      if (response == null) return;
 
-                                    setState(() {
-                                      image.item2["response"] = response.item1;
-                                      image.item2["emotion"] = response.item2;
-                                    });
-                                  },
-                                  child: const Icon(Icons.edit_note, size: 30,)  
-                                ),
+                                      setState(() {
+                                        image.item2["response"] =
+                                            response.item1;
+                                        image.item2["emotion"] = response.item2;
+                                      });
+                                    },
+                                    child: const Icon(
+                                      Icons.edit_note,
+                                      size: 30,
+                                    )),
                               ),
-                            ]
-                          ),
-                          Text(image.item2["caption"]),
-                          const SizedBox(height: 25,),
-                        ]
-                      );
-                    }
-                  );
-                }).toList(),
-              ),
-            )
-          : Container(),
+                            ]),
+                            Text(image.item2["caption"]),
+                            const SizedBox(
+                              height: 25,
+                            ),
+                          ]);
+                        });
+                  }).toList(),
+                ),
+              )
+            : Container(),
       ),
     );
   }
-
 }
