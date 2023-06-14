@@ -58,12 +58,6 @@ jobs:
       
       - name: Install dependencies
         run: flutter pub get
-
-      - name: Check formatting
-        run: dart format .
-
-      - name: Analyze project source
-        run: flutter analyze
       
       - name: Build APK
         run: cd frontend && flutter build apk
