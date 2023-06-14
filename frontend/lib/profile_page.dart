@@ -14,7 +14,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   bool isEditing = false;
 
   final int count = 22;
-  final List<String> textFields = List.generate(22, (index) => "");
+  List<String> textFields = List.generate(22, (index) => "");
   final List<TextEditingController> controllers =
       List.generate(22, (index) => TextEditingController());
 
@@ -22,10 +22,23 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   void initState() {
     super.initState();
     // Retrieve textFields from database
+    getTextFields();
+  }
 
-    for (int i = 0; i < count; i++) {
-      controllers[i].text = textFields[i];
-    }
+  Future<void> getTextFields() async {
+    final profileData = await supabase
+        .from('Scrapbooks')
+        .select<Map<String, dynamic>>('profile')
+        .eq('id', widget.uuid)
+        .single();
+    setState(() {
+      for (int i = 0; i < count; i++) {
+        textFields[i] = profileData['profile'][i];
+      }
+      for (int i = 0; i < count; i++) {
+        controllers[i].text = textFields[i];
+      }
+    });
   }
 
   @override
@@ -47,7 +60,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     });
   }
 
-  void saveChanges() async {
+  Future<void> saveChanges() async {
     setState(() {
       for (int i = 0; i < count; i++) {
         textFields[i] = controllers[i].text;
@@ -55,8 +68,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       isEditing = false;
     });
     // Send array to database
-    print(textFields);
-    print(widget.uuid);
     await supabase
         .from('Scrapbooks')
         .update({'profile': textFields}).match({'id': widget.uuid});
