@@ -158,7 +158,7 @@ class _ChaptersTabState extends State<ChaptersTab> {
             },
           ) 
           : widget.isProfileTab
-            ? const ProfileWidget()
+            ? ProfileWidget(uuid: widget.uuid)
             : EmotionsWidget(allChapters: future,),
       ),
     );
