@@ -29,16 +29,6 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
     controller = TextEditingController();
   }
 
-  authenticate(Profile profile) async {
-//final AuthResponse res =
-    await supabase.auth.signInWithPassword(
-      email: profile.email,
-      password: profile.password,
-    );
-    //final Session? session = res.session;
-    //final User? user = res.user;
-  }
-
   // Disposes the scrapbook creation controller
   @override
   void dispose() {
@@ -82,7 +72,9 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
   // Builds the main screen for the scrapbook page
   @override
   Widget build(BuildContext context) {
-    final auth = authenticate(widget.profile);
+    //final auth = authenticate(widget.profile);
+    final data =
+        supabase.from("Scrapbooks").select<List<Map<String, dynamic>>>();
 
     return WillPopScope(
         onWillPop: () async {
@@ -122,7 +114,7 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
             centerTitle: true,
           ),
           body: GenericContainer(
-              child: FutureBuilder(
+              child: /*FutureBuilder(
                   future: auth,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
@@ -131,18 +123,20 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
                     final data = supabase
                         .from("Scrapbooks")
                         .select<List<Map<String, dynamic>>>();
-                    return GenericFutureListView(
-                      future: data,
-                      genericTileBuilder: (scrapbook) {
-                        return GenericTile(
-                          name: scrapbook["name"],
-                          tileIcon: const Icon(Icons.menu_book, size: 30),
-                          navigatesTo: ChaptersPage(
-                              uuid: scrapbook["id"], name: scrapbook["name"]),
-                        );
-                      },
-                    );
-                  })),
+                    return */
+                  GenericFutureListView(
+            future: data,
+            genericTileBuilder: (scrapbook) {
+              return GenericTile(
+                name: scrapbook["name"],
+                tileIcon: const Icon(Icons.menu_book, size: 30),
+                navigatesTo: ChaptersPage(
+                    uuid: scrapbook["id"], name: scrapbook["name"]),
+              );
+            },
+          )
+              //})
+              ),
         ));
   }
 

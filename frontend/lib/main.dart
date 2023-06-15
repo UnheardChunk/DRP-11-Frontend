@@ -66,6 +66,16 @@ class LoginScreen extends StatelessWidget {
         password: 'Pass123'),
   ];
 
+  authenticate(Profile profile) async {
+//final AuthResponse res =
+    await supabase.auth.signInWithPassword(
+      email: profile.email,
+      password: profile.password,
+    );
+    //final Session? session = res.session;
+    //final User? user = res.user;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,6 +103,7 @@ class LoginScreen extends StatelessWidget {
                       fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 onTap: () async {
+                  await authenticate(profile);
                   print('Selected profile: ${profile.name}');
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => ScrapbooksPage(profile)));
