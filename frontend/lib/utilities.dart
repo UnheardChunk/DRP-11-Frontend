@@ -167,3 +167,61 @@ class GenericContainer extends StatelessWidget {
     );
   }
 }
+
+class GenericCircularButton extends StatelessWidget {
+  final Widget icon;
+  final void Function() onTap;
+  final String text;
+  final double size;
+
+  const GenericCircularButton(
+      {super.key,
+      required this.icon,
+      required this.onTap,
+      required this.text,
+      required this.size});
+
+  @override
+  Widget build(BuildContext context) => Column(
+        children: [
+          ClipOval(
+            child: Material(
+              color: Colors.blue,
+              child: InkWell(
+                splashColor: Colors.grey.withOpacity(0.35),
+                onTap: onTap,
+                child: SizedBox(
+                  width: size,
+                  height: size,
+                  child: icon,
+                ),
+              ),
+            ),
+          ),
+          Text(text),
+        ],
+      );
+}
+
+class CustomIcon extends StatelessWidget {
+  final double size;
+  final String imagePath;
+  final Color colour;
+
+  const CustomIcon(
+      {super.key,
+      required this.size,
+      required this.imagePath,
+      this.colour = Colors.black});
+
+  @override
+  Widget build(BuildContext context) => Container(
+        height: size,
+        padding: const EdgeInsets.all(8),
+        child: Image.asset(
+          imagePath,
+          filterQuality: FilterQuality.high,
+          color: colour,
+        ),
+      );
+}
