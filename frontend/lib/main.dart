@@ -91,7 +91,14 @@ class LoginScreen extends StatelessWidget {
                   style: const TextStyle(
                       fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
-                onTap: () {
+                onTap: () async {
+                  final AuthResponse res =
+                      await supabase.auth.signInWithPassword(
+                    email: profile.email,
+                    password: profile.password,
+                  );
+                  final Session? session = res.session;
+                  final User? user = res.user;
                   print('Selected profile: ${profile.name}');
                 },
               ),
