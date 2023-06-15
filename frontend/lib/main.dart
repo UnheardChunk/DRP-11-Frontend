@@ -53,7 +53,7 @@ class LoginScreen extends StatelessWidget {
         name: 'Huzaifah',
         image: 'assets/profile.png',
         email: 'hf521@ic.ac.uk',
-        password: 'pass123'),
+        password: 'Pass123'),
     Profile(
         name: 'Krish',
         image: 'assets/profile.png',
@@ -65,6 +65,17 @@ class LoginScreen extends StatelessWidget {
         email: 'gd221@ic.ac.uk',
         password: 'Pass123'),
   ];
+
+  authenticate(Profile profile) async {
+//final AuthResponse res =
+    await supabase.auth.signInWithPassword(
+      email: profile.email,
+      password: profile.password,
+    );
+    //final Session? session = res.session;
+    //final User? user = res.user;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,15 +102,11 @@ class LoginScreen extends StatelessWidget {
                   style: const TextStyle(
                       fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
-                onTap: () async {
-                  final AuthResponse res =
-                      await supabase.auth.signInWithPassword(
-                    email: profile.email,
-                    password: profile.password,
-                  );
-                  final Session? session = res.session;
-                  final User? user = res.user;
+                onTap: () {
+                  authenticate(profile);
                   print('Selected profile: ${profile.name}');
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const ScrapbooksPage()));
                 },
               ),
             );
