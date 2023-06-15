@@ -90,14 +90,17 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
           return await showDialog(
             context: context,
             builder: (BuildContext context) => AlertDialog(
-              title: const Text('Confirm that you want to Exit'),
-              content: const Text('Are you sure you want to exit the app?'),
+              title: const Text('Log out ?'),
+              content: const Text('Are you sure you want to log out?'),
               actions: <Widget>[
                 TextButton(
                     onPressed: () => Navigator.of(context).pop(false),
                     child: const Text('No')),
                 TextButton(
-                    onPressed: () => Navigator.of(context).pop(true),
+                    onPressed: () async {
+                      await supabase.auth.signOut();
+                      Navigator.of(context).pop(true);
+                    },
                     child: const Text('Yes')),
               ],
             ),
