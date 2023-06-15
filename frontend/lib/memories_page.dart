@@ -161,38 +161,34 @@ class _MemoriesPageState extends State<MemoriesPage> {
       builder: (BuildContext context) {
         return GenericModalBottomSheetChild(
           heightScale: 0.2,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GenericCircularButton(
-                    size: iconSize,
-                    icon: const Icon(
-                      Icons.image,
-                      size: iconSize * 0.75,
-                    ),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      getImage(ImageSource.gallery);
-                    },
-                    text: "Gallery",
+          child: GenericGrid(
+            rowChildren: [
+              [
+                GenericCircularButton(
+                  size: iconSize,
+                  icon: const Icon(
+                    Icons.image,
+                    size: iconSize * 0.75,
                   ),
-                  GenericCircularButton(
-                    size: iconSize,
-                    icon: const Icon(
-                      Icons.camera_alt,
-                      size: iconSize * 0.75,
-                    ),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      getImage(ImageSource.camera);
-                    },
-                    text: "Camera",
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    getImage(ImageSource.gallery);
+                  },
+                  text: "Gallery",
+                ),
+                GenericCircularButton(
+                  size: iconSize,
+                  icon: const Icon(
+                    Icons.camera_alt,
+                    size: iconSize * 0.75,
                   ),
-                ],
-              ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    getImage(ImageSource.camera);
+                  },
+                  text: "Camera",
+                ),
+              ],
             ],
           ),
         );
@@ -262,53 +258,47 @@ class _MemoriesPageState extends State<MemoriesPage> {
   void chooseVideoUploadType() {
     Navigator.of(context).pop();
     showModalBottomSheet(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30),
-        ),
-      ),
-      context: context,
-      builder: (BuildContext context) {
-        return GenericModalBottomSheetChild(
-          heightScale: 0.2,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GenericCircularButton(
-                    size: iconSize,
-                    icon: const Icon(
-                      Icons.image,
-                      size: iconSize * 0.75,
-                    ),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      // TODO
-                    },
-                    text: "Gallery",
-                  ),
-                  GenericCircularButton(
-                    size: iconSize,
-                    icon: const Icon(
-                      Icons.videocam,
-                      size: iconSize * 0.75,
-                    ),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      // TODO
-                    },
-                    text: "Record video",
-                  )
-                ],
-              ),
-            ],
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
           ),
-        );
-      }
-    );
+        ),
+        context: context,
+        builder: (BuildContext context) {
+          return GenericModalBottomSheetChild(
+              heightScale: 0.2,
+              child: GenericGrid(
+                rowChildren: [
+                  [
+                    GenericCircularButton(
+                      size: iconSize,
+                      icon: const Icon(
+                        Icons.image,
+                        size: iconSize * 0.75,
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        // TODO
+                      },
+                      text: "Gallery",
+                    ),
+                    GenericCircularButton(
+                      size: iconSize,
+                      icon: const Icon(
+                        Icons.videocam,
+                        size: iconSize * 0.75,
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        // TODO
+                      },
+                      text: "Record video",
+                    )
+                  ]
+                ],
+              ));
+        });
   }
 
   void chooseSoundUploadType() {
@@ -323,50 +313,44 @@ class _MemoriesPageState extends State<MemoriesPage> {
       context: context,
       builder: (context) => GenericModalBottomSheetChild(
         heightScale: 0.2,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                GenericCircularButton(
-                  size: iconSize,
-                  icon: const Icon(
-                    Icons.upload,
-                    size: iconSize * 0.75,
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    // TODO
-                  },
-                  text: "Upload sound",
+        child: GenericGrid(
+          rowChildren: [
+            [
+              GenericCircularButton(
+                size: iconSize,
+                icon: const Icon(
+                  Icons.upload,
+                  size: iconSize * 0.75,
                 ),
-                GenericCircularButton(
-                  size: iconSize,
-                  icon: const CustomIcon(
-                    size: iconSize * 0.75,
-                    imagePath: "assets/youtube.png",
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    // TODO
-                  },
-                  text: "YouTube",
+                onTap: () {
+                  Navigator.of(context).pop();
+                  // TODO
+                },
+                text: "Upload sound",
+              ),
+              GenericCircularButton(
+                size: iconSize,
+                icon: const CustomIcon(
+                  size: iconSize * 0.75,
+                  imagePath: "assets/youtube.png",
                 ),
-                GenericCircularButton(
-                  size: iconSize,
-                  icon: const CustomIcon(
-                    size: iconSize * 0.75, 
-                    imagePath: "assets/microphone.png"
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    // TODO
-                  },
-                  text: "Record",
-                ),
-              ],
-            )
+                onTap: () {
+                  Navigator.of(context).pop();
+                  // TODO
+                },
+                text: "YouTube",
+              ),
+              GenericCircularButton(
+                size: iconSize,
+                icon: const CustomIcon(
+                    size: iconSize * 0.75, imagePath: "assets/microphone.png"),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  // TODO
+                },
+                text: "Record",
+              ),
+            ],
           ],
         ),
       ),
@@ -384,81 +368,74 @@ class _MemoriesPageState extends State<MemoriesPage> {
       context: context,
       builder: (context) => GenericModalBottomSheetChild(
         heightScale: 0.4,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                GenericCircularButton(
+        child: GenericGrid(
+          rowChildren: [
+            [
+              GenericCircularButton(
+                size: iconSize,
+                icon: const Icon(
+                  Icons.image,
+                  size: iconSize * 0.75,
+                ),
+                onTap: chooseImageUploadType,
+                text: "Image",
+              ),
+              GenericCircularButton(
                   size: iconSize,
                   icon: const Icon(
-                    Icons.image,
+                    Icons.videocam,
                     size: iconSize * 0.75,
                   ),
-                  onTap: chooseImageUploadType,
-                  text: "Image",
+                  onTap: chooseVideoUploadType,
+                  text: "Video"),
+              GenericCircularButton(
+                size: iconSize,
+                icon: const CustomIcon(
+                  size: iconSize * 0.75,
+                  imagePath: "assets/text.png",
                 ),
-                GenericCircularButton(
-                    size: iconSize,
-                    icon: const Icon(
-                      Icons.videocam,
-                      size: iconSize * 0.75,
-                    ),
-                    onTap: chooseVideoUploadType,
-                    text: "Video"),
-                GenericCircularButton(
-                  size: iconSize,
-                  icon: const CustomIcon(
-                    size: iconSize * 0.75,
-                    imagePath: "assets/text.png",
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    // TODO
-                  },
-                  text: "Text",
+                onTap: () {
+                  Navigator.of(context).pop();
+                  // TODO
+                },
+                text: "Text",
+              ),
+            ],
+            [
+              GenericCircularButton(
+                size: iconSize,
+                icon: const CustomIcon(
+                  size: iconSize * 0.75,
+                  imagePath: "assets/sound.png",
                 ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                GenericCircularButton(
-                  size: iconSize,
-                  icon: const CustomIcon(
-                    size: iconSize * 0.75,
-                    imagePath: "assets/sound.png",
-                  ),
-                  onTap: chooseSoundUploadType,
-                  text: "Sound",
+                onTap: chooseSoundUploadType,
+                text: "Sound",
+              ),
+              GenericCircularButton(
+                size: iconSize,
+                icon: const CustomIcon(
+                  size: iconSize * 0.75,
+                  imagePath: "assets/smell.png",
                 ),
-                GenericCircularButton(
-                  size: iconSize,
-                  icon: const CustomIcon(
-                    size: iconSize * 0.75,
-                    imagePath: "assets/smell.png",
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    // TODO
-                  },
-                  text: "Smell",
+                onTap: () {
+                  Navigator.of(context).pop();
+                  // TODO
+                },
+                text: "Smell",
+              ),
+              GenericCircularButton(
+                size: iconSize,
+                icon: const CustomIcon(
+                  size: iconSize * 0.75,
+                  imagePath: "assets/taste.png",
                 ),
-                GenericCircularButton(
-                  size: iconSize,
-                  icon: const CustomIcon(
-                    size: iconSize * 0.75,
-                    imagePath: "assets/taste.png",
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    // TODO
-                  },
-                  text: "Taste",
-                ),
-              ],
-            ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  // TODO
+                },
+                text: "Taste",
+              ),
+            ]
           ],
         ),
       ),
@@ -538,5 +515,4 @@ class _MemoriesPageState extends State<MemoriesPage> {
       ),
     );
   }
-
 }

@@ -262,15 +262,14 @@ class GenericGrid extends StatelessWidget {
   const GenericGrid({super.key, required this.rowChildren});
 
   @override
-  Widget build(BuildContext context) =>  Column(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-      for (List<Widget> row in rowChildren)
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: row,
-        ),
-    ],
-  );
-  
+  Widget build(BuildContext context) => Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          for (List<Widget> row in rowChildren)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: row,
+            ),
+        ],
+      );
 }
