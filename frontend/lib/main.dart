@@ -43,6 +43,28 @@ class Profile {
 }
 
 class LoginScreen extends StatelessWidget {
+  List<Profile> profiles = [
+    Profile(
+        name: 'Shruti',
+        image: 'assets/profile.png',
+        email: 'sp1521@ic.ac.uk',
+        password: 'Pass123'),
+    Profile(
+        name: 'Huzaifah',
+        image: 'assets/profile.png',
+        email: 'hf521@ic.ac.uk',
+        password: 'Pass123'),
+    Profile(
+        name: 'Krish',
+        image: 'assets/profile.png',
+        email: 'krm221@ic.ac.uk',
+        password: 'Pass123'),
+    Profile(
+        name: 'Gabriel',
+        image: 'assets/profile.png',
+        email: 'gd221@ic.ac.uk',
+        password: 'Pass123'),
+  ];
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
