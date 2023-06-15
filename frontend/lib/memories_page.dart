@@ -92,7 +92,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
   Future getImage(ImageSource media) async {
     var img = await picker.pickImage(source: media);
 
-    await displayBox(img);
+    await createCaption(img);
   }
 
   void uploadImage(XFile? img, String caption, String bucketId) async {
@@ -111,7 +111,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
     if (context.mounted) Navigator.of(context).pop(captionController.text);
   }
 
-  Future displayBox(XFile? img) {
+  Future createCaption(XFile? img) {
     captionController.clear();
 
     return showDialog<String>(
@@ -146,7 +146,8 @@ class _MemoriesPageState extends State<MemoriesPage> {
   }
 
   //show popup dialog
-  void mediaAlert() {
+  void chooseImageUploadType() {
+    Navigator.of(context).pop();
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -251,6 +252,84 @@ class _MemoriesPageState extends State<MemoriesPage> {
     }
   }
 
+  void openMemoryUploading() {
+    const iconSize = 75.0;
+
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => SizedBox(
+              height: MediaQuery.of(context).size.height * 0.4,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GenericCircularButton(
+                        size: iconSize,
+                        icon: const Icon(
+                          Icons.image,
+                          size: iconSize * 0.75,
+                        ),
+                        onTap: chooseImageUploadType,
+                        text: "Image",
+                      ),
+                      GenericCircularButton(
+                          size: iconSize,
+                          icon: const Icon(
+                            Icons.videocam,
+                            size: iconSize * 0.75,
+                          ),
+                          onTap: () {},
+                          text: "Video"),
+                      GenericCircularButton(
+                        size: iconSize,
+                        icon: const CustomIcon(
+                          size: iconSize * 0.75,
+                          imagePath: "assets/text.png",
+                        ),
+                        onTap: () {},
+                        text: "Text",
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GenericCircularButton(
+                        size: iconSize,
+                        icon: const CustomIcon(
+                          size: iconSize * 0.75,
+                          imagePath: "assets/sound.png",
+                        ),
+                        onTap: () {},
+                        text: "Sound",
+                      ),
+                      GenericCircularButton(
+                        size: iconSize,
+                        icon: const CustomIcon(
+                          size: iconSize * 0.75,
+                          imagePath: "assets/smell.png",
+                        ),
+                        onTap: () {},
+                        text: "Smell",
+                      ),
+                      GenericCircularButton(
+                        size: iconSize,
+                        icon: const CustomIcon(
+                          size: iconSize * 0.75,
+                          imagePath: "assets/taste.png",
+                        ),
+                        onTap: () {},
+                        text: "Taste",
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -258,7 +337,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
       floatingActionButton:
           widget.organisationType == MemoryOrganisationType.chapters
               ? FloatingActionButton(
-                  onPressed: mediaAlert,
+                  onPressed: openMemoryUploading,
                   child: const Icon(Icons.add),
                 )
               : Container(),
