@@ -65,7 +65,8 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
 
   // Pops the AlertDialog for scrapbook creation when the submit button is pressed
   void createScrapbook() async {
-    await supabase.from('Scrapbooks').insert({'name': controller.text});
+    await supabase.from('Scrapbooks').insert(
+        {'name': controller.text, "owner": supabase.auth.currentUser!.id});
     if (context.mounted) Navigator.of(context).pop(controller.text);
   }
 
