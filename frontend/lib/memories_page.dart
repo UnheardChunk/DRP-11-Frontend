@@ -123,7 +123,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
     if (context.mounted) Navigator.of(context).pop(captionController.text);
   }
 
-  Future createCaption(File img, MemoryType memoryType) {
+  Future createCaption(File file, MemoryType memoryType) {
     captionController.clear();
 
     return showDialog<String>(
@@ -132,7 +132,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
         title: const Text("Add caption"),
         content: TextField(
           onSubmitted: (_) => uploadFile(
-              img, captionController.text, widget.bucketIds[0], memoryType),
+              file, captionController.text, widget.bucketIds[0], memoryType),
           autofocus: true,
           decoration: const InputDecoration(
             hintText: "Enter a caption",
@@ -142,7 +142,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
         actions: [
           TextButton(
             onPressed: () => uploadFile(
-                img, captionController.text, widget.bucketIds[0], memoryType),
+                file, captionController.text, widget.bucketIds[0], memoryType),
             child: const Text("Submit"),
           )
         ],
