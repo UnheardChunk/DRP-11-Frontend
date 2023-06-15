@@ -73,12 +73,28 @@ class LoginScreen extends StatelessWidget {
           itemCount: profiles.length,
           itemBuilder: (context, index) {
             final profile = profiles[index];
-            return ListTile(
-              leading: Image.asset(profile.image),
-              title: Text(profile.name),
-              onTap: () {
-                print('Selected profile: ${profile.name}');
-              },
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(20.0),
+                leading: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(image: AssetImage(profile.image)),
+                  ),
+                  child: Image.asset(profile.image),
+                ),
+                title: Text(
+                  profile.name,
+                  style: const TextStyle(
+                      fontSize: 18.0, fontWeight: FontWeight.bold),
+                ),
+                onTap: () {
+                  print('Selected profile: ${profile.name}');
+                },
+              ),
             );
           },
         ));
