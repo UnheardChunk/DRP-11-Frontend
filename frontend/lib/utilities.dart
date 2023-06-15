@@ -217,7 +217,7 @@ class CustomIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         height: size,
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(15),
         child: Image.asset(
           imagePath,
           filterQuality: FilterQuality.high,
