@@ -75,7 +75,6 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
 
   // Pops the AlertDialog for scrapbook creation when the submit button is pressed
   void createScrapbook() async {
-    await authenticate(widget.profile);
     await supabase.from('Scrapbooks').insert({'name': controller.text});
     if (context.mounted) Navigator.of(context).pop(controller.text);
   }
@@ -83,8 +82,8 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
   // Builds the main screen for the scrapbook page
   @override
   Widget build(BuildContext context) {
-    final data =
-        supabase.from("Scrapbooks").select<List<Map<String, dynamic>>>();
+    final auth = authenticate(widget.profile);
+
     return WillPopScope(
         onWillPop: () async {
           return await showDialog(
@@ -120,17 +119,27 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
             centerTitle: true,
           ),
           body: GenericContainer(
-              child: GenericFutureListView(
-            future: data,
-            genericTileBuilder: (scrapbook) {
-              return GenericTile(
-                name: scrapbook["name"],
-                tileIcon: const Icon(Icons.menu_book, size: 30),
-                navigatesTo: ChaptersPage(
-                    uuid: scrapbook["id"], name: scrapbook["name"]),
-              );
-            },
-          )),
+              child: FutureBuilder(
+                  future: auth,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    final data = supabase
+                        .from("Scrapbooks")
+                        .select<List<Map<String, dynamic>>>();
+                    return GenericFutureListView(
+                      future: data,
+                      genericTileBuilder: (scrapbook) {
+                        return GenericTile(
+                          name: scrapbook["name"],
+                          tileIcon: const Icon(Icons.menu_book, size: 30),
+                          navigatesTo: ChaptersPage(
+                              uuid: scrapbook["id"], name: scrapbook["name"]),
+                        );
+                      },
+                    );
+                  })),
         ));
   }
 }
