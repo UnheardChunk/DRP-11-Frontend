@@ -10,7 +10,6 @@ import 'dart:io';
 import 'main.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:video_player/video_player.dart';
 import 'package:camera/camera.dart';
 
 class MemoriesPage extends StatefulWidget {
@@ -33,24 +32,6 @@ class _MemoriesPageState extends State<MemoriesPage> {
   late TextEditingController captionController;
   late TextEditingController responseController;
   late List<String> emotionsList;
-
-  late VideoPlayerController _videoPlayerController;
-  late File _video;
-
-
-  Future _pickVideo() async {
-    final video = await picker.pickVideo(source: ImageSource.gallery);
-    _video = File(video!.path);
-    _videoPlayerController = VideoPlayerController.file(_video)..initialize().then((_) {
-      setState(() {
-
-      });
-      _videoPlayerController.play();
-    });
-
-    await createCaption(_video, MemoryType.video);
-
-  }
 
   static const iconSize = 75.0;
 
@@ -248,9 +229,6 @@ class _MemoriesPageState extends State<MemoriesPage> {
     final String videoDirectory = '${appDirectory.path}/Videos';
     await Directory(videoDirectory).create(recursive: true);
 
-    // final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
-    // final String filePath = '$videoDirectory/$currentTime.mp4';
-
     try {
       await _cameraController!.startVideoRecording();
     } catch (e) {
@@ -261,8 +239,6 @@ class _MemoriesPageState extends State<MemoriesPage> {
   void disposeCamera() {
     _cameraController?.dispose();
   }
-
-
 
   Future<Tuple2<String, String>?> openResponseCreation(Map metadata) {
     String dropdownValue = metadata["emotion"];
@@ -347,8 +323,8 @@ class _MemoriesPageState extends State<MemoriesPage> {
                       ),
                       onTap: () {
                         Navigator.of(context).pop();
-                        //getVideo(ImageSource.gallery)
-                        _pickVideo();
+                        getVideo(ImageSource.gallery);
+                        //_pickVideo();
                       },
                       text: "Gallery",
                     ),
@@ -548,7 +524,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
         break;
       default:
     }
-    return Placeholder();
+    return const Placeholder();
   }
 
   @override
