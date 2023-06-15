@@ -259,6 +259,58 @@ class _MemoriesPageState extends State<MemoriesPage> {
     }
   }
 
+  void chooseVideoUploadType() {
+    Navigator.of(context).pop();
+    showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
+      context: context,
+      builder: (BuildContext context) {
+        return GenericModalBottomSheetChild(
+          heightScale: 0.2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GenericCircularButton(
+                    size: iconSize,
+                    icon: const Icon(
+                      Icons.image,
+                      size: iconSize * 0.75,
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      // TODO
+                    },
+                    text: "Gallery",
+                  ),
+                  GenericCircularButton(
+                    size: iconSize,
+                    icon: const Icon(
+                      Icons.videocam,
+                      size: iconSize * 0.75,
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      // TODO
+                    },
+                    text: "Record video",
+                  )
+                ],
+              ),
+            ],
+          ),
+        );
+      }
+    );
+  }
+
   void openMemoryUploading() {
     showModalBottomSheet(
       shape: const RoundedRectangleBorder(
@@ -291,7 +343,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
                       Icons.videocam,
                       size: iconSize * 0.75,
                     ),
-                    onTap: () {},
+                    onTap: chooseVideoUploadType,
                     text: "Video"),
                 GenericCircularButton(
                   size: iconSize,
@@ -415,4 +467,5 @@ class _MemoriesPageState extends State<MemoriesPage> {
       ),
     );
   }
+
 }
