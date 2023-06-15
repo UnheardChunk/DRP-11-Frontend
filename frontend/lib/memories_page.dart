@@ -259,74 +259,89 @@ class _MemoriesPageState extends State<MemoriesPage> {
         context: context,
         builder: (context) => SizedBox(
               height: MediaQuery.of(context).size.height * 0.4,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              child: Stack(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GenericCircularButton(
-                        size: iconSize,
-                        icon: const Icon(
-                          Icons.image,
-                          size: iconSize * 0.75,
-                        ),
-                        onTap: chooseImageUploadType,
-                        text: "Image",
-                      ),
-                      GenericCircularButton(
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      padding: const EdgeInsets.all(5),
+                      constraints: const BoxConstraints(),
+                      icon: const Icon(Icons.close), 
+                      onPressed: Navigator.of(context).pop,
+                    ),
+                  ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GenericCircularButton(
                           size: iconSize,
                           icon: const Icon(
-                            Icons.videocam,
+                            Icons.image,
                             size: iconSize * 0.75,
                           ),
+                          onTap: chooseImageUploadType,
+                          text: "Image",
+                        ),
+                        GenericCircularButton(
+                            size: iconSize,
+                            icon: const Icon(
+                              Icons.videocam,
+                              size: iconSize * 0.75,
+                            ),
+                            onTap: () {},
+                            text: "Video"),
+                        GenericCircularButton(
+                          size: iconSize,
+                          icon: const CustomIcon(
+                            size: iconSize * 0.75,
+                            imagePath: "assets/text.png",
+                          ),
                           onTap: () {},
-                          text: "Video"),
-                      GenericCircularButton(
-                        size: iconSize,
-                        icon: const CustomIcon(
-                          size: iconSize * 0.75,
-                          imagePath: "assets/text.png",
+                          text: "Text",
                         ),
-                        onTap: () {},
-                        text: "Text",
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GenericCircularButton(
-                        size: iconSize,
-                        icon: const CustomIcon(
-                          size: iconSize * 0.75,
-                          imagePath: "assets/sound.png",
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GenericCircularButton(
+                          size: iconSize,
+                          icon: const CustomIcon(
+                            size: iconSize * 0.75,
+                            imagePath: "assets/sound.png",
+                          ),
+                          onTap: () {},
+                          text: "Sound",
                         ),
-                        onTap: () {},
-                        text: "Sound",
-                      ),
-                      GenericCircularButton(
-                        size: iconSize,
-                        icon: const CustomIcon(
-                          size: iconSize * 0.75,
-                          imagePath: "assets/smell.png",
+                        GenericCircularButton(
+                          size: iconSize,
+                          icon: const CustomIcon(
+                            size: iconSize * 0.75,
+                            imagePath: "assets/smell.png",
+                          ),
+                          onTap: () {},
+                          text: "Smell",
                         ),
-                        onTap: () {},
-                        text: "Smell",
-                      ),
-                      GenericCircularButton(
-                        size: iconSize,
-                        icon: const CustomIcon(
-                          size: iconSize * 0.75,
-                          imagePath: "assets/taste.png",
+                        GenericCircularButton(
+                          size: iconSize,
+                          icon: const CustomIcon(
+                            size: iconSize * 0.75,
+                            imagePath: "assets/taste.png",
+                          ),
+                          onTap: () {},
+                          text: "Taste",
                         ),
-                        onTap: () {},
-                        text: "Taste",
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                      ],
+                    ),
+                  ],
+                ),
+              ]),
             ));
   }
 
