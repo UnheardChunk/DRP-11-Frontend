@@ -29,6 +29,8 @@ class _MemoriesPageState extends State<MemoriesPage> {
   late TextEditingController responseController;
   late List<String> emotionsList;
 
+  static const iconSize = 75.0;
+
   @override
   void initState() {
     super.initState();
@@ -148,45 +150,50 @@ class _MemoriesPageState extends State<MemoriesPage> {
   //show popup dialog
   void chooseImageUploadType() {
     Navigator.of(context).pop();
-    showDialog(
+    showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          title: const Text('Please choose media to select'),
-          content: SizedBox(
-            height: MediaQuery.of(context).size.height / 6,
-            child: Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    getImage(ImageSource.gallery);
-                  },
-                  child: const Row(
-                    children: [
-                      Icon(Icons.image),
-                      Text('From Gallery'),
-                    ],
+        return GenericModalBottomSheetChild(
+          heightScale: 0.2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GenericCircularButton(
+                    size: iconSize,
+                    icon: const Icon(
+                      Icons.image,
+                      size: iconSize * 0.75,
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      getImage(ImageSource.gallery);
+                    },
+                    text: "Gallery",
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    getImage(ImageSource.camera);
-                  },
-                  child: const Row(
-                    children: [
-                      Icon(Icons.camera),
-                      Text('From Camera'),
-                    ],
+                  GenericCircularButton(
+                    size: iconSize,
+                    icon: const Icon(
+                      Icons.camera_alt,
+                      size: iconSize * 0.75,
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      getImage(ImageSource.camera);
+                    },
+                    text: "Camera",
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+            ],
           ),
         );
       },
@@ -253,102 +260,86 @@ class _MemoriesPageState extends State<MemoriesPage> {
   }
 
   void openMemoryUploading() {
-    const iconSize = 75.0;
-
     showModalBottomSheet(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
-          ),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
         ),
-        context: context,
-        builder: (context) => SizedBox(
-              height: MediaQuery.of(context).size.height * 0.4,
-              child: Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      padding: const EdgeInsets.all(10),
-                      constraints: const BoxConstraints(),
-                      icon: const Icon(Icons.close), 
-                      onPressed: Navigator.of(context).pop,
-                    ),
+      ),
+      context: context,
+      builder: (context) => GenericModalBottomSheetChild(
+        heightScale: 0.4,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                GenericCircularButton(
+                  size: iconSize,
+                  icon: const Icon(
+                    Icons.image,
+                    size: iconSize * 0.75,
                   ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        GenericCircularButton(
-                          size: iconSize,
-                          icon: const Icon(
-                            Icons.image,
-                            size: iconSize * 0.75,
-                          ),
-                          onTap: chooseImageUploadType,
-                          text: "Image",
-                        ),
-                        GenericCircularButton(
-                            size: iconSize,
-                            icon: const Icon(
-                              Icons.videocam,
-                              size: iconSize * 0.75,
-                            ),
-                            onTap: () {},
-                            text: "Video"),
-                        GenericCircularButton(
-                          size: iconSize,
-                          icon: const CustomIcon(
-                            size: iconSize * 0.75,
-                            imagePath: "assets/text.png",
-                          ),
-                          onTap: () {},
-                          text: "Text",
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        GenericCircularButton(
-                          size: iconSize,
-                          icon: const CustomIcon(
-                            size: iconSize * 0.75,
-                            imagePath: "assets/sound.png",
-                          ),
-                          onTap: () {},
-                          text: "Sound",
-                        ),
-                        GenericCircularButton(
-                          size: iconSize,
-                          icon: const CustomIcon(
-                            size: iconSize * 0.75,
-                            imagePath: "assets/smell.png",
-                          ),
-                          onTap: () {},
-                          text: "Smell",
-                        ),
-                        GenericCircularButton(
-                          size: iconSize,
-                          icon: const CustomIcon(
-                            size: iconSize * 0.75,
-                            imagePath: "assets/taste.png",
-                          ),
-                          onTap: () {},
-                          text: "Taste",
-                        ),
-                      ],
-                    ),
-                  ],
+                  onTap: chooseImageUploadType,
+                  text: "Image",
                 ),
-              ]),
-            ));
+                GenericCircularButton(
+                    size: iconSize,
+                    icon: const Icon(
+                      Icons.videocam,
+                      size: iconSize * 0.75,
+                    ),
+                    onTap: () {},
+                    text: "Video"),
+                GenericCircularButton(
+                  size: iconSize,
+                  icon: const CustomIcon(
+                    size: iconSize * 0.75,
+                    imagePath: "assets/text.png",
+                  ),
+                  onTap: () {},
+                  text: "Text",
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                GenericCircularButton(
+                  size: iconSize,
+                  icon: const CustomIcon(
+                    size: iconSize * 0.75,
+                    imagePath: "assets/sound.png",
+                  ),
+                  onTap: () {},
+                  text: "Sound",
+                ),
+                GenericCircularButton(
+                  size: iconSize,
+                  icon: const CustomIcon(
+                    size: iconSize * 0.75,
+                    imagePath: "assets/smell.png",
+                  ),
+                  onTap: () {},
+                  text: "Smell",
+                ),
+                GenericCircularButton(
+                  size: iconSize,
+                  icon: const CustomIcon(
+                    size: iconSize * 0.75,
+                    imagePath: "assets/taste.png",
+                  ),
+                  onTap: () {},
+                  text: "Taste",
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
