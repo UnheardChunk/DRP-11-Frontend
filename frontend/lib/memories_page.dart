@@ -25,9 +25,7 @@ class MemoriesPage extends StatefulWidget {
 }
 
 class _MemoriesPageState extends State<MemoriesPage> {
-  List<Tuple2<Future<Uint8List>, Map<String, dynamic>>> images = [];
-
-  List<Tuple2<Future<Uint8List>, Map<String, dynamic>>> audioFiles = [];
+  List<Tuple2<Future<Uint8List>, Map<String, dynamic>>> files = [];
 
   final ImagePicker picker = ImagePicker();
   late TextEditingController captionController;
@@ -52,7 +50,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
         .eq("name", path.name)
         .single();
     setState(() {
-      images.add(Tuple2(
+      files.add(Tuple2(
           supabase.storage.from(bucketId).download(path.name), metadata));
     });
   }
@@ -69,7 +67,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
     if (metadata == null) return;
 
     setState(() {
-      images.add(Tuple2(
+      files.add(Tuple2(
           supabase.storage.from(bucketId).download(path.name), metadata));
     });
   }
@@ -115,7 +113,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
       "file_type": memoryType.typeString
     });
     setState(() {
-      images.add(Tuple2(file.readAsBytes(), <String, dynamic>{
+      files.add(Tuple2(file.readAsBytes(), <String, dynamic>{
         "caption": caption,
         "name": fileName,
         "emotion": "No Emotion",
@@ -480,14 +478,14 @@ class _MemoriesPageState extends State<MemoriesPage> {
         title: Text('${widget.name} Memories'),
       ),
       body: GenericContainer(
-        child: images.isNotEmpty
+        child: files.isNotEmpty
             ? SingleChildScrollView(
                 child: ListView(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  children: images.map((image) {
+                  children: files.map((file) {
                     return FutureBuilder(
-                        future: image.item1,
+                        future: file.item1,
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
                             return const Center(
@@ -510,13 +508,13 @@ class _MemoriesPageState extends State<MemoriesPage> {
                                     onPressed: () async {
                                       final response =
                                           await openResponseCreation(
-                                              image.item2);
+                                              file.item2);
                                       if (response == null) return;
 
                                       setState(() {
-                                        image.item2["response"] =
+                                        file.item2["response"] =
                                             response.item1;
-                                        image.item2["emotion"] = response.item2;
+                                        file.item2["emotion"] = response.item2;
                                       });
                                     },
                                     child: const Icon(
@@ -525,7 +523,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
                                     )),
                               ),
                             ]),
-                            Text(image.item2["caption"]),
+                            Text(file.item2["caption"]),
                             const SizedBox(
                               height: 25,
                             ),
