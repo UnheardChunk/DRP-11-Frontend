@@ -53,7 +53,7 @@ class LoginScreen extends StatelessWidget {
         name: 'Huzaifah',
         image: 'assets/profile.png',
         email: 'hf521@ic.ac.uk',
-        password: 'Pass123'),
+        password: 'pass123'),
     Profile(
         name: 'Krish',
         image: 'assets/profile.png',
@@ -67,7 +67,39 @@ class LoginScreen extends StatelessWidget {
   ];
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Scaffold(
+        appBar: AppBar(title: const Text('Select a profile')),
+        body: SingleChildScrollView(
+          child: Expanded(
+            child: GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 0,
+                mainAxisExtent: 150,
+                mainAxisSpacing: 0,
+              ),
+              itemCount: profiles.length,
+              itemBuilder: (count, index) {
+                final profile = profiles[index];
+                return GestureDetector(
+                    onTap: () {
+                      print('Selected Profile: ${profile.name}');
+                    },
+                    child: Card(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(profile.image),
+                          const SizedBox(height: 10),
+                          Text(profile.name),
+                        ],
+                      ),
+                    ));
+              },
+            ),
+          ),
+        ));
   }
 }
