@@ -7,6 +7,7 @@ import 'dart:io';
 import 'main.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
 
 class MemoriesPage extends StatefulWidget {
   final String name;
@@ -28,6 +29,21 @@ class _MemoriesPageState extends State<MemoriesPage> {
   late TextEditingController captionController;
   late TextEditingController responseController;
   late List<String> emotionsList;
+
+  late VideoPlayerController _videoPlayerController;
+  late File _video;
+
+
+  Future _pickVideo() async {
+    final video = await picker.pickVideo(source: ImageSource.gallery);
+    _video = File(video!.path);
+    _videoPlayerController = VideoPlayerController.file(_video)..initialize().then((_) {
+      setState(() {
+
+      });
+      _videoPlayerController.play();
+    });
+  }
 
   static const iconSize = 75.0;
 
@@ -279,7 +295,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
                       ),
                       onTap: () {
                         Navigator.of(context).pop();
-                        // TODO
+                        _pickVideo();
                       },
                       text: "Gallery",
                     ),
