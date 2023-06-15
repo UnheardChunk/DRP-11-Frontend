@@ -69,37 +69,18 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text('Select a profile')),
-        body: SingleChildScrollView(
-          child: Expanded(
-            child: GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 0,
-                mainAxisExtent: 150,
-                mainAxisSpacing: 0,
-              ),
-              itemCount: profiles.length,
-              itemBuilder: (count, index) {
-                final profile = profiles[index];
-                return GestureDetector(
-                    onTap: () {
-                      print('Selected Profile: ${profile.name}');
-                    },
-                    child: Card(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(profile.image),
-                          const SizedBox(height: 10),
-                          Text(profile.name),
-                        ],
-                      ),
-                    ));
+        body: ListView.builder(
+          itemCount: profiles.length,
+          itemBuilder: (context, index) {
+            final profile = profiles[index];
+            return ListTile(
+              leading: Image.asset(profile.image),
+              title: Text(profile.name),
+              onTap: () {
+                print('Selected profile: ${profile.name}');
               },
-            ),
-          ),
+            );
+          },
         ));
   }
 }
