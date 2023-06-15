@@ -463,6 +463,16 @@ class _MemoriesPageState extends State<MemoriesPage> {
     );
   }
 
+  Future<void> pressResponse(Map<String, dynamic> metadata) async {
+    final response = await openResponseCreation(metadata);
+              if (response == null) return;
+
+              setState(() {
+                metadata["response"] = response.item1;
+                metadata["emotion"] = response.item2;
+              });
+  }
+
   Widget displayMemory(Uint8List media, Map<String, dynamic> metadata) {
     switch (metadata["file_type"]) {
       case "image":
@@ -470,15 +480,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
           caption: metadata["caption"],
           image: media,
           responseButton: ResponseButton(
-            onPressed: () async {
-              final response = await openResponseCreation(metadata);
-              if (response == null) return;
-
-              setState(() {
-                metadata["response"] = response.item1;
-                metadata["emotion"] = response.item2;
-              });
-            },
+            onPressed: () => pressResponse(metadata),
           ),
         );
       case "video":
