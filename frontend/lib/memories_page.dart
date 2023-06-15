@@ -256,6 +256,12 @@ class _MemoriesPageState extends State<MemoriesPage> {
     const iconSize = 75.0;
 
     showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+        ),
         context: context,
         builder: (context) => SizedBox(
               height: MediaQuery.of(context).size.height * 0.4,
@@ -267,7 +273,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       splashColor: Colors.transparent,
-                      padding: const EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(10),
                       constraints: const BoxConstraints(),
                       icon: const Icon(Icons.close), 
                       onPressed: Navigator.of(context).pop,
