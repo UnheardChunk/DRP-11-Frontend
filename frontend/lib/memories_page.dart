@@ -351,7 +351,10 @@ class _MemoriesPageState extends State<MemoriesPage> {
                     size: iconSize * 0.75,
                     imagePath: "assets/text.png",
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    // TODO
+                  },
                   text: "Text",
                 ),
               ],
