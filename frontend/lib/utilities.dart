@@ -255,3 +255,22 @@ class GenericModalBottomSheetChild extends StatelessWidget {
         ),
       );
 }
+
+class GenericGrid extends StatelessWidget {
+  final List<List<Widget>> rowChildren;
+
+  const GenericGrid({super.key, required this.rowChildren});
+
+  @override
+  Widget build(BuildContext context) =>  Column(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: [
+      for (List<Widget> row in rowChildren)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: row,
+        ),
+    ],
+  );
+  
+}
