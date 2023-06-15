@@ -463,6 +463,33 @@ class _MemoriesPageState extends State<MemoriesPage> {
     );
   }
 
+  Widget displayMemory(Uint8List media, Map<String, dynamic> metadata) {
+    switch (metadata["file_type"]) {
+      case "image":
+        return MemoryImage(
+          caption: metadata["caption"],
+          image: media,
+          responseButton: ResponseButton(
+            onPressed: () async {
+              final response = await openResponseCreation(metadata);
+              if (response == null) return;
+
+              setState(() {
+                metadata["response"] = response.item1;
+                metadata["emotion"] = response.item2;
+              });
+            },
+          ),
+        );
+      case "video":
+        break;
+      case "audio":
+        break;
+      default:
+    }
+    return Placeholder();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -491,22 +518,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
                             return const Center(
                                 child: CircularProgressIndicator());
                           }
-                          return MemoryImage(
-                            caption: file.item2["caption"],
-                            image: snapshot.data!,
-                            responseButton: ResponseButton(
-                              onPressed: () async {
-                                final response =
-                                    await openResponseCreation(file.item2);
-                                if (response == null) return;
-
-                                setState(() {
-                                  file.item2["response"] = response.item1;
-                                  file.item2["emotion"] = response.item2;
-                                });
-                              },
-                            ),
-                          );
+                          return displayMemory(snapshot.data!, file.item2);
                         });
                   }).toList(),
                 ),
