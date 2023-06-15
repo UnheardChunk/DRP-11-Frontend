@@ -53,7 +53,7 @@ class LoginScreen extends StatelessWidget {
         name: 'Huzaifah',
         image: 'assets/profile.png',
         email: 'hf521@ic.ac.uk',
-        password: 'pass123'),
+        password: 'Pass123'),
     Profile(
         name: 'Krish',
         image: 'assets/profile.png',
