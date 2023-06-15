@@ -1,4 +1,7 @@
 import 'dart:typed_data';
+import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'chapters_page.dart';
 import 'utilities.dart';
 import 'package:tuple/tuple.dart';
@@ -9,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 import 'package:camera/camera.dart';
-import 'package:path_provider/path_provider.dart';
 
 class MemoriesPage extends StatefulWidget {
   final String name;
@@ -25,7 +27,7 @@ class MemoriesPage extends StatefulWidget {
 }
 
 class _MemoriesPageState extends State<MemoriesPage> {
-  List<Tuple2<Future<Uint8List>, Map<String, dynamic>>> images = [];
+  List<Tuple2<Future<Uint8List>, Map<String, dynamic>>> files = [];
 
   final ImagePicker picker = ImagePicker();
   late TextEditingController captionController;
@@ -46,7 +48,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
       _videoPlayerController.play();
     });
 
-    await createCaption(_video as XFile?);
+    await createCaption(_video, MemoryType.video);
 
   }
 
@@ -68,7 +70,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
         .eq("name", path.name)
         .single();
     setState(() {
-      images.add(Tuple2(
+      files.add(Tuple2(
           supabase.storage.from(bucketId).download(path.name), metadata));
     });
   }
@@ -85,7 +87,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
     if (metadata == null) return;
 
     setState(() {
-      images.add(Tuple2(
+      files.add(Tuple2(
           supabase.storage.from(bucketId).download(path.name), metadata));
     });
   }
@@ -113,35 +115,44 @@ class _MemoriesPageState extends State<MemoriesPage> {
 
   //we can upload image from camera or from gallery based on parameter
   Future getImage(ImageSource media) async {
-    var img = await picker.pickImage(source: media);
+    final img = await picker.pickImage(source: media);
 
-    await createCaption(img);
+    if (img != null) {
+      await createCaption(File(img.path), MemoryType.image);
+    }
   }
 
   Future getVideo(ImageSource media) async {
-    var img = await picker.pickVideo(source: media);
+    final video = await picker.pickVideo(source: media);
 
-    await createCaption(img);
+    if (video != null) {
+      await createCaption(File(video.path), MemoryType.video);
+    }
   }
 
-
-  void uploadImage(XFile? img, String caption, String bucketId) async {
-    await supabase.storage.from(bucketId).upload(img!.name, File(img.path));
-    await supabase
-        .from("Files")
-        .insert({"bucket_id": bucketId, "name": img.name, "caption": caption});
+  void uploadFile(
+      File file, String caption, String bucketId, MemoryType memoryType) async {
+    final fileName = path.basename(file.path);
+    await supabase.storage.from(bucketId).upload(fileName, file);
+    await supabase.from("Files").insert({
+      "bucket_id": bucketId,
+      "name": fileName,
+      "caption": caption,
+      "file_type": memoryType.typeString
+    });
     setState(() {
-      images.add(Tuple2(img.readAsBytes(), <String, dynamic>{
+      files.add(Tuple2(file.readAsBytes(), <String, dynamic>{
         "caption": caption,
-        "name": img.name,
+        "name": fileName,
         "emotion": "No Emotion",
-        "response": null
+        "response": null,
+        "file_type": memoryType.typeString
       }));
     });
     if (context.mounted) Navigator.of(context).pop(captionController.text);
   }
 
-  Future createCaption(XFile? img) {
+  Future createCaption(File file, MemoryType memoryType) {
     captionController.clear();
 
     return showDialog<String>(
@@ -149,8 +160,8 @@ class _MemoriesPageState extends State<MemoriesPage> {
       builder: (context) => AlertDialog(
         title: const Text("Add caption"),
         content: TextField(
-          onSubmitted: (_) =>
-              uploadImage(img, captionController.text, widget.bucketIds[0]),
+          onSubmitted: (_) => uploadFile(
+              file, captionController.text, widget.bucketIds[0], memoryType),
           autofocus: true,
           decoration: const InputDecoration(
             hintText: "Enter a caption",
@@ -159,8 +170,8 @@ class _MemoriesPageState extends State<MemoriesPage> {
         ),
         actions: [
           TextButton(
-            onPressed: () =>
-                uploadImage(img, captionController.text, widget.bucketIds[0]),
+            onPressed: () => uploadFile(
+                file, captionController.text, widget.bucketIds[0], memoryType),
             child: const Text("Submit"),
           )
         ],
@@ -360,6 +371,16 @@ class _MemoriesPageState extends State<MemoriesPage> {
         });
   }
 
+  Future<void> getAudioFile() async {
+    final audioFile = await FilePicker.platform.pickFiles(
+      type: FileType.audio,
+    );
+
+    if (audioFile != null) {
+      await createCaption(File(audioFile.files.first.path!), MemoryType.audio);
+    }
+  }
+
   void chooseSoundUploadType() {
     Navigator.of(context).pop();
     showModalBottomSheet(
@@ -383,7 +404,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
                 ),
                 onTap: () {
                   Navigator.of(context).pop();
-                  // TODO
+                  getAudioFile();
                 },
                 text: "Upload sound",
               ),
@@ -501,6 +522,35 @@ class _MemoriesPageState extends State<MemoriesPage> {
     );
   }
 
+  Future<void> pressResponse(Map<String, dynamic> metadata) async {
+    final response = await openResponseCreation(metadata);
+              if (response == null) return;
+
+              setState(() {
+                metadata["response"] = response.item1;
+                metadata["emotion"] = response.item2;
+              });
+  }
+
+  Widget displayMemory(Uint8List media, Map<String, dynamic> metadata) {
+    switch (metadata["file_type"]) {
+      case "image":
+        return MemoryImage(
+          caption: metadata["caption"],
+          image: media,
+          responseButton: ResponseButton(
+            onPressed: () => pressResponse(metadata),
+          ),
+        );
+      case "video":
+        break;
+      case "audio":
+        break;
+      default:
+    }
+    return Placeholder();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -516,56 +566,20 @@ class _MemoriesPageState extends State<MemoriesPage> {
         title: Text('${widget.name} Memories'),
       ),
       body: GenericContainer(
-        child: images.isNotEmpty
+        child: files.isNotEmpty
             ? SingleChildScrollView(
                 child: ListView(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  children: images.map((image) {
+                  children: files.map((file) {
                     return FutureBuilder(
-                        future: image.item1,
+                        future: file.item1,
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
                             return const Center(
                                 child: CircularProgressIndicator());
                           }
-                          final img = snapshot.data!;
-                          return Column(children: [
-                            Stack(children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.memory(
-                                  img,
-                                  fit: BoxFit.fitWidth,
-                                  width: MediaQuery.of(context).size.width,
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: ElevatedButton(
-                                    onPressed: () async {
-                                      final response =
-                                          await openResponseCreation(
-                                              image.item2);
-                                      if (response == null) return;
-
-                                      setState(() {
-                                        image.item2["response"] =
-                                            response.item1;
-                                        image.item2["emotion"] = response.item2;
-                                      });
-                                    },
-                                    child: const Icon(
-                                      Icons.edit_note,
-                                      size: 30,
-                                    )),
-                              ),
-                            ]),
-                            Text(image.item2["caption"]),
-                            const SizedBox(
-                              height: 25,
-                            ),
-                          ]);
+                          return displayMemory(snapshot.data!, file.item2);
                         });
                   }).toList(),
                 ),
@@ -574,4 +588,63 @@ class _MemoriesPageState extends State<MemoriesPage> {
       ),
     );
   }
+}
+
+enum MemoryType {
+  image("image"),
+  video("video"),
+  audio("audio"),
+  text("text");
+
+  final String typeString;
+
+  const MemoryType(this.typeString);
+}
+
+class ResponseButton extends StatelessWidget {
+  final void Function() onPressed;
+
+  const ResponseButton({super.key, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) => Align(
+        alignment: Alignment.topRight,
+        child: ElevatedButton(
+            onPressed: onPressed,
+            child: const Icon(
+              Icons.edit_note,
+              size: 30,
+            )),
+      );
+}
+
+class MemoryImage extends StatelessWidget {
+  final Uint8List image;
+  final ResponseButton responseButton;
+  final String caption;
+
+  const MemoryImage(
+      {super.key,
+      required this.image,
+      required this.responseButton,
+      required this.caption});
+
+  @override
+  Widget build(BuildContext context) => Column(children: [
+        Stack(children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.memory(
+              image,
+              fit: BoxFit.fitWidth,
+              width: MediaQuery.of(context).size.width,
+            ),
+          ),
+          responseButton,
+        ]),
+        Text(caption),
+        const SizedBox(
+          height: 25,
+        ),
+      ]);
 }
