@@ -491,43 +491,22 @@ class _MemoriesPageState extends State<MemoriesPage> {
                             return const Center(
                                 child: CircularProgressIndicator());
                           }
-                          final img = snapshot.data!;
-                          return Column(children: [
-                            Stack(children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.memory(
-                                  img,
-                                  fit: BoxFit.fitWidth,
-                                  width: MediaQuery.of(context).size.width,
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: ElevatedButton(
-                                    onPressed: () async {
-                                      final response =
-                                          await openResponseCreation(
-                                              file.item2);
-                                      if (response == null) return;
+                          return MemoryImage(
+                            caption: file.item2["caption"],
+                            image: snapshot.data!,
+                            responseButton: ResponseButton(
+                              onPressed: () async {
+                                final response =
+                                    await openResponseCreation(file.item2);
+                                if (response == null) return;
 
-                                      setState(() {
-                                        file.item2["response"] =
-                                            response.item1;
-                                        file.item2["emotion"] = response.item2;
-                                      });
-                                    },
-                                    child: const Icon(
-                                      Icons.edit_note,
-                                      size: 30,
-                                    )),
-                              ),
-                            ]),
-                            Text(file.item2["caption"]),
-                            const SizedBox(
-                              height: 25,
+                                setState(() {
+                                  file.item2["response"] = response.item1;
+                                  file.item2["emotion"] = response.item2;
+                                });
+                              },
                             ),
-                          ]);
+                          );
                         });
                   }).toList(),
                 ),
@@ -547,4 +526,52 @@ enum MemoryType {
   final String typeString;
 
   const MemoryType(this.typeString);
+}
+
+class ResponseButton extends StatelessWidget {
+  final void Function() onPressed;
+
+  const ResponseButton({super.key, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) => Align(
+        alignment: Alignment.topRight,
+        child: ElevatedButton(
+            onPressed: onPressed,
+            child: const Icon(
+              Icons.edit_note,
+              size: 30,
+            )),
+      );
+}
+
+class MemoryImage extends StatelessWidget {
+  final Uint8List image;
+  final ResponseButton responseButton;
+  final String caption;
+
+  const MemoryImage(
+      {super.key,
+      required this.image,
+      required this.responseButton,
+      required this.caption});
+
+  @override
+  Widget build(BuildContext context) => Column(children: [
+        Stack(children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.memory(
+              image,
+              fit: BoxFit.fitWidth,
+              width: MediaQuery.of(context).size.width,
+            ),
+          ),
+          responseButton,
+        ]),
+        Text(caption),
+        const SizedBox(
+          height: 25,
+        ),
+      ]);
 }
