@@ -108,9 +108,12 @@ class _MemoriesPageState extends State<MemoriesPage> {
       File file, String caption, String bucketId, MemoryType memoryType) async {
     final fileName = path.basename(file.path);
     await supabase.storage.from(bucketId).upload(fileName, file);
-    await supabase
-        .from("Files")
-        .insert({"bucket_id": bucketId, "name": fileName, "caption": caption});
+    await supabase.from("Files").insert({
+      "bucket_id": bucketId,
+      "name": fileName,
+      "caption": caption,
+      "file_type": memoryType.typeString
+    });
     setState(() {
       images.add(Tuple2(file.readAsBytes(), <String, dynamic>{
         "caption": caption,
@@ -316,11 +319,9 @@ class _MemoriesPageState extends State<MemoriesPage> {
       type: FileType.audio,
     );
 
-    if (audioFile == null) {
-      return;
+    if (audioFile != null) {
+      await createCaption(File(audioFile.files.first.path!), MemoryType.audio);
     }
-
-    // uploadAudioFile(File(audioFile.files.first.path!));
   }
 
   void chooseSoundUploadType() {
