@@ -311,6 +311,68 @@ class _MemoriesPageState extends State<MemoriesPage> {
     );
   }
 
+  void chooseSoundUploadType() {
+    Navigator.of(context).pop();
+    showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
+      context: context,
+      builder: (context) => GenericModalBottomSheetChild(
+        heightScale: 0.2,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                GenericCircularButton(
+                  size: iconSize,
+                  icon: const Icon(
+                    Icons.upload,
+                    size: iconSize * 0.75,
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    // TODO
+                  },
+                  text: "Upload sound",
+                ),
+                GenericCircularButton(
+                  size: iconSize,
+                  icon: const CustomIcon(
+                    size: iconSize * 0.75,
+                    imagePath: "assets/youtube.png",
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    // TODO
+                  },
+                  text: "YouTube",
+                ),
+                GenericCircularButton(
+                  size: iconSize,
+                  icon: const CustomIcon(
+                    size: iconSize * 0.75, 
+                    imagePath: "assets/microphone.png"
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    // TODO
+                  },
+                  text: "Record",
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   void openMemoryUploading() {
     showModalBottomSheet(
       shape: const RoundedRectangleBorder(
@@ -368,7 +430,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
                     size: iconSize * 0.75,
                     imagePath: "assets/sound.png",
                   ),
-                  onTap: () {},
+                  onTap: chooseSoundUploadType,
                   text: "Sound",
                 ),
                 GenericCircularButton(
