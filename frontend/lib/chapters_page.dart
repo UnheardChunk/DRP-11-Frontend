@@ -26,6 +26,16 @@ class _ChaptersPageState extends State<ChaptersPage> {
         appBar: AppBar(
           title: Text('${widget.name}\'s scrapbook'),
           centerTitle: true,
+          actions: [
+            IconButton(
+                onPressed: () {
+                  print('pressed it!');
+                },
+                icon: const Icon(
+                  Icons.person_add,
+                  size: 35,
+                ))
+          ],
           leading: BackButton(
             onPressed: () => Navigator.of(context).pop(),
           ),
