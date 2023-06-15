@@ -1,4 +1,7 @@
 import 'dart:typed_data';
+import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart' as path;
+
 import 'chapters_page.dart';
 import 'utilities.dart';
 import 'package:tuple/tuple.dart';
@@ -23,6 +26,8 @@ class MemoriesPage extends StatefulWidget {
 
 class _MemoriesPageState extends State<MemoriesPage> {
   List<Tuple2<Future<Uint8List>, Map<String, dynamic>>> images = [];
+
+  List<Tuple2<Future<Uint8List>, Map<String, dynamic>>> audioFiles = [];
 
   final ImagePicker picker = ImagePicker();
   late TextEditingController captionController;
@@ -92,28 +97,33 @@ class _MemoriesPageState extends State<MemoriesPage> {
 
   //we can upload image from camera or from gallery based on parameter
   Future getImage(ImageSource media) async {
-    var img = await picker.pickImage(source: media);
+    final img = await picker.pickImage(source: media);
 
-    await createCaption(img);
+    if (img != null) {
+      await createCaption(File(img.path), MemoryType.image);
+    }
   }
 
-  void uploadImage(XFile? img, String caption, String bucketId) async {
-    await supabase.storage.from(bucketId).upload(img!.name, File(img.path));
+  void uploadFile(
+      File file, String caption, String bucketId, MemoryType memoryType) async {
+    final fileName = path.basename(file.path);
+    await supabase.storage.from(bucketId).upload(fileName, file);
     await supabase
         .from("Files")
-        .insert({"bucket_id": bucketId, "name": img.name, "caption": caption});
+        .insert({"bucket_id": bucketId, "name": fileName, "caption": caption});
     setState(() {
-      images.add(Tuple2(img.readAsBytes(), <String, dynamic>{
+      images.add(Tuple2(file.readAsBytes(), <String, dynamic>{
         "caption": caption,
-        "name": img.name,
+        "name": fileName,
         "emotion": "No Emotion",
-        "response": null
+        "response": null,
+        "file_type": memoryType.typeString
       }));
     });
     if (context.mounted) Navigator.of(context).pop(captionController.text);
   }
 
-  Future createCaption(XFile? img) {
+  Future createCaption(File img, MemoryType memoryType) {
     captionController.clear();
 
     return showDialog<String>(
@@ -121,8 +131,8 @@ class _MemoriesPageState extends State<MemoriesPage> {
       builder: (context) => AlertDialog(
         title: const Text("Add caption"),
         content: TextField(
-          onSubmitted: (_) =>
-              uploadImage(img, captionController.text, widget.bucketIds[0]),
+          onSubmitted: (_) => uploadFile(
+              img, captionController.text, widget.bucketIds[0], memoryType),
           autofocus: true,
           decoration: const InputDecoration(
             hintText: "Enter a caption",
@@ -131,8 +141,8 @@ class _MemoriesPageState extends State<MemoriesPage> {
         ),
         actions: [
           TextButton(
-            onPressed: () =>
-                uploadImage(img, captionController.text, widget.bucketIds[0]),
+            onPressed: () => uploadFile(
+                img, captionController.text, widget.bucketIds[0], memoryType),
             child: const Text("Submit"),
           )
         ],
@@ -301,6 +311,18 @@ class _MemoriesPageState extends State<MemoriesPage> {
         });
   }
 
+  Future<void> getAudioFile() async {
+    final audioFile = await FilePicker.platform.pickFiles(
+      type: FileType.audio,
+    );
+
+    if (audioFile == null) {
+      return;
+    }
+
+    // uploadAudioFile(File(audioFile.files.first.path!));
+  }
+
   void chooseSoundUploadType() {
     Navigator.of(context).pop();
     showModalBottomSheet(
@@ -324,7 +346,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
                 ),
                 onTap: () {
                   Navigator.of(context).pop();
-                  // TODO
+                  getAudioFile();
                 },
                 text: "Upload sound",
               ),
@@ -515,4 +537,15 @@ class _MemoriesPageState extends State<MemoriesPage> {
       ),
     );
   }
+}
+
+enum MemoryType {
+  image("image"),
+  video("video"),
+  audio("audio"),
+  text("text");
+
+  final String typeString;
+
+  const MemoryType(this.typeString);
 }
