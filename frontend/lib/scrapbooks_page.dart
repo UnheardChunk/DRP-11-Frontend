@@ -5,7 +5,9 @@ import 'utilities.dart';
 
 // Creates the scrapbook page
 class ScrapbooksPage extends StatefulWidget {
-  const ScrapbooksPage({super.key});
+  final Profile profile;
+
+  const ScrapbooksPage(this.profile, {super.key});
 
   @override
   State<ScrapbooksPage> createState() => _ScrapbooksPageState();
@@ -25,6 +27,16 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
     super.initState();
 
     controller = TextEditingController();
+  }
+
+  authenticate(Profile profile) async {
+//final AuthResponse res =
+    await supabase.auth.signInWithPassword(
+      email: profile.email,
+      password: profile.password,
+    );
+    //final Session? session = res.session;
+    //final User? user = res.user;
   }
 
   // Disposes the scrapbook creation controller
@@ -63,6 +75,7 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
 
   // Pops the AlertDialog for scrapbook creation when the submit button is pressed
   void createScrapbook() async {
+    await authenticate(widget.profile);
     await supabase.from('Scrapbooks').insert({'name': controller.text});
     if (context.mounted) Navigator.of(context).pop(controller.text);
   }
