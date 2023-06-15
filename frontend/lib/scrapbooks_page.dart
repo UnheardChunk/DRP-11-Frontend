@@ -97,8 +97,8 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
                     onPressed: () => Navigator.of(context).pop(false),
                     child: const Text('No')),
                 TextButton(
-                    onPressed: () async {
-                      await supabase.auth.signOut();
+                    onPressed: () {
+                      logOut();
                       Navigator.of(context).pop(true);
                     },
                     child: const Text('Yes')),
@@ -135,5 +135,9 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
             },
           )),
         ));
+  }
+
+  Future<void> logOut() async {
+    await supabase.auth.signOut();
   }
 }
