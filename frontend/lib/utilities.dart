@@ -225,3 +225,33 @@ class CustomIcon extends StatelessWidget {
         ),
       );
 }
+
+class GenericModalBottomSheetChild extends StatelessWidget {
+  final Widget child;
+  final double heightScale;
+
+  const GenericModalBottomSheetChild(
+      {super.key, required this.child, required this.heightScale});
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+        height: MediaQuery.of(context).size.height * heightScale,
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                padding: const EdgeInsets.all(10),
+                constraints: const BoxConstraints(),
+                icon: const Icon(Icons.close),
+                onPressed: Navigator.of(context).pop,
+              ),
+            ),
+            child,
+          ],
+        ),
+      );
+}
