@@ -292,7 +292,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Add response'),
+                      const Text('Add comment'),
                       DropdownButton<String>(
                         value: dropdownValue,
                         onChanged: (String? emotion) async {
@@ -314,8 +314,8 @@ class _MemoriesPageState extends State<MemoriesPage> {
                     onSubmitted: (_) => createResponse(
                         dropdownValue, metadata["name"], metadata["bucket_id"]),
                     autofocus: true,
-                    decoration: const InputDecoration(
-                        hintText: "Enter a response to this memory"),
+                    decoration:
+                        const InputDecoration(hintText: "Enter a comment"),
                     controller: responseController,
                   ),
                   actions: [
@@ -632,10 +632,8 @@ class ResponseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Align(
         alignment: Alignment.topRight,
-        child: ElevatedButton(
-            onPressed: onPressed,
-            child: const Text("Response")
-            ),
+        child:
+            ElevatedButton(onPressed: onPressed, child: const Text("Comment")),
       );
 }
 
