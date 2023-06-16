@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as path;
 
@@ -465,12 +466,12 @@ class _MemoriesPageState extends State<MemoriesPage> {
 
   Future<void> pressResponse(Map<String, dynamic> metadata) async {
     final response = await openResponseCreation(metadata);
-              if (response == null) return;
+    if (response == null) return;
 
-              setState(() {
-                metadata["response"] = response.item1;
-                metadata["emotion"] = response.item2;
-              });
+    setState(() {
+      metadata["response"] = response.item1;
+      metadata["emotion"] = response.item2;
+    });
   }
 
   Widget displayMemory(Uint8List media, Map<String, dynamic> metadata) {
@@ -486,7 +487,13 @@ class _MemoriesPageState extends State<MemoriesPage> {
       case "video":
         break;
       case "audio":
-        break;
+        return MemoryAudio(
+          audio: media, 
+          responseButton: ResponseButton(
+            onPressed: () => pressResponse(metadata),
+          ), 
+          caption: metadata["caption"],
+        );
       default:
     }
     return Placeholder();
@@ -588,4 +595,104 @@ class MemoryImage extends StatelessWidget {
           height: 25,
         ),
       ]);
+}
+
+class MemoryAudio extends StatefulWidget {
+  final Uint8List audio;
+  final ResponseButton responseButton;
+  final String caption;
+
+  const MemoryAudio(
+      {super.key,
+      required this.audio,
+      required this.responseButton,
+      required this.caption});
+
+  @override
+  State<MemoryAudio> createState() => _MemoryAudioState();
+}
+
+class _MemoryAudioState extends State<MemoryAudio> {
+
+  static const double iconSize = 45;
+
+  final audioPlayer = AudioPlayer();
+
+  bool isPlaying = false;
+  Duration duration = Duration.zero;
+  Duration position = Duration.zero;
+
+  Future<void> setAudioSource() async {
+    await audioPlayer.setSourceBytes(widget.audio);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(Duration.zero, () async {
+      await setAudioSource();
+    });
+
+    audioPlayer.onPlayerStateChanged.listen((state) {
+      setState(() {
+        isPlaying = state == PlayerState.playing;
+      });
+    });
+
+    audioPlayer.onDurationChanged.listen((newDuration) {
+      setState(() {
+        duration = newDuration;
+      });
+    });
+
+    audioPlayer.onPositionChanged.listen((newPosition) {
+      setState(() {
+        position = newPosition;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    audioPlayer.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print("Duration of song: ${duration.inSeconds}");
+    print("Position in song: ${position.inSeconds}");
+    return Material(
+      child: ListTile(
+        leading: GenericCircularButton(
+          size: iconSize,
+          icon: const Icon(
+            Icons.play_arrow,
+            size: iconSize * 0.75,
+          ),
+          onTap: () async {
+            if (isPlaying) {
+              await audioPlayer.pause();
+            } else {
+              await audioPlayer.resume();
+            }
+          },
+        ),
+        title: Text(widget.caption),
+        subtitle: Slider(
+          min: 0,
+          max: duration.inSeconds.toDouble(),
+          value: position.inSeconds.toDouble(),
+          onChanged: (value) async {
+            setState(() {
+              position = Duration(seconds: value.toInt());
+            });
+            await audioPlayer.seek(position);
+          },
+        ),
+      ),
+    );
+  }
 }
