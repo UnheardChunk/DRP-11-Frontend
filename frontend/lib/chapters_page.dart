@@ -8,15 +8,23 @@ import 'profile_page.dart';
 
 class MultiSelect extends StatefulWidget {
   final List<Tuple2> items;
+  final initialSelectedUsers;
   final String uuid;
-  const MultiSelect(this.uuid, {super.key, required this.items});
+  const MultiSelect(this.uuid, this.initialSelectedUsers,
+      {super.key, required this.items});
 
   @override
   State<MultiSelect> createState() => _MultiSelectState();
 }
 
 class _MultiSelectState extends State<MultiSelect> {
-  final Set<String> _selectedUsers = {};
+  late final List<String> _selectedUsers;
+
+  @override
+  void initState() {
+    _selectedUsers = widget.initialSelectedUsers;
+    super.initState();
+  }
 
   // Triggered when a checkbox is checked / unchecked
   void _itemChange(String itemValue, bool isSelected) {
@@ -36,8 +44,9 @@ class _MultiSelectState extends State<MultiSelect> {
 
   // Triggered when submit button is called
   void _submit() async {
-    await supabase.from("Scrapbooks").update(
-        {"contributors": _selectedUsers.toList()}).eq("id", widget.uuid);
+    await supabase
+        .from("Scrapbooks")
+        .update({"contributors": _selectedUsers}).eq("id", widget.uuid);
     print(_selectedUsers);
   }
 
@@ -49,7 +58,7 @@ class _MultiSelectState extends State<MultiSelect> {
         child: ListBody(
           children: widget.items
               .map((item) => CheckboxListTile(
-                    value: _selectedUsers.contains(item.item1),
+                    value: _selectedUsers.contains(item.item2),
                     title: Text(item.item1),
                     onChanged: (isChecked) =>
                         _itemChange(item.item2, isChecked!),
@@ -63,7 +72,7 @@ class _MultiSelectState extends State<MultiSelect> {
         ElevatedButton(
             onPressed: () {
               _submit();
-              Navigator.pop(context, _selectedUsers.toList());
+              Navigator.pop(context, _selectedUsers);
             },
             child: const Text('Submit')),
       ],
@@ -85,6 +94,23 @@ class ChaptersPage extends StatefulWidget {
 class _ChaptersPageState extends State<ChaptersPage> {
   List<String> _selectedUsers = [];
 
+  @override
+  void initState() {
+    populateInitUsers();
+    super.initState();
+  }
+
+  populateInitUsers() async {
+    final ret = await supabase
+        .from("Scrapbooks")
+        .select("contributors")
+        .eq("id", widget.uuid)
+        .single();
+    _selectedUsers = ((ret["contributors"]) as List<dynamic>)
+        .map((e) => e as String)
+        .toList();
+  }
+
   void _showMultiSelect() async {
     List<Tuple2> items = [
       const Tuple2("Shruti", "cb965659-dacc-4268-848d-056ac9181992"),
@@ -98,6 +124,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
       builder: (BuildContext context) {
         return MultiSelect(
           widget.uuid,
+          _selectedUsers,
           items: items,
         );
       },
