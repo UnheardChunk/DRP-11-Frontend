@@ -38,19 +38,16 @@ class _MemoriesPageState extends State<MemoriesPage> {
   late VideoPlayerController _videoPlayerController;
   late File _video;
 
-
   Future _pickVideo() async {
     final video = await picker.pickVideo(source: ImageSource.gallery);
     _video = File(video!.path);
-    _videoPlayerController = VideoPlayerController.file(_video)..initialize().then((_) {
-      setState(() {
-
+    _videoPlayerController = VideoPlayerController.file(_video)
+      ..initialize().then((_) {
+        setState(() {});
+        _videoPlayerController.play();
       });
-      _videoPlayerController.play();
-    });
 
     await createCaption(_video, MemoryType.video);
-
   }
 
   static const iconSize = 75.0;
@@ -262,8 +259,6 @@ class _MemoriesPageState extends State<MemoriesPage> {
   void disposeCamera() {
     _cameraController?.dispose();
   }
-
-
 
   Future<Tuple2<String, String>?> openResponseCreation(Map metadata) {
     String dropdownValue = metadata["emotion"];
@@ -547,10 +542,10 @@ class _MemoriesPageState extends State<MemoriesPage> {
         break;
       case "audio":
         return MemoryAudio(
-          audio: media, 
+          audio: media,
           responseButton: ResponseButton(
             onPressed: () => pressResponse(metadata),
-          ), 
+          ),
           caption: metadata["caption"],
         );
       default:
@@ -672,7 +667,6 @@ class MemoryAudio extends StatefulWidget {
 }
 
 class _MemoryAudioState extends State<MemoryAudio> {
-
   static const double iconSize = 45;
 
   final audioPlayer = AudioPlayer();
@@ -727,10 +721,12 @@ class _MemoryAudioState extends State<MemoryAudio> {
       child: ListTile(
         leading: GenericCircularButton(
           size: iconSize,
-          icon: const Icon(
-            Icons.play_arrow,
-            size: iconSize * 0.75,
-          ),
+          icon: isPlaying
+              ? const Icon(
+                  Icons.pause,
+                  size: iconSize * 0.75,
+                )
+              : const Icon(Icons.play_arrow, size: iconSize * 0.75),
           onTap: () async {
             if (isPlaying) {
               await audioPlayer.pause();
