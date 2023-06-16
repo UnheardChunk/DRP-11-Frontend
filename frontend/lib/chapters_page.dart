@@ -8,9 +8,11 @@ import 'profile_page.dart';
 
 class MultiSelect extends StatefulWidget {
   final List<Tuple2> items;
-  final initialSelectedUsers;
+  final List<String> initialSelectedUsers;
   final String uuid;
-  const MultiSelect(this.uuid, this.initialSelectedUsers,
+  final String owner;
+
+  const MultiSelect(this.uuid, this.initialSelectedUsers, this.owner,
       {super.key, required this.items});
 
   @override
@@ -57,6 +59,7 @@ class _MultiSelectState extends State<MultiSelect> {
       content: SingleChildScrollView(
         child: ListBody(
           children: widget.items
+              .where((element) => element.item2 != widget.owner)
               .map((item) => CheckboxListTile(
                     value: _selectedUsers.contains(item.item2),
                     title: Text(item.item1),
@@ -129,6 +132,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
         return MultiSelect(
           widget.uuid,
           _selectedUsers,
+          widget.owner,
           items: items,
         );
       },
