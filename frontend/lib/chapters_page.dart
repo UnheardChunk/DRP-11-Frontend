@@ -402,6 +402,7 @@ class EmotionsWidget extends StatelessWidget {
             builder: (context) => MemoriesPage(
                   bucketIds,
                   MemoryOrganisationType.emotions,
+                  owner,
                   emotion: emotions[4],
                   name: emotions[4],
                 )));
