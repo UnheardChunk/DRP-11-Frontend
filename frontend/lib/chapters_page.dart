@@ -83,8 +83,10 @@ class _MultiSelectState extends State<MultiSelect> {
 class ChaptersPage extends StatefulWidget {
   final String uuid;
   final String name;
+  final String owner;
 
-  const ChaptersPage({Key? key, required this.uuid, required this.name})
+  const ChaptersPage(
+      {Key? key, required this.uuid, required this.name, required this.owner})
       : super(key: key);
 
   @override
@@ -93,11 +95,13 @@ class ChaptersPage extends StatefulWidget {
 
 class _ChaptersPageState extends State<ChaptersPage> {
   List<String> _selectedUsers = [];
+  late bool isOwner;
 
   @override
   void initState() {
     populateInitUsers();
     super.initState();
+    isOwner = supabase.auth.currentUser!.id == widget.owner;
   }
 
   populateInitUsers() async {
@@ -140,14 +144,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('${widget.name}\'s scrapbook'),
-          centerTitle: true,
-          actions: [
+    final List<Widget> actions = isOwner
+        ? [
             IconButton(
                 onPressed: () {
                   _showMultiSelect();
@@ -156,16 +154,29 @@ class _ChaptersPageState extends State<ChaptersPage> {
                   Icons.person_add,
                   size: 35,
                 ))
-          ],
+          ]
+        : [];
+    final List<Widget> tabs = isOwner
+        ? [
+            const Tab(child: Text('Chapters')),
+            const Tab(child: Text('Emotions')),
+            const Tab(child: Text('Profile')),
+          ]
+        : [const Tab(child: Text('Chapters'))];
+
+    return Scaffold(
+        body: DefaultTabController(
+      length: isOwner ? 3 : 1,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('${widget.name}\'s scrapbook'),
+          centerTitle: true,
+          actions: actions,
           leading: BackButton(
             onPressed: () => Navigator.of(context).pop(),
           ),
-          bottom: const TabBar(
-            tabs: [
-              Tab(child: Text('Chapters')),
-              Tab(child: Text('Emotions')),
-              Tab(child: Text('Profile')),
-            ],
+          bottom: TabBar(
+            tabs: tabs,
           ),
         ),
         body: TabBarView(

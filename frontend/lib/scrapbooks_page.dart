@@ -132,7 +132,9 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
                 name: scrapbook["name"],
                 tileIcon: const Icon(Icons.menu_book, size: 30),
                 navigatesTo: ChaptersPage(
-                    uuid: scrapbook["id"], name: scrapbook["name"]),
+                    uuid: scrapbook["id"],
+                    name: scrapbook["name"],
+                    owner: scrapbook["owner"]),
               );
             },
           )
