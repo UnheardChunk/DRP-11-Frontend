@@ -634,10 +634,8 @@ class ResponseButton extends StatelessWidget {
         alignment: Alignment.topRight,
         child: ElevatedButton(
             onPressed: onPressed,
-            child: const Icon(
-              Icons.edit_note,
-              size: 30,
-            )),
+            child: const Text("Response")
+            ),
       );
 }
 
@@ -752,8 +750,6 @@ class _MemoryAudioState extends State<MemoryAudio> {
 
   @override
   Widget build(BuildContext context) {
-    print("Duration of song: ${duration.inSeconds}");
-    print("Position in song: ${position.inSeconds}");
     return Material(
       child: ListTile(
         leading: GenericCircularButton(
