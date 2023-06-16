@@ -163,6 +163,13 @@ class _ChaptersPageState extends State<ChaptersPage> {
             const Tab(child: Text('Profile')),
           ]
         : [const Tab(child: Text('Chapters'))];
+    final List<Widget> chapterTabs = isOwner
+        ? [
+            ChaptersTab(widget.uuid, index: 0), // Form for "Chapter" tab
+            ChaptersTab(widget.uuid, index: 1), // Form for "Emotions" tab
+            ChaptersTab(widget.uuid, index: 2), // Form for "Profile" tab
+          ]
+        : [ChaptersTab(widget.uuid, index: 0)];
 
     return Scaffold(
         body: DefaultTabController(
@@ -180,11 +187,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
           ),
         ),
         body: TabBarView(
-          children: [
-            ChaptersTab(widget.uuid, index: 0), // Form for "Chapter" tab
-            ChaptersTab(widget.uuid, index: 1), // Form for "Emotions" tab
-            ChaptersTab(widget.uuid, index: 2), // Form for "Profile" tab
-          ],
+          children: chapterTabs,
         ),
       ),
     ));
