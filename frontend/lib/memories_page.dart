@@ -2,7 +2,7 @@ import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as path;
-
+import 'package:path_provider/path_provider.dart';
 import 'chapters_page.dart';
 import 'utilities.dart';
 import 'package:tuple/tuple.dart';
@@ -11,6 +11,8 @@ import 'dart:io';
 import 'main.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
+import 'package:camera/camera.dart';
 
 class MemoriesPage extends StatefulWidget {
   final String name;
@@ -32,6 +34,24 @@ class _MemoriesPageState extends State<MemoriesPage> {
   late TextEditingController captionController;
   late TextEditingController responseController;
   late List<String> emotionsList;
+
+  late VideoPlayerController _videoPlayerController;
+  late File _video;
+
+
+  Future _pickVideo() async {
+    final video = await picker.pickVideo(source: ImageSource.gallery);
+    _video = File(video!.path);
+    _videoPlayerController = VideoPlayerController.file(_video)..initialize().then((_) {
+      setState(() {
+
+      });
+      _videoPlayerController.play();
+    });
+
+    await createCaption(_video, MemoryType.video);
+
+  }
 
   static const iconSize = 75.0;
 
@@ -100,6 +120,14 @@ class _MemoriesPageState extends State<MemoriesPage> {
 
     if (img != null) {
       await createCaption(File(img.path), MemoryType.image);
+    }
+  }
+
+  Future getVideo(ImageSource media) async {
+    final video = await picker.pickVideo(source: media);
+
+    if (video != null) {
+      await createCaption(File(video.path), MemoryType.video);
     }
   }
 
@@ -208,6 +236,35 @@ class _MemoriesPageState extends State<MemoriesPage> {
     );
   }
 
+  late List<CameraDescription> cameras;
+  CameraController? _cameraController;
+
+  Future<void> initializeCamera() async {
+    cameras = await availableCameras();
+    // Choose the desired camera, e.g., cameras[0] for the back camera
+    _cameraController = CameraController(cameras[0], ResolutionPreset.medium);
+    await _cameraController!.initialize();
+
+    final Directory appDirectory = await getApplicationDocumentsDirectory();
+    final String videoDirectory = '${appDirectory.path}/Videos';
+    await Directory(videoDirectory).create(recursive: true);
+
+    // final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
+    // final String filePath = '$videoDirectory/$currentTime.mp4';
+
+    try {
+      await _cameraController!.startVideoRecording();
+    } catch (e) {
+      // print(e);
+    }
+  }
+
+  void disposeCamera() {
+    _cameraController?.dispose();
+  }
+
+
+
   Future<Tuple2<String, String>?> openResponseCreation(Map metadata) {
     String dropdownValue = metadata["emotion"];
     responseController.text = metadata["response"] ?? "";
@@ -291,7 +348,8 @@ class _MemoriesPageState extends State<MemoriesPage> {
                       ),
                       onTap: () {
                         Navigator.of(context).pop();
-                        // TODO
+                        //getVideo(ImageSource.gallery)
+                        _pickVideo();
                       },
                       text: "Gallery",
                     ),
@@ -303,7 +361,8 @@ class _MemoriesPageState extends State<MemoriesPage> {
                       ),
                       onTap: () {
                         Navigator.of(context).pop();
-                        // TODO
+                        // initializeCamera();
+                        getVideo(ImageSource.camera);
                       },
                       text: "Record video",
                     )
