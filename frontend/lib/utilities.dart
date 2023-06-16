@@ -171,14 +171,14 @@ class GenericContainer extends StatelessWidget {
 class GenericCircularButton extends StatelessWidget {
   final Widget icon;
   final void Function() onTap;
-  final String text;
+  final String? text;
   final double size;
 
   const GenericCircularButton(
       {super.key,
       required this.icon,
       required this.onTap,
-      required this.text,
+      this.text,
       required this.size});
 
   @override
@@ -198,7 +198,8 @@ class GenericCircularButton extends StatelessWidget {
               ),
             ),
           ),
-          Text(text),
+          if (text != null)
+            Text(text!),
         ],
       );
 }
