@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:tuple/tuple.dart';
 import 'main.dart';
 import 'utilities.dart';
 import 'memories_page.dart';
 import 'profile_page.dart';
 
 class MultiSelect extends StatefulWidget {
-  final List<String> items;
-  const MultiSelect({super.key, required this.items});
+  final List<Tuple2> items;
+  final String uuid;
+  const MultiSelect(this.uuid, {super.key, required this.items});
 
   @override
   State<MultiSelect> createState() => _MultiSelectState();
 }
 
 class _MultiSelectState extends State<MultiSelect> {
-  final List<String> _selectedUsers = [];
+  final Set<String> _selectedUsers = {};
 
   // Triggered when a checkbox is checked / unchecked
   void _itemChange(String itemValue, bool isSelected) {
@@ -33,9 +35,10 @@ class _MultiSelectState extends State<MultiSelect> {
   }
 
   // Triggered when submit button is called
-  void _submit() {
+  void _submit() async {
+    await supabase.from("Scrapbooks").update(
+        {"contributors": _selectedUsers.toList()}).eq("id", widget.uuid);
     print(_selectedUsers);
-    Navigator.pop(context, _selectedUsers);
   }
 
   @override
@@ -46,9 +49,10 @@ class _MultiSelectState extends State<MultiSelect> {
         child: ListBody(
           children: widget.items
               .map((item) => CheckboxListTile(
-                    value: _selectedUsers.contains(item),
-                    title: Text(item),
-                    onChanged: (isChecked) => _itemChange(item, isChecked!),
+                    value: _selectedUsers.contains(item.item1),
+                    title: Text(item.item1),
+                    onChanged: (isChecked) =>
+                        _itemChange(item.item2, isChecked!),
                     controlAffinity: ListTileControlAffinity.leading,
                   ))
               .toList(),
@@ -56,7 +60,12 @@ class _MultiSelectState extends State<MultiSelect> {
       ),
       actions: [
         TextButton(onPressed: _cancel, child: const Text('Cancel')),
-        ElevatedButton(onPressed: _submit, child: const Text('Submit')),
+        ElevatedButton(
+            onPressed: () {
+              _submit();
+              Navigator.pop(context, _selectedUsers.toList());
+            },
+            child: const Text('Submit')),
       ],
     );
   }
@@ -77,17 +86,18 @@ class _ChaptersPageState extends State<ChaptersPage> {
   List<String> _selectedUsers = [];
 
   void _showMultiSelect() async {
-    List<String> items = [
-      'Shruti',
-      'Huzaifah',
-      'Krish',
-      'Gabriel',
+    List<Tuple2> items = [
+      const Tuple2("Shruti", "cb965659-dacc-4268-848d-056ac9181992"),
+      const Tuple2("Huzaifah", "4dfcf557-5b65-4fed-b86f-796edf311955"),
+      const Tuple2("Krish", "5bd6ed3e-d1f2-435f-9191-670989d207e8"),
+      const Tuple2("Gabriel", "505d1b6f-1e46-4f3d-814a-7cb65094a402"),
     ];
 
     final List<String>? results = await showDialog(
       context: context,
       builder: (BuildContext context) {
         return MultiSelect(
+          widget.uuid,
           items: items,
         );
       },
