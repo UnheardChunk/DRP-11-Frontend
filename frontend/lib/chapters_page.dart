@@ -169,11 +169,14 @@ class _ChaptersPageState extends State<ChaptersPage> {
         : [const Tab(child: Text('Chapters'))];
     final List<Widget> chapterTabs = isOwner
         ? [
-            ChaptersTab(widget.uuid, index: 0), // Form for "Chapter" tab
-            ChaptersTab(widget.uuid, index: 1), // Form for "Emotions" tab
-            ChaptersTab(widget.uuid, index: 2), // Form for "Profile" tab
+            ChaptersTab(widget.uuid, widget.owner,
+                index: 0), // Form for "Chapter" tab
+            ChaptersTab(widget.uuid, widget.owner,
+                index: 1), // Form for "Emotions" tab
+            ChaptersTab(widget.uuid, widget.owner,
+                index: 2), // Form for "Profile" tab
           ]
-        : [ChaptersTab(widget.uuid, index: 0)];
+        : [ChaptersTab(widget.uuid, widget.owner, index: 0)];
 
     return Scaffold(
         body: DefaultTabController(
@@ -202,8 +205,9 @@ class ChaptersTab extends StatefulWidget {
   late final bool allowChapterCreation;
   late final bool isProfileTab;
   final String uuid;
+  final String owner;
 
-  ChaptersTab(this.uuid, {super.key, required index}) {
+  ChaptersTab(this.uuid, this.owner, {super.key, required index}) {
     allowChapterCreation = index == 0;
     isProfileTab = index == 2;
   }
@@ -301,6 +305,7 @@ class _ChaptersTabState extends State<ChaptersTab> {
                     navigatesTo: MemoriesPage(
                       [chapter["bucket_id"]],
                       MemoryOrganisationType.chapters,
+                      widget.owner,
                       name: chapter["name"],
                     ),
                   );
@@ -310,6 +315,7 @@ class _ChaptersTabState extends State<ChaptersTab> {
                 ? ProfileWidget(uuid: widget.uuid)
                 : EmotionsWidget(
                     allChapters: future,
+                    owner: widget.owner,
                   ),
       ),
     );
@@ -318,11 +324,9 @@ class _ChaptersTabState extends State<ChaptersTab> {
 
 class EmotionsWidget extends StatelessWidget {
   final PostgrestFilterBuilder<List<Map<String, dynamic>>> allChapters;
+  final String owner;
 
-  EmotionsWidget({
-    super.key,
-    required this.allChapters,
-  });
+  EmotionsWidget({super.key, required this.allChapters, required this.owner});
 
   final List<String> emotions = [
     "Happy",
@@ -360,6 +364,7 @@ class EmotionsWidget extends StatelessWidget {
                   navigatesTo: MemoriesPage(
                     bucketIds,
                     MemoryOrganisationType.emotions,
+                    owner,
                     emotion: emotions[i],
                     name: emotions[i],
                   ),

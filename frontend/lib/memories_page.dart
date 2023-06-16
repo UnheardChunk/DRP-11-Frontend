@@ -1,3 +1,4 @@
+import 'dart:isolate';
 import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:file_picker/file_picker.dart';
@@ -16,11 +17,12 @@ import 'package:camera/camera.dart';
 
 class MemoriesPage extends StatefulWidget {
   final String name;
+  final String owner;
   final List<String> bucketIds;
   final MemoryOrganisationType organisationType;
   final String emotion;
 
-  const MemoriesPage(this.bucketIds, this.organisationType,
+  const MemoriesPage(this.bucketIds, this.organisationType, this.owner,
       {super.key, this.emotion = "", required this.name});
 
   @override
@@ -34,23 +36,21 @@ class _MemoriesPageState extends State<MemoriesPage> {
   late TextEditingController captionController;
   late TextEditingController responseController;
   late List<String> emotionsList;
+  late bool isOwner;
 
   late VideoPlayerController _videoPlayerController;
   late File _video;
 
-
   Future _pickVideo() async {
     final video = await picker.pickVideo(source: ImageSource.gallery);
     _video = File(video!.path);
-    _videoPlayerController = VideoPlayerController.file(_video)..initialize().then((_) {
-      setState(() {
-
+    _videoPlayerController = VideoPlayerController.file(_video)
+      ..initialize().then((_) {
+        setState(() {});
+        _videoPlayerController.play();
       });
-      _videoPlayerController.play();
-    });
 
     await createCaption(_video, MemoryType.video);
-
   }
 
   static const iconSize = 75.0;
@@ -60,6 +60,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
     super.initState();
     captionController = TextEditingController();
     responseController = TextEditingController();
+    isOwner = widget.owner == supabase.auth.currentUser!.id;
     initialise();
   }
 
@@ -151,6 +152,23 @@ class _MemoriesPageState extends State<MemoriesPage> {
       }));
     });
     if (context.mounted) Navigator.of(context).pop(captionController.text);
+  }
+
+  void testDialog(String text) {
+    showDialog<String>(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(text),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      if (context.mounted) {
+                        Navigator.of(context).pop(text);
+                      }
+                    },
+                    child: const Text("Return"))
+              ],
+            ));
   }
 
   Future createCaption(File file, MemoryType memoryType) {
@@ -262,8 +280,6 @@ class _MemoriesPageState extends State<MemoriesPage> {
   void disposeCamera() {
     _cameraController?.dispose();
   }
-
-
 
   Future<Tuple2<String, String>?> openResponseCreation(Map metadata) {
     String dropdownValue = metadata["emotion"];
@@ -542,15 +558,16 @@ class _MemoriesPageState extends State<MemoriesPage> {
           responseButton: ResponseButton(
             onPressed: () => pressResponse(metadata),
           ),
+          isOwner: isOwner,
         );
       case "video":
         break;
       case "audio":
         return MemoryAudio(
-          audio: media, 
+          audio: media,
           responseButton: ResponseButton(
             onPressed: () => pressResponse(metadata),
-          ), 
+          ),
           caption: metadata["caption"],
         );
       default:
@@ -629,31 +646,47 @@ class MemoryImage extends StatelessWidget {
   final Uint8List image;
   final ResponseButton responseButton;
   final String caption;
+  final bool isOwner;
 
   const MemoryImage(
       {super.key,
       required this.image,
       required this.responseButton,
-      required this.caption});
+      required this.caption,
+      required this.isOwner});
 
   @override
-  Widget build(BuildContext context) => Column(children: [
-        Stack(children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.memory(
-              image,
-              fit: BoxFit.fitWidth,
-              width: MediaQuery.of(context).size.width,
+  Widget build(BuildContext context) {
+    List<Widget> stackChildren = isOwner
+        ? [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.memory(
+                image,
+                fit: BoxFit.fitWidth,
+                width: MediaQuery.of(context).size.width,
+              ),
             ),
-          ),
-          responseButton,
-        ]),
-        Text(caption),
-        const SizedBox(
-          height: 25,
-        ),
-      ]);
+            responseButton,
+          ]
+        : [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.memory(
+                image,
+                fit: BoxFit.fitWidth,
+                width: MediaQuery.of(context).size.width,
+              ),
+            )
+          ];
+    return Column(children: [
+      Stack(children: stackChildren),
+      Text(caption),
+      const SizedBox(
+        height: 25,
+      ),
+    ]);
+  }
 }
 
 class MemoryAudio extends StatefulWidget {
@@ -672,7 +705,6 @@ class MemoryAudio extends StatefulWidget {
 }
 
 class _MemoryAudioState extends State<MemoryAudio> {
-
   static const double iconSize = 45;
 
   final audioPlayer = AudioPlayer();
