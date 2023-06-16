@@ -759,10 +759,12 @@ class _MemoryAudioState extends State<MemoryAudio> {
       child: ListTile(
         leading: GenericCircularButton(
           size: iconSize,
-          icon: const Icon(
-            Icons.play_arrow,
-            size: iconSize * 0.75,
-          ),
+          icon: isPlaying
+              ? const Icon(
+                  Icons.pause,
+                  size: iconSize * 0.75,
+                )
+              : const Icon(Icons.play_arrow, size: iconSize * 0.75),
           onTap: () async {
             if (isPlaying) {
               await audioPlayer.pause();

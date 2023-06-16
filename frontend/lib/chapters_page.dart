@@ -357,7 +357,7 @@ class EmotionsWidget extends StatelessWidget {
           }
           return ListView(
             children: [
-              for (var i = 0; i < emotions.length; i++)
+              for (var i = 0; i < emotions.length - 1; i++)
                 GenericTile(
                   name: emotions[i],
                   tileIcon: const Icon(null),
@@ -369,10 +369,60 @@ class EmotionsWidget extends StatelessWidget {
                     name: emotions[i],
                   ),
                   colour: emotionColours[i],
-                )
+                ),
+              // Tile for Distressing
+              GestureDetector(
+                onTap: () => _openDistressingEmotion(context, bucketIds),
+                child: Card(
+                  color: emotionColours[4],
+                  child: ListTile(
+                    title: Text(emotions[4]),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                    leading: const Icon(null),
+                  ),
+                ),
+              )
             ],
           );
         });
+  }
+
+  _openDistressingEmotion(BuildContext context, List<String> bucketIds) {
+    Widget cancelButton = ElevatedButton(
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+      child: const Text('Cancel'),
+    );
+
+    Widget continueButton = ElevatedButton(
+      onPressed: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => MemoriesPage(
+                  bucketIds,
+                  MemoryOrganisationType.emotions,
+                  emotion: emotions[4],
+                  name: emotions[4],
+                )));
+      },
+      child: const Text('Continue'),
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: const Text('See distressing memories?'),
+      content: const Text(
+          'The contents of this page may be sensitive. Are you sure you want to continue ?'),
+      actions: [cancelButton, continueButton],
+    );
+
+    Future.delayed(Duration.zero, () {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          });
+    });
   }
 }
 
