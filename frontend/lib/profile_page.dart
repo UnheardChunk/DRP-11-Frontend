@@ -140,7 +140,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
 
               // Favourite Places --------------------------------------------------
               Field(
-                  labelText: 'Favourite placed I have lived and visted',
+                  labelText: 'Favourite places I have lived and visted',
                   text: textFields[7].isEmpty ? "Not provided" : textFields[7],
                   isEditing: isEditing,
                   controller: controllers[7]),
