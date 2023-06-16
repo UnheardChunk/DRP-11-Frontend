@@ -198,8 +198,7 @@ class GenericCircularButton extends StatelessWidget {
               ),
             ),
           ),
-          if (text != null)
-            Text(text!),
+          if (text != null) Text(text!),
         ],
       );
 }
