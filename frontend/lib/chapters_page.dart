@@ -169,14 +169,33 @@ class _ChaptersPageState extends State<ChaptersPage> {
         : [const Tab(child: Text('Chapters'))];
     final List<Widget> chapterTabs = isOwner
         ? [
-            ChaptersTab(widget.uuid, widget.owner,
-                index: 0), // Form for "Chapter" tab
-            ChaptersTab(widget.uuid, widget.owner,
-                index: 1), // Form for "Emotions" tab
-            ChaptersTab(widget.uuid, widget.owner,
-                index: 2), // Form for "Profile" tab
+            ChaptersTab(
+              widget.uuid,
+              widget.owner,
+              index: 0,
+              name: widget.name,
+            ), // Form for "Chapter" tab
+            ChaptersTab(
+              widget.uuid,
+              widget.owner,
+              index: 1,
+              name: widget.name,
+            ), // Form for "Emotions" tab
+            ChaptersTab(
+              widget.uuid,
+              widget.owner,
+              index: 2,
+              name: widget.name,
+            ), // Form for "Profile" tab
           ]
-        : [ChaptersTab(widget.uuid, widget.owner, index: 0)];
+        : [
+            ChaptersTab(
+              widget.uuid,
+              widget.owner,
+              index: 0,
+              name: widget.name,
+            )
+          ];
 
     return Scaffold(
         body: DefaultTabController(
@@ -206,8 +225,10 @@ class ChaptersTab extends StatefulWidget {
   late final bool isProfileTab;
   final String uuid;
   final String owner;
+  final String name;
 
-  ChaptersTab(this.uuid, this.owner, {super.key, required index}) {
+  ChaptersTab(this.uuid, this.owner,
+      {super.key, required index, required this.name}) {
     allowChapterCreation = index == 0;
     isProfileTab = index == 2;
   }
@@ -316,6 +337,7 @@ class _ChaptersTabState extends State<ChaptersTab> {
                 : EmotionsWidget(
                     allChapters: future,
                     owner: widget.owner,
+                    scrapbookName: widget.name,
                   ),
       ),
     );
@@ -325,8 +347,13 @@ class _ChaptersTabState extends State<ChaptersTab> {
 class EmotionsWidget extends StatelessWidget {
   final PostgrestFilterBuilder<List<Map<String, dynamic>>> allChapters;
   final String owner;
+  final String scrapbookName;
 
-  EmotionsWidget({super.key, required this.allChapters, required this.owner});
+  EmotionsWidget(
+      {super.key,
+      required this.allChapters,
+      required this.owner,
+      required this.scrapbookName});
 
   final List<String> emotions = [
     "Happy",
@@ -412,8 +439,8 @@ class EmotionsWidget extends StatelessWidget {
 
     AlertDialog alert = AlertDialog(
       title: const Text('See distressing memories?'),
-      content: const Text(
-          'The contents of this page may be sensitive. Are you sure you want to continue ?'),
+      content: Text(
+          'The contents of this page may be sensitive to $scrapbookName. Are you sure you want to continue?'),
       actions: [cancelButton, continueButton],
     );
 
