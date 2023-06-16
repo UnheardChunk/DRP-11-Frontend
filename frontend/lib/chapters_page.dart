@@ -5,6 +5,63 @@ import 'utilities.dart';
 import 'memories_page.dart';
 import 'profile_page.dart';
 
+class MultiSelect extends StatefulWidget {
+  final List<String> items;
+  const MultiSelect({super.key, required this.items});
+
+  @override
+  State<MultiSelect> createState() => _MultiSelectState();
+}
+
+class _MultiSelectState extends State<MultiSelect> {
+  final List<String> _selectedUsers = [];
+
+  // Triggered when a checkbox is checked / unchecked
+  void _itemChange(String itemValue, bool isSelected) {
+    setState(() {
+      if (isSelected) {
+        _selectedUsers.add(itemValue);
+      } else {
+        _selectedUsers.remove(itemValue);
+      }
+    });
+  }
+
+  // Triggered when cancel button is selected
+  void _cancel() {
+    Navigator.pop(context);
+  }
+
+  // Triggered when submit button is called
+  void _submit() {
+    print(_selectedUsers);
+    Navigator.pop(context, _selectedUsers);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Select Contributors'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: widget.items
+              .map((item) => CheckboxListTile(
+                    value: _selectedUsers.contains(item),
+                    title: Text(item),
+                    onChanged: (isChecked) => _itemChange(item, isChecked!),
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ))
+              .toList(),
+        ),
+      ),
+      actions: [
+        TextButton(onPressed: _cancel, child: const Text('Cancel')),
+        ElevatedButton(onPressed: _submit, child: const Text('Submit')),
+      ],
+    );
+  }
+}
+
 class ChaptersPage extends StatefulWidget {
   final String uuid;
   final String name;
@@ -17,6 +74,33 @@ class ChaptersPage extends StatefulWidget {
 }
 
 class _ChaptersPageState extends State<ChaptersPage> {
+  List<String> _selectedUsers = [];
+
+  void _showMultiSelect() async {
+    List<String> items = [
+      'Shruti',
+      'Huzaifah',
+      'Krish',
+      'Gabriel',
+    ];
+
+    final List<String>? results = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MultiSelect(
+          items: items,
+        );
+      },
+    );
+
+    // Update UI
+    if (results != null) {
+      setState(() {
+        _selectedUsers = results;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +113,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
           actions: [
             IconButton(
                 onPressed: () {
-                  print('pressed it!');
+                  _showMultiSelect();
                 },
                 icon: const Icon(
                   Icons.person_add,
