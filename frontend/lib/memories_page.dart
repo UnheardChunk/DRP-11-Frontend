@@ -519,7 +519,13 @@ class _MemoriesPageState extends State<MemoriesPage> {
           ),
         );
       case "video":
-        break;
+        return MemoryVideo(
+          caption: metadata["caption"],
+          video: media,
+          responseButton: ResponseButton(
+            onPressed: () => pressResponse(metadata),
+          ),
+        );
       case "audio":
         break;
       default:
@@ -623,4 +629,36 @@ class MemoryImage extends StatelessWidget {
           height: 25,
         ),
       ]);
+}
+
+class MemoryVideo extends StatelessWidget {
+  final Uint8List video;
+  final ResponseButton responseButton;
+  final String caption;
+
+  const MemoryVideo({
+    super.key,
+    required this.video,
+    required this.responseButton,
+    required this.caption
+  });
+
+  @override
+  Widget build(BuildContext context) => Column(children: [
+    Stack(children: [
+      ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Image.memory(
+          video,
+          fit: BoxFit.fitWidth,
+          width: MediaQuery.of(context).size.width,
+        ),
+      ),
+      responseButton,
+    ]),
+    Text(caption),
+    const SizedBox(
+      height: 25,
+    ),
+  ]);
 }
