@@ -103,7 +103,7 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
             child: const Icon(Icons.add),
           ),
           appBar: AppBar(
-            title: const Text('My scrapbooks'),
+            title: const Text('Scrapbooks'),
             centerTitle: true,
           ),
           body: GenericContainer(
