@@ -565,6 +565,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
         return MemoryAudio(
           audio: media,
           responseButton: ResponseButton(
+            alignButton: false,
             onPressed: () => pressResponse(metadata),
           ),
           caption: metadata["caption"],
@@ -626,15 +627,16 @@ enum MemoryType {
 
 class ResponseButton extends StatelessWidget {
   final void Function() onPressed;
+  final bool alignButton;
 
-  const ResponseButton({super.key, required this.onPressed});
+  const ResponseButton({super.key, required this.onPressed, this.alignButton = true});
 
   @override
-  Widget build(BuildContext context) => Align(
-        alignment: Alignment.topRight,
-        child:
-            ElevatedButton(onPressed: onPressed, child: const Text("Comment")),
-      );
+  Widget build(BuildContext context) {
+
+    final button = ElevatedButton(onPressed: onPressed, child: const Text("Comment"));
+    return alignButton ? Align(alignment: Alignment.topRight, child: button,) : button;
+  } 
 }
 
 class MemoryImage extends StatelessWidget {
@@ -700,7 +702,7 @@ class MemoryAudio extends StatefulWidget {
 }
 
 class _MemoryAudioState extends State<MemoryAudio> {
-  static const double iconSize = 45;
+  static const double iconSize = 40;
 
   final audioPlayer = AudioPlayer();
 
@@ -749,7 +751,11 @@ class _MemoryAudioState extends State<MemoryAudio> {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: Colors.grey[300],
+      elevation: 10,
+      borderRadius: BorderRadius.circular(10),
       child: ListTile(
+        dense: true,
         leading: GenericCircularButton(
           size: iconSize,
           icon: isPlaying
@@ -766,7 +772,8 @@ class _MemoryAudioState extends State<MemoryAudio> {
             }
           },
         ),
-        title: Text(widget.caption),
+        title: Text(widget.caption, textAlign: TextAlign.center,),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 6),
         subtitle: Slider(
           min: 0,
           max: duration.inSeconds.toDouble(),
@@ -778,6 +785,7 @@ class _MemoryAudioState extends State<MemoryAudio> {
             await audioPlayer.seek(position);
           },
         ),
+        trailing: widget.responseButton,
       ),
     );
   }
