@@ -137,6 +137,7 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
                     owner: scrapbook["owner"]),
               );
             },
+            noContentText: "You have no scrapbooks",
           )
               //})
               ),
