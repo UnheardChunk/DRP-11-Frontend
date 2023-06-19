@@ -331,6 +331,7 @@ class _ChaptersTabState extends State<ChaptersTab> {
                     ),
                   );
                 },
+                noContentText: "This scrapbook current has no chapters",
               )
             : widget.isProfileTab
                 ? ProfileWidget(uuid: widget.uuid)
