@@ -153,9 +153,9 @@ class _ChaptersPageState extends State<ChaptersPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: IconButton(
-                hoverColor: Colors.transparent,
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
                   onPressed: () {
                     _showMultiSelect();
                   },

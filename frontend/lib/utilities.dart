@@ -40,7 +40,7 @@ class GenericFutureListView extends StatelessWidget {
   const GenericFutureListView({
     super.key,
     required this.future,
-    required this.genericTileBuilder, 
+    required this.genericTileBuilder,
     required this.noContentText,
   });
 
@@ -68,9 +68,11 @@ class GenericFutureListView extends StatelessWidget {
               final row = data[index];
               return genericTileBuilder(row);
             },
-        );
+          );
         } else {
-          return Center(child: Text(noContentText, textScaleFactor: 1.25),);
+          return Center(
+            child: Text(noContentText, textScaleFactor: 1.25),
+          );
         }
       },
     );
