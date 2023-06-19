@@ -150,14 +150,20 @@ class _ChaptersPageState extends State<ChaptersPage> {
   Widget build(BuildContext context) {
     final List<Widget> actions = isOwner
         ? [
-            IconButton(
-                onPressed: () {
-                  _showMultiSelect();
-                },
-                icon: const Icon(
-                  Icons.person_add,
-                  size: 35,
-                ))
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: IconButton(
+                hoverColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                  onPressed: () {
+                    _showMultiSelect();
+                  },
+                  icon: const Icon(
+                    Icons.person_add,
+                    size: 35,
+                  )),
+            )
           ]
         : [];
     final List<Widget> tabs = isOwner
