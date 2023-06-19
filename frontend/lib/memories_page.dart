@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as path;
+import 'package:better_player/better_player.dart';
 import 'chapters_page.dart';
 import 'utilities.dart';
 import 'package:tuple/tuple.dart';
@@ -497,7 +498,13 @@ class _MemoriesPageState extends State<MemoriesPage> {
           isOwner: isOwner,
         );
       case "video":
-        break;
+        return MemoryVideo(
+          caption: metadata["caption"],
+          video: media,
+          responseButton: ResponseButton(
+            onPressed: () => pressResponse(metadata),
+          ),
+        );
       case "audio":
         return MemoryAudio(
           audio: media,
@@ -566,14 +573,20 @@ class ResponseButton extends StatelessWidget {
   final void Function() onPressed;
   final bool alignButton;
 
-  const ResponseButton({super.key, required this.onPressed, this.alignButton = true});
+  const ResponseButton(
+      {super.key, required this.onPressed, this.alignButton = true});
 
   @override
   Widget build(BuildContext context) {
-
-    final button = ElevatedButton(onPressed: onPressed, child: const Text("Comment"));
-    return alignButton ? Align(alignment: Alignment.topRight, child: button,) : button;
-  } 
+    final button =
+        ElevatedButton(onPressed: onPressed, child: const Text("Comment"));
+    return alignButton
+        ? Align(
+            alignment: Alignment.topRight,
+            child: button,
+          )
+        : button;
+  }
 }
 
 class MemoryImage extends StatelessWidget {
@@ -709,7 +722,10 @@ class _MemoryAudioState extends State<MemoryAudio> {
             }
           },
         ),
-        title: Text(widget.caption, textAlign: TextAlign.center,),
+        title: Text(
+          widget.caption,
+          textAlign: TextAlign.center,
+        ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 6),
         subtitle: Slider(
           min: 0,
@@ -726,4 +742,49 @@ class _MemoryAudioState extends State<MemoryAudio> {
       ),
     );
   }
+}
+
+class MemoryVideo extends StatefulWidget {
+  final Uint8List video;
+  final ResponseButton responseButton;
+  final String caption;
+
+  const MemoryVideo(
+      {super.key,
+      required this.video,
+      required this.responseButton,
+      required this.caption});
+
+  @override
+  State<StatefulWidget> createState() => _MemoryVideoState();
+}
+
+class _MemoryVideoState extends State<MemoryVideo> {
+  late BetterPlayerListVideoPlayerController videoController;
+  late BetterPlayerConfiguration videoConfiguration;
+
+  @override
+  void initState() {
+    super.initState();
+
+    videoController = BetterPlayerListVideoPlayerController();
+    videoConfiguration = const BetterPlayerConfiguration(
+      looping: true,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      AspectRatio(
+        aspectRatio: 16 / 9,
+        child: BetterPlayerListVideoPlayer(
+          BetterPlayerDataSource.memory(widget.video),
+          betterPlayerListVideoPlayerController: videoController,
+          configuration: videoConfiguration,
+          playFraction: 0.8,
+        ),
+      ),
+    ],
+  );
 }
