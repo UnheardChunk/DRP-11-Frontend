@@ -48,7 +48,6 @@ class _MultiSelectState extends State<MultiSelect> {
     await supabase
         .from("Scrapbooks")
         .update({"contributors": _selectedUsers}).eq("id", widget.uuid);
-    print(_selectedUsers);
   }
 
   @override
@@ -244,7 +243,7 @@ class ChaptersTab extends StatefulWidget {
 
 class _ChaptersTabState extends State<ChaptersTab> {
   List<String> chapters = [];
-  late final stream;
+  late Stream<List<Map<String, dynamic>>> stream;
   late TextEditingController controller;
 
   @override
