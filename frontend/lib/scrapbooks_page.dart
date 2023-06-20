@@ -6,7 +6,6 @@ import 'utilities.dart';
 // Creates the scrapbook page
 class ScrapbooksPage extends StatefulWidget {
   final Profile profile;
-
   const ScrapbooksPage(this.profile, {super.key});
 
   @override
@@ -17,6 +16,7 @@ class ScrapbooksPage extends StatefulWidget {
 class _ScrapbooksPageState extends State<ScrapbooksPage> {
   // List of all the scrapbooks the user has
   List<String> scrapbooks = [];
+  final _data = supabase.from("Scrapbooks").stream(primaryKey: ["id"]);
 
   // Controller for scrapbook creation
   late TextEditingController controller;
@@ -74,8 +74,6 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
   @override
   Widget build(BuildContext context) {
     //final auth = authenticate(widget.profile);
-    final data =
-        supabase.from("Scrapbooks").select<List<Map<String, dynamic>>>();
 
     return WillPopScope(
         onWillPop: () async {
@@ -125,8 +123,8 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
                         .from("Scrapbooks")
                         .select<List<Map<String, dynamic>>>();
                     return */
-                  GenericFutureListView(
-            future: data,
+                  GenericStreamListView(
+            stream: _data,
             genericTileBuilder: (scrapbook) {
               return GenericTile(
                 name: scrapbook["name"],

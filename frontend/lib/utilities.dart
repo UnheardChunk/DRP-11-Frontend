@@ -79,6 +79,50 @@ class GenericFutureListView extends StatelessWidget {
   }
 }
 
+// Class defining list view using supabase database
+class GenericStreamListView extends StatelessWidget {
+  const GenericStreamListView({
+    super.key,
+    required this.stream,
+    required this.genericTileBuilder,
+    required this.noContentText,
+  });
+
+  // Future containing data to build GenericTile
+  final Stream<List<Map<String, dynamic>>> stream;
+
+  // Function to build the GenericTile from a row of the table
+  final GenericTile Function(Map<String, dynamic>) genericTileBuilder;
+
+  final String noContentText;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: stream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        final data = snapshot.data!;
+        if (data.isNotEmpty) {
+          return ListView.builder(
+            itemCount: data.length,
+            itemBuilder: (context, index) {
+              final row = data[index];
+              return genericTileBuilder(row);
+            },
+          );
+        } else {
+          return Center(
+            child: Text(noContentText, textScaleFactor: 1.25),
+          );
+        }
+      },
+    );
+  }
+}
+
 class Field extends StatelessWidget {
   final String labelText;
   final String text;

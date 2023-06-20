@@ -245,12 +245,15 @@ class ChaptersTab extends StatefulWidget {
 
 class _ChaptersTabState extends State<ChaptersTab> {
   List<String> chapters = [];
-
+  late final stream;
   late TextEditingController controller;
 
   @override
   void initState() {
     super.initState();
+    stream = supabase
+        .from("Chapters")
+        .stream(primaryKey: ["scrapbook", "name"]).eq("scrapbook", widget.uuid);
 
     controller = TextEditingController();
   }
@@ -303,11 +306,6 @@ class _ChaptersTabState extends State<ChaptersTab> {
 
   @override
   Widget build(BuildContext context) {
-    final future = supabase
-        .from("Chapters")
-        .select<List<Map<String, dynamic>>>()
-        .eq("scrapbook", widget.uuid);
-
     return Scaffold(
       floatingActionButton: widget.allowChapterCreation
           ? FloatingActionButton(
@@ -323,8 +321,8 @@ class _ChaptersTabState extends State<ChaptersTab> {
           : Container(),
       body: GenericContainer(
         child: widget.allowChapterCreation
-            ? GenericFutureListView(
-                future: future,
+            ? GenericStreamListView(
+                stream: stream,
                 genericTileBuilder: (chapter) {
                   return GenericTile(
                     name: chapter["name"],
@@ -342,7 +340,7 @@ class _ChaptersTabState extends State<ChaptersTab> {
             : widget.isProfileTab
                 ? ProfileWidget(uuid: widget.uuid)
                 : EmotionsWidget(
-                    allChapters: future,
+                    allChapters: stream,
                     owner: widget.owner,
                     scrapbookName: widget.name,
                   ),
@@ -352,7 +350,7 @@ class _ChaptersTabState extends State<ChaptersTab> {
 }
 
 class EmotionsWidget extends StatelessWidget {
-  final PostgrestFilterBuilder<List<Map<String, dynamic>>> allChapters;
+  final Stream<List<Map<String, dynamic>>> allChapters;
   final String owner;
   final String scrapbookName;
 
@@ -379,8 +377,8 @@ class EmotionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Map<String, dynamic>>>(
-        future: allChapters,
+    return StreamBuilder<List<Map<String, dynamic>>>(
+        stream: allChapters,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
