@@ -7,17 +7,12 @@ Future<void> main() async {
 
   await Supabase.initialize(
       url: 'https://cjcjooldtthzjlnpknaf.supabase.co',
-      // anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqY2pvb2xkdHRoempsbnBrbmFmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY4NTU1ODc1OSwiZXhwIjoyMDAxMTM0NzU5fQ.cXwzHzFAIizOyQ26MZhZZdCHUQRybqBALGQpLKF3mXw');
-
       anonKey:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqY2pvb2xkdHRoempsbnBrbmFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODU1NTg3NTksImV4cCI6MjAwMTEzNDc1OX0.rCbTxIImYWlOyVh67BNlYF-5i9GJD6glXSVYn2M9F1c');
-  final AuthResponse res =
-      await Supabase.instance.client.auth.signInWithPassword(
+  await Supabase.instance.client.auth.signInWithPassword(
     email: 'hf521@ic.ac.uk',
     password: 'Pass123',
   );
-  // final Session? session = res.session;
-  // final User? user = res.user;
   runApp(const MyApp());
 }
 
@@ -31,7 +26,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: LoginScreen(),
-      //home: ScrapbooksPage(),
     );
   }
 }
@@ -50,7 +44,7 @@ class Profile {
 }
 
 class LoginScreen extends StatelessWidget {
-  List<Profile> profiles = [
+  final List<Profile> profiles = [
     Profile(
         name: 'Shruti',
         image: 'assets/profile.png',
@@ -73,14 +67,13 @@ class LoginScreen extends StatelessWidget {
         password: 'Pass123'),
   ];
 
+  LoginScreen({super.key});
+
   authenticate(Profile profile) async {
-//final AuthResponse res =
     await supabase.auth.signInWithPassword(
       email: profile.email,
       password: profile.password,
     );
-    //final Session? session = res.session;
-    //final User? user = res.user;
   }
 
   @override
@@ -111,9 +104,10 @@ class LoginScreen extends StatelessWidget {
                 ),
                 onTap: () async {
                   await authenticate(profile);
-                  print('Selected profile: ${profile.name}');
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ScrapbooksPage(profile)));
+                  if (context.mounted) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ScrapbooksPage(profile)));
+                  }
                 },
               ),
             );
