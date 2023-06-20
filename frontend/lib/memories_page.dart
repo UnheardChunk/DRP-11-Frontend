@@ -14,12 +14,12 @@ import 'package:image_picker/image_picker.dart';
 
 class MemoriesPage extends StatefulWidget {
   final String name;
-  final String owner;
+  final List<String> owners;
   final List<String> bucketIds;
   final MemoryOrganisationType organisationType;
   final String emotion;
 
-  const MemoriesPage(this.bucketIds, this.organisationType, this.owner,
+  const MemoriesPage(this.bucketIds, this.organisationType, this.owners,
       {super.key, this.emotion = "", required this.name});
 
   @override
@@ -42,7 +42,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
     super.initState();
     captionController = TextEditingController();
     responseController = TextEditingController();
-    isOwner = widget.owner == supabase.auth.currentUser!.id;
+    isOwner = widget.owners.contains(supabase.auth.currentUser!.id);
     initialise();
   }
 

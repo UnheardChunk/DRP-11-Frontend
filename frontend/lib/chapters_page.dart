@@ -7,11 +7,13 @@ import 'profile_page.dart';
 
 class MultiSelect extends StatefulWidget {
   final List<Tuple2> items;
-  final List<String> initialSelectedUsers;
+  final List<String> initialSelectedContributors;
+  final List<String> initialSelectedOwners;
   final String uuid;
-  final String owner;
+  final List<String> owners;
 
-  const MultiSelect(this.uuid, this.initialSelectedUsers, this.owner,
+  const MultiSelect(this.uuid, this.initialSelectedContributors,
+      this.initialSelectedOwners, this.owners,
       {super.key, required this.items});
 
   @override
@@ -19,21 +21,24 @@ class MultiSelect extends StatefulWidget {
 }
 
 class _MultiSelectState extends State<MultiSelect> {
-  late final List<String> _selectedUsers;
+  late final List<String> _selectedContributors;
+  late final List<String> _selectedOwners;
 
   @override
   void initState() {
-    _selectedUsers = widget.initialSelectedUsers;
+    _selectedContributors = widget.initialSelectedContributors;
+    _selectedOwners = widget.initialSelectedOwners;
     super.initState();
   }
 
   // Triggered when a checkbox is checked / unchecked
-  void _itemChange(String itemValue, bool isSelected) {
+  void _itemChange(
+      String itemValue, bool isSelected, List<String> selectedUsers) {
     setState(() {
       if (isSelected) {
-        _selectedUsers.add(itemValue);
+        selectedUsers.add(itemValue);
       } else {
-        _selectedUsers.remove(itemValue);
+        selectedUsers.remove(itemValue);
       }
     });
   }
@@ -45,9 +50,10 @@ class _MultiSelectState extends State<MultiSelect> {
 
   // Triggered when submit button is called
   void _submit() async {
-    await supabase
-        .from("Scrapbooks")
-        .update({"contributors": _selectedUsers}).eq("id", widget.uuid);
+    await supabase.from("Scrapbooks").update({
+      "contributors": _selectedContributors,
+      "owners": _selectedOwners
+    }).eq("id", widget.uuid);
   }
 
   @override
@@ -55,25 +61,25 @@ class _MultiSelectState extends State<MultiSelect> {
     return AlertDialog(
       title: const Text('Select Contributors'),
       content: SingleChildScrollView(
-        child: ListBody(
-          children: widget.items
-              .where((element) => element.item2 != widget.owner)
-              .map((item) => CheckboxListTile(
-                    value: _selectedUsers.contains(item.item2),
-                    title: Text(item.item1),
-                    onChanged: (isChecked) =>
-                        _itemChange(item.item2, isChecked!),
-                    controlAffinity: ListTileControlAffinity.leading,
-                  ))
-              .toList(),
-        ),
-      ),
+          child: ListBody(
+        children: widget.items
+            .where((element) => !widget.owners.contains(element.item2))
+            .map((item) => CheckboxListTile(
+                  value: _selectedContributors.contains(item.item2),
+                  title: Text(item.item1),
+                  onChanged: (isChecked) => _itemChange(
+                      item.item2, isChecked!, _selectedContributors),
+                  controlAffinity: ListTileControlAffinity.leading,
+                ))
+            .toList(),
+      )),
       actions: [
         TextButton(onPressed: _cancel, child: const Text('Cancel')),
         ElevatedButton(
             onPressed: () {
               _submit();
-              Navigator.pop(context, _selectedUsers);
+              Navigator.pop(
+                  context, Tuple2(_selectedContributors, _selectedOwners));
             },
             child: const Text('Submit')),
       ],
@@ -84,10 +90,10 @@ class _MultiSelectState extends State<MultiSelect> {
 class ChaptersPage extends StatefulWidget {
   final String uuid;
   final String name;
-  final String owner;
+  final List<String> owners;
 
   const ChaptersPage(
-      {Key? key, required this.uuid, required this.name, required this.owner})
+      {Key? key, required this.uuid, required this.name, required this.owners})
       : super(key: key);
 
   @override
@@ -95,25 +101,28 @@ class ChaptersPage extends StatefulWidget {
 }
 
 class _ChaptersPageState extends State<ChaptersPage> {
-  List<String> _selectedUsers = [];
+  List<String> _selectedContributors = [];
+  List<String> _selectedOwners = [];
   late bool isOwner;
 
   @override
   void initState() {
     populateInitUsers();
     super.initState();
-    isOwner = supabase.auth.currentUser!.id == widget.owner;
+    isOwner = widget.owners.contains(supabase.auth.currentUser!.id);
   }
 
   populateInitUsers() async {
     final ret = await supabase
         .from("Scrapbooks")
-        .select("contributors")
+        .select("contributors, owners")
         .eq("id", widget.uuid)
         .single();
-    _selectedUsers = ((ret["contributors"]) as List<dynamic>)
+    _selectedContributors = ((ret["contributors"]) as List<dynamic>)
         .map((e) => e as String)
         .toList();
+    _selectedOwners =
+        ((ret["owners"]) as List<dynamic>).map((e) => e as String).toList();
   }
 
   void _showMultiSelect() async {
@@ -124,13 +133,14 @@ class _ChaptersPageState extends State<ChaptersPage> {
       const Tuple2("Gabriel", "505d1b6f-1e46-4f3d-814a-7cb65094a402"),
     ];
 
-    final List<String>? results = await showDialog(
+    final Tuple2? results = await showDialog(
       context: context,
       builder: (BuildContext context) {
         return MultiSelect(
           widget.uuid,
-          _selectedUsers,
-          widget.owner,
+          _selectedContributors,
+          _selectedOwners,
+          widget.owners,
           items: items,
         );
       },
@@ -139,7 +149,8 @@ class _ChaptersPageState extends State<ChaptersPage> {
     // Update UI
     if (results != null) {
       setState(() {
-        _selectedUsers = results;
+        _selectedContributors = results.item1;
+        _selectedOwners = results.item2;
       });
     }
   }
@@ -175,19 +186,19 @@ class _ChaptersPageState extends State<ChaptersPage> {
         ? [
             ChaptersTab(
               widget.uuid,
-              widget.owner,
+              widget.owners,
               index: 0,
               name: widget.name,
             ), // Form for "Chapter" tab
             ChaptersTab(
               widget.uuid,
-              widget.owner,
+              widget.owners,
               index: 1,
               name: widget.name,
             ), // Form for "Emotions" tab
             ChaptersTab(
               widget.uuid,
-              widget.owner,
+              widget.owners,
               index: 2,
               name: widget.name,
             ), // Form for "Profile" tab
@@ -195,7 +206,7 @@ class _ChaptersPageState extends State<ChaptersPage> {
         : [
             ChaptersTab(
               widget.uuid,
-              widget.owner,
+              widget.owners,
               index: 0,
               name: widget.name,
             )
@@ -228,10 +239,10 @@ class ChaptersTab extends StatefulWidget {
   late final bool allowChapterCreation;
   late final bool isProfileTab;
   final String uuid;
-  final String owner;
+  final List<String> owners;
   final String name;
 
-  ChaptersTab(this.uuid, this.owner,
+  ChaptersTab(this.uuid, this.owners,
       {super.key, required index, required this.name}) {
     allowChapterCreation = index == 0;
     isProfileTab = index == 2;
@@ -328,7 +339,7 @@ class _ChaptersTabState extends State<ChaptersTab> {
                     navigatesTo: MemoriesPage(
                       [chapter["bucket_id"]],
                       MemoryOrganisationType.chapters,
-                      widget.owner,
+                      widget.owners,
                       name: chapter["name"],
                     ),
                   );
@@ -339,7 +350,7 @@ class _ChaptersTabState extends State<ChaptersTab> {
                 ? ProfileWidget(uuid: widget.uuid)
                 : EmotionsWidget(
                     allChapters: stream,
-                    owner: widget.owner,
+                    owners: widget.owners,
                     scrapbookName: widget.name,
                   ),
       ),
@@ -349,13 +360,13 @@ class _ChaptersTabState extends State<ChaptersTab> {
 
 class EmotionsWidget extends StatelessWidget {
   final Stream<List<Map<String, dynamic>>> allChapters;
-  final String owner;
+  final List<String> owners;
   final String scrapbookName;
 
   EmotionsWidget(
       {super.key,
       required this.allChapters,
-      required this.owner,
+      required this.owners,
       required this.scrapbookName});
 
   final List<String> emotions = [
@@ -394,7 +405,7 @@ class EmotionsWidget extends StatelessWidget {
                   navigatesTo: MemoriesPage(
                     bucketIds,
                     MemoryOrganisationType.emotions,
-                    owner,
+                    owners,
                     emotion: emotions[i],
                     name: emotions[i],
                   ),
@@ -432,7 +443,7 @@ class EmotionsWidget extends StatelessWidget {
             builder: (context) => MemoriesPage(
                   bucketIds,
                   MemoryOrganisationType.emotions,
-                  owner,
+                  owners,
                   emotion: emotions[4],
                   name: emotions[4],
                 )));

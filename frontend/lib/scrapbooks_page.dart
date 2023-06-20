@@ -65,8 +65,10 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
 
   // Pops the AlertDialog for scrapbook creation when the submit button is pressed
   void createScrapbook() async {
-    await supabase.from('Scrapbooks').insert(
-        {'name': controller.text, "owner": supabase.auth.currentUser!.id});
+    await supabase.from('Scrapbooks').insert({
+      'name': controller.text,
+      "owners": [supabase.auth.currentUser!.id]
+    });
     if (context.mounted) Navigator.of(context).pop(controller.text);
   }
 
@@ -132,7 +134,9 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
                 navigatesTo: ChaptersPage(
                     uuid: scrapbook["id"],
                     name: scrapbook["name"],
-                    owner: scrapbook["owner"]),
+                    owners: (scrapbook["owners"] as List<dynamic>)
+                        .map((e) => e as String)
+                        .toList()),
               );
             },
             noContentText: "You have no scrapbooks",
