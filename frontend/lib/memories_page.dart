@@ -516,7 +516,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
         );
       default:
     }
-    return Placeholder();
+    return const Placeholder();
   }
 
   @override
