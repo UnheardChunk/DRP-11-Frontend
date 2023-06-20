@@ -767,24 +767,26 @@ class _MemoryVideoState extends State<MemoryVideo> {
   void initState() {
     super.initState();
 
-    videoController = BetterPlayerListVideoPlayerController();
-    videoConfiguration = const BetterPlayerConfiguration(
-      looping: true,
-    );
+    setState(() {
+      videoController = BetterPlayerListVideoPlayerController();
+      videoConfiguration = const BetterPlayerConfiguration(
+        looping: true,
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) => Column(
-    children: [
-      AspectRatio(
-        aspectRatio: 16 / 9,
-        child: BetterPlayerListVideoPlayer(
-          BetterPlayerDataSource.memory(widget.video),
-          betterPlayerListVideoPlayerController: videoController,
-          configuration: videoConfiguration,
-          playFraction: 0.8,
-        ),
-      ),
-    ],
-  );
+        children: [
+          AspectRatio(
+            aspectRatio: 16 / 9,
+            child: BetterPlayerListVideoPlayer(
+              BetterPlayerDataSource.memory(widget.video),
+              betterPlayerListVideoPlayerController: videoController,
+              configuration: videoConfiguration,
+              playFraction: 0.8,
+            ),
+          ),
+        ],
+      );
 }
