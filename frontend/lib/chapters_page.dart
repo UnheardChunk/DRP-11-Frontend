@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tuple/tuple.dart';
 import 'main.dart';
 import 'utilities.dart';
