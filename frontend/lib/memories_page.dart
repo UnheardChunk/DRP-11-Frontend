@@ -221,6 +221,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
 
   Future<Tuple2<String, String>?> openResponseCreation(Map metadata) {
     String dropdownValue = metadata["emotion"];
+    bool isEditing = false;
     responseController.text = metadata["response"] ?? "";
 
     return showDialog<Tuple2<String, String>>(
@@ -249,21 +250,44 @@ class _MemoriesPageState extends State<MemoriesPage> {
                       ),
                     ],
                   ),
-                  content: TextField(
-                    onSubmitted: (_) => createResponse(
-                        dropdownValue, metadata["name"], metadata["bucket_id"]),
-                    autofocus: true,
-                    decoration:
-                        const InputDecoration(hintText: "Enter a comment"),
-                    controller: responseController,
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => createResponse(dropdownValue,
-                          metadata["name"], metadata["bucket_id"]),
-                      child: const Text("Submit"),
-                    ),
-                  ],
+                  content: isEditing
+                      ? TextField(
+                          maxLines: null,
+                          onSubmitted: (_) => createResponse(dropdownValue,
+                              metadata["name"], metadata["bucket_id"]),
+                          autofocus: true,
+                          decoration: const InputDecoration(
+                              hintText: "Enter a comment"),
+                          controller: responseController,
+                        )
+                      : Text(responseController.text),
+                  actions: isEditing
+                      ? [
+                          TextButton(
+                            onPressed: () => setState(() {
+                              isEditing = false;
+                            }),
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              createResponse(dropdownValue, metadata["name"],
+                                  metadata["bucket_id"]);
+                              setState(() {
+                                isEditing = false;
+                              });
+                            },
+                            child: const Text("Submit"),
+                          ),
+                        ]
+                      : [
+                          TextButton(
+                            onPressed: () => setState(() {
+                              isEditing = true;
+                            }),
+                            child: const Text("Edit"),
+                          ),
+                        ],
                 )));
   }
 
@@ -273,9 +297,6 @@ class _MemoriesPageState extends State<MemoriesPage> {
         .update({"response": responseController.text, "emotion": emotion})
         .eq("bucket_id", bucketId)
         .eq("name", path);
-    if (context.mounted) {
-      Navigator.of(context).pop(Tuple2(responseController.text, emotion));
-    }
   }
 
   void chooseVideoUploadType() {
