@@ -47,7 +47,7 @@ class GenericStreamListView extends StatelessWidget {
   final Stream<List<Map<String, dynamic>>> stream;
 
   // Function to build the GenericTile from a row of the table
-  final GenericTile Function(Map<String, dynamic>) genericTileBuilder;
+  final Widget Function(Map<String, dynamic>) genericTileBuilder;
 
   final String noContentText;
 
