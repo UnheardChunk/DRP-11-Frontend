@@ -175,6 +175,7 @@ class GenericContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: const BoxConstraints.expand(),
       color: Colors.grey[300],
       padding: const EdgeInsets.all(10),
       child: child,
