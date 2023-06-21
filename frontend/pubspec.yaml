@@ -29,6 +29,7 @@ dependencies:
   better_player: ^0.0.83
   wakelock: ^0.6.2
   wakelock_windows: ^0.2.1
+  google_fonts: ^4.0.4
 
 dependency_overrides:
   win32: ^5.0.2

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'scrapbooks_page.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +29,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           appBarTheme: AppBarTheme(color: Colors.pinkAccent[100]),
           cardColor: Colors.blueGrey,
-          textTheme: Typography.blackHelsinki),
+          textTheme: GoogleFonts.interTextTheme(),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(Colors.pinkAccent[100]))),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+              backgroundColor: Colors.pinkAccent[100],
+              hoverColor: Colors.pinkAccent)),
       home: LoginScreen(),
     );
   }
