@@ -201,7 +201,7 @@ class GenericCircularButton extends StatelessWidget {
         children: [
           ClipOval(
             child: Material(
-              color: Colors.blue,
+              color: Colors.pinkAccent[100],
               child: InkWell(
                 splashColor: Colors.grey.withOpacity(0.35),
                 onTap: onTap,
@@ -213,7 +213,7 @@ class GenericCircularButton extends StatelessWidget {
               ),
             ),
           ),
-          if (text != null) Text(text!),
+          if (text != null) Text(text!, textScaleFactor: 1.5,),
         ],
       );
 }
