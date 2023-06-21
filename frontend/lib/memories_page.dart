@@ -550,7 +550,9 @@ class _MemoriesPageState extends State<MemoriesPage> {
                   }).toList(),
                 ),
               )
-            : Container(),
+            : GenericContainer(
+                child: Container(),
+              ),
       ),
     );
   }

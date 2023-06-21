@@ -28,7 +28,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
           appBarTheme: AppBarTheme(color: Colors.pinkAccent[100]),
-          cardColor: Colors.blueGrey,
           textTheme: GoogleFonts.interTextTheme(),
           elevatedButtonTheme: ElevatedButtonThemeData(
               style: ButtonStyle(

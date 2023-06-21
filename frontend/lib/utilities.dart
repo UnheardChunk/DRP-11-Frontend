@@ -98,15 +98,15 @@ class Field extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
           textAlign: TextAlign.center,
           labelText,
           style: const TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 53, 113, 217)),
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 8.0),
         isEditing
@@ -153,7 +153,7 @@ class SectionHeader extends StatelessWidget {
                 style: const TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 226, 75, 98)),
+                    color: Color.fromARGB(255, 77, 144, 207)),
               ),
             ),
           ],
