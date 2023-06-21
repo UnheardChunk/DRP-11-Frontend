@@ -75,10 +75,11 @@ class _ScrapbooksPageState extends State<ScrapbooksPage> {
 
   void _showSingleSelect(String uuid, List<dynamic> contributors) async {
     List<Tuple2> items = [
-      const Tuple2("Shruti", "cb965659-dacc-4268-848d-056ac9181992"),
-      const Tuple2("Huzaifah", "4dfcf557-5b65-4fed-b86f-796edf311955"),
-      const Tuple2("Krish", "5bd6ed3e-d1f2-435f-9191-670989d207e8"),
-      const Tuple2("Gabriel", "505d1b6f-1e46-4f3d-814a-7cb65094a402"),
+      const Tuple2("Adam", "cb965659-dacc-4268-848d-056ac9181992"),
+      const Tuple2(
+          "Adam (after a year)", "4dfcf557-5b65-4fed-b86f-796edf311955"),
+      const Tuple2("Julia", "5bd6ed3e-d1f2-435f-9191-670989d207e8"),
+      const Tuple2("Justin", "505d1b6f-1e46-4f3d-814a-7cb65094a402"),
     ];
 
     await showDialog(

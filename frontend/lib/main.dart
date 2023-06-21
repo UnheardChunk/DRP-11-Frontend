@@ -25,6 +25,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+          appBarTheme: AppBarTheme(color: Colors.pinkAccent[100]),
+          cardColor: Colors.blueGrey,
+          textTheme: Typography.blackHelsinki),
       home: LoginScreen(),
     );
   }
@@ -46,22 +50,22 @@ class Profile {
 class LoginScreen extends StatelessWidget {
   final List<Profile> profiles = [
     Profile(
-        name: 'Shruti',
+        name: 'Adam',
         image: 'assets/profile.png',
         email: 'sp1521@ic.ac.uk',
         password: 'Pass123'),
     Profile(
-        name: 'Huzaifah',
+        name: 'Adam (after a year)',
         image: 'assets/profile.png',
         email: 'hf521@ic.ac.uk',
         password: 'Pass123'),
     Profile(
-        name: 'Krish',
+        name: 'Julia',
         image: 'assets/profile.png',
         email: 'krm221@ic.ac.uk',
         password: 'Pass123'),
     Profile(
-        name: 'Gabriel',
+        name: 'Justin',
         image: 'assets/profile.png',
         email: 'gd221@ic.ac.uk',
         password: 'Pass123'),

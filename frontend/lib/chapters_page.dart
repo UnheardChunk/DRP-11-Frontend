@@ -118,10 +118,11 @@ class _ChaptersPageState extends State<ChaptersPage> {
 
   void _showMultiSelect() async {
     List<Tuple2> items = [
-      const Tuple2("Shruti", "cb965659-dacc-4268-848d-056ac9181992"),
-      const Tuple2("Huzaifah", "4dfcf557-5b65-4fed-b86f-796edf311955"),
-      const Tuple2("Krish", "5bd6ed3e-d1f2-435f-9191-670989d207e8"),
-      const Tuple2("Gabriel", "505d1b6f-1e46-4f3d-814a-7cb65094a402"),
+      const Tuple2("Adam", "cb965659-dacc-4268-848d-056ac9181992"),
+      const Tuple2(
+          "Adam (after a year)", "4dfcf557-5b65-4fed-b86f-796edf311955"),
+      const Tuple2("Julia", "5bd6ed3e-d1f2-435f-9191-670989d207e8"),
+      const Tuple2("Justin", "505d1b6f-1e46-4f3d-814a-7cb65094a402"),
     ];
 
     final List<String>? results = await showDialog(
@@ -366,11 +367,11 @@ class EmotionsWidget extends StatelessWidget {
     "Distressing"
   ];
   final List<Color> emotionColours = [
-    Colors.yellow,
-    Colors.green,
-    Colors.purple,
-    Colors.blue,
-    Colors.red
+    const Color.fromARGB(255, 249, 239, 151),
+    const Color.fromARGB(255, 153, 191, 154),
+    const Color.fromARGB(255, 165, 111, 175),
+    const Color.fromARGB(255, 142, 189, 227),
+    const Color.fromARGB(255, 211, 103, 95)
   ];
 
   @override
@@ -390,7 +391,6 @@ class EmotionsWidget extends StatelessWidget {
               for (var i = 0; i < emotions.length - 1; i++)
                 GenericTile(
                   name: emotions[i],
-                  tileIcon: const Icon(null),
                   navigatesTo: MemoriesPage(
                     bucketIds,
                     MemoryOrganisationType.emotions,
@@ -406,9 +406,13 @@ class EmotionsWidget extends StatelessWidget {
                 child: Card(
                   color: emotionColours[4],
                   child: ListTile(
-                    title: Text(emotions[4]),
+                    contentPadding: const EdgeInsetsDirectional.symmetric(
+                        vertical: 8, horizontal: 20),
+                    title: Text(
+                      emotions[4],
+                      style: const TextStyle(fontSize: 20),
+                    ),
                     trailing: const Icon(Icons.arrow_forward_ios),
-                    leading: const Icon(null),
                   ),
                 ),
               )

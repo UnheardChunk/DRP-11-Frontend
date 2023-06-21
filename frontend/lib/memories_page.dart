@@ -530,9 +530,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
                   child: const Icon(Icons.add),
                 )
               : Container(),
-      appBar: AppBar(
-        title: Text('${widget.name} Memories'),
-      ),
+      appBar: AppBar(title: Text(widget.name), centerTitle: true),
       body: GenericContainer(
         child: files.isNotEmpty
             ? SingleChildScrollView(
@@ -628,9 +626,12 @@ class MemoryImage extends StatelessWidget {
           ];
     return Column(children: [
       Stack(children: stackChildren),
-      Text(caption),
+      Text(
+        caption,
+        textScaleFactor: 2,
+      ),
       const SizedBox(
-        height: 25,
+        height: 5,
       ),
     ]);
   }
@@ -725,6 +726,7 @@ class _MemoryAudioState extends State<MemoryAudio> {
         title: Text(
           widget.caption,
           textAlign: TextAlign.center,
+          textScaleFactor: 2,
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 6),
         subtitle: Slider(

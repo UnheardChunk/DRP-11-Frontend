@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 class GenericTile extends StatelessWidget {
   // Name of the tile
   final String name;
-  final Icon tileIcon;
+  final Icon? tileIcon;
   final Widget navigatesTo;
   final Color colour;
 
   const GenericTile(
       {super.key,
       required this.name,
-      required this.tileIcon,
+      this.tileIcon,
       required this.navigatesTo,
       this.colour = Colors.white});
 
@@ -20,7 +20,12 @@ class GenericTile extends StatelessWidget {
     return Card(
       color: colour,
       child: ListTile(
-        title: Text(name),
+        contentPadding:
+            const EdgeInsetsDirectional.symmetric(vertical: 8, horizontal: 20),
+        title: Text(
+          name,
+          style: const TextStyle(fontSize: 20),
+        ),
         trailing: const Icon(Icons.arrow_forward_ios),
         leading: tileIcon,
         iconColor: Colors.black,
