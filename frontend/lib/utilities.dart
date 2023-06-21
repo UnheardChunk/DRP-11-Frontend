@@ -118,7 +118,7 @@ class Field extends StatelessWidget {
               )
             : Text(
                 text,
-                style: const TextStyle(fontSize: 16.0),
+                style: const TextStyle(fontSize: 18.0),
                 textAlign: TextAlign.center,
               ),
         const SizedBox(height: 30),
